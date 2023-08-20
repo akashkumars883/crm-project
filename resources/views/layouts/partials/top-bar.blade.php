@@ -1,219 +1,271 @@
-<!-- Top Bar Start -->
-<div class="topbar">
-    <!-- Navbar -->
-    <nav class="navbar-custom" id="navbar-custom">
-        <ul class="list-unstyled topbar-nav float-end mb-0">
-            @auth
-            {{-- <li class="dropdown notification-list">
-                <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
-                    aria-haspopup="false" aria-expanded="false">
-                    <i class="ti ti-mail"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-lg pt-0">
-
-                    <h6 class="dropdown-item-text font-15 m-0 py-3 border-bottom d-flex justify-content-between align-items-center">
-                        Messages <span class="badge bg-soft-primary badge-pill">3</span>
-                    </h6>
-                    <div class="notification-menu" data-simplebar>
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">2 min ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <img src="assets/images/users/user-1.jpg" alt="" class="thumb-sm rounded-circle">
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">Your order is placed</h6>
-                                    <small class="text-muted mb-0">Dummy text of the printing and industry.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">10 min ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <img src="assets/images/users/user-4.jpg" alt="" class="thumb-sm rounded-circle">
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">Meeting with designers</h6>
-                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">40 min ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <img src="assets/images/users/user-2.jpg" alt="" class="thumb-sm rounded-circle">
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">UX 3 Task complete.</h6>
-                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">1 hr ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <img src="assets/images/users/user-5.jpg" alt="" class="thumb-sm rounded-circle">
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">Your order is placed</h6>
-                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">2 hrs ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <img src="assets/images/users/user-3.jpg" alt="" class="thumb-sm rounded-circle">
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">Payment Successfull</h6>
-                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                    </div>
-                    <!-- All-->
-                    <a href="javascript:void(0);" class="dropdown-item text-center text-primary">
-                        View all <i class="fi-arrow-right"></i>
-                    </a>
-                </div>
-            </li>
-            <li class="dropdown notification-list">
-                <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
-                    aria-haspopup="false" aria-expanded="false">
-                    <i class="ti ti-bell"></i>
-                    <span class="alert-badge"></span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-lg pt-0">
-
-                    <h6 class="dropdown-item-text font-15 m-0 py-3 border-bottom d-flex justify-content-between align-items-center">
-                        Notifications <span class="badge bg-soft-primary badge-pill">2</span>
-                    </h6>
-                    <div class="notification-menu" data-simplebar>
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">2 min ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <i class="ti ti-chart-arcs"></i>
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">Your order is placed</h6>
-                                    <small class="text-muted mb-0">Dummy text of the printing and industry.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">10 min ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <i class="ti ti-device-computer-camera"></i>
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">Meeting with designers</h6>
-                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">40 min ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <i class="ti ti-diamond"></i>
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">UX 3 Task complete.</h6>
-                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">1 hr ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <i class="ti ti-drone"></i>
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">Your order is placed</h6>
-                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                        <!-- item-->
-                        <a href="#" class="dropdown-item py-3">
-                            <small class="float-end text-muted ps-2">2 hrs ago</small>
-                            <div class="media">
-                                <div class="avatar-md bg-soft-primary">
-                                    <i class="ti ti-users"></i>
-                                </div>
-                                <div class="media-body align-self-center ms-2 text-truncate">
-                                    <h6 class="my-0 fw-normal text-dark">Payment Successfull</h6>
-                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
-                                </div><!--end media-body-->
-                            </div><!--end media-->
-                        </a><!--end-item-->
-                    </div>
-                    <!-- All-->
-                    <a href="javascript:void(0);" class="dropdown-item text-center text-primary">
-                        View all <i class="fi-arrow-right"></i>
-                    </a>
-                </div>
-            </li> --}}
-            <li class="dropdown">
-                <a class="nav-link dropdown-toggle nav-user" data-bs-toggle="dropdown" href="#" role="button"
-                    aria-haspopup="true" aria-expanded="false">
-                    <div class="d-flex align-items-center">
-                        <img src="{{ Avatar::create(Auth::user()->name)->toBase64() }}" alt="{{ Auth::user()->name }}"  class="me-3"/>
-                        {{-- <img src="{{ asset('assets/images/users/user-4.jpg') }}" alt="profile-user" class="rounded-circle me-2 thumb-sm" /> --}}
-                        <div>
-                            <small class="d-none d-md-block font-11">{{ Auth::user()->email }}</small>
-                            <span class="d-none d-md-block fw-semibold font-12">{{ Auth::user()->name }} <i
-                                    class="mdi mdi-chevron-down"></i></span>
-                        </div>
-                    </div>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end">
-                    {{-- <a class="dropdown-item" href="#"><i class="ti ti-user font-16 me-1 align-text-bottom"></i> Profile</a> --}}
-                    {{-- <a class="dropdown-item" href="#"><i class="ti ti-settings font-16 me-1 align-text-bottom"></i> Settings</a> --}}
-                    <div class="dropdown-divider mb-0"></div>
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="ti ti-power font-16 me-1 align-text-bottom"></i> Logout
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </div>
-            </li><!--end topbar-profile-->
-            @else
-            <li>
-                <a href="{{ route('login') }}">Login</a>
-            </li>
-            @endauth
-        </ul><!--end topbar-nav-->
-
-        <ul class="list-unstyled topbar-nav mb-0">
-            <li>
-                <button class="nav-link button-menu-mobile nav-icon" id="togglemenu">
-                    <i class="ti ti-menu-2"></i>
-                </button>
-            </li>
-        </ul>
-    </nav>
-    <!-- end navbar-->
-    @include('notify::components.notify')
+<!-- LOGO -->
+<div class="brand">
+    <a href="index.html" class="logo">
+        {{-- <span>
+            <img src="{{ asset('assets/images/logo.webp') }}" alt="logo-small" class="logo-sm">
+        </span> --}}
+        <span>
+            {{-- <img src="{{ asset('assets/images/logo.webp') }}" alt="logo-large" class="logo-lg logo-light"> --}}
+            <img src="{{ asset('assets/images/logo.webp') }}" alt="logo-large" class="logo-lg logo-dark" style="height: 50px;">
+        </span> 
+    </a>
 </div>
-<!-- Top Bar End -->
-<!-- Top Bar End -->
+<!--end logo-->  
+<!-- Navbar -->
+<nav class="navbar-custom">    
+    <ul class="list-unstyled topbar-nav float-end mb-0"> 
+        @auth
+        <li class="dropdown">
+            <a class="nav-link dropdown-toggle nav-user" data-bs-toggle="dropdown" href="#" role="button"
+                aria-haspopup="true" aria-expanded="false">
+                <div class="d-flex align-items-center">
+                    <img src="{{ Avatar::create(Auth::user()->name)->toBase64() }}" alt="{{ Auth::user()->name }}"  class="me-3"/>
+                    {{-- <img src="{{ asset('assets/images/users/user-4.jpg') }}" alt="profile-user" class="rounded-circle me-2 thumb-sm" /> --}}
+                    <div>
+                        <small class="d-none d-md-block font-11">{{ Auth::user()->email }}</small>
+                        <span class="d-none d-md-block fw-semibold font-12">{{ Auth::user()->name }} <i
+                                class="mdi mdi-chevron-down"></i></span>
+                    </div>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end">
+                {{-- <a class="dropdown-item" href="#"><i class="ti ti-user font-16 me-1 align-text-bottom"></i> Profile</a> --}}
+                {{-- <a class="dropdown-item" href="#"><i class="ti ti-settings font-16 me-1 align-text-bottom"></i> Settings</a> --}}
+                {{-- <div class="dropdown-divider mb-0"></div> --}}
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="ti ti-power font-16 me-1 align-text-bottom"></i> Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
+        </li><!--end topbar-profile-->
+        @else
+        <li>
+            <a href="{{ route('login') }}">Login</a>
+        </li>
+        @endauth<!--end menu item--> 
+    </ul><!--end topbar-nav-->
+
+    <div class="navbar-custom-menu active">
+        <div id="navigation">
+            <!-- Navigation Menu-->
+            <ul class="navigation-menu active">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ route('home') }}">Dashboard</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarApps" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span>CRM Management</span>
+                    </a>
+                    <ul class="dropdown-menu animate slideIn" aria-labelledby="navbarApps"> 
+                        <li>
+                            <a href="{{ route('users.index') }}" class="dropdown-item">
+                                Users
+                            </a>
+                        </li> 
+                        <li class="dropdown-submenu dropend">
+                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                Sales
+                            </a>
+                            <ul class="dropdown-menu animate slideIn">
+                                <li>
+                                    <a href="{{ route('leads.index') }}" class="dropdown-item ">Leads</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('lead-statuses.index') }}" class="dropdown-item ">Invoices</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('contact-methods.index') }}" class="dropdown-item ">Projects</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('contact-languages.index') }}" class="dropdown-item ">Contact Language</a>
+                                </li>
+                            </ul>
+                        </li>                    
+                    </ul><!--end submenu-->
+                </li><!--end nav-item-->
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarApps" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span>Fields Management</span>
+                    </a>
+                    <ul class="dropdown-menu animate slideIn" aria-labelledby="navbarApps"> 
+                        <li class="dropdown-submenu dropend">
+                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                Leads
+                            </a>
+                            <ul class="dropdown-menu animate slideIn">
+                                <li>
+                                    <a href="{{ route('lead-sources.index') }}" class="dropdown-item ">Lead Source</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('lead-statuses.index') }}" class="dropdown-item ">Lead Status</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('contact-methods.index') }}" class="dropdown-item ">Contact Method</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('contact-languages.index') }}" class="dropdown-item ">Contact Language</a>
+                                </li>
+                            </ul>
+                        </li> 
+                        <li class="dropdown-submenu dropend">
+                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                Invoices
+                            </a>
+                            <ul class="dropdown-menu animate slideIn">
+                                <li>
+                                    <a href="{{ route('invoice-types.index') }}" class="dropdown-item ">Invoice Type</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('invoice-statuses.index') }}" class="dropdown-item ">Invoice Status</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu dropend">
+                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                Payments
+                            </a>
+                            <ul class="dropdown-menu animate slideIn">
+                                <li>
+                                    <a href="{{ route('bill-types.index') }}" class="dropdown-item ">Bill Type</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('bill-statuses.index') }}" class="dropdown-item ">Bill Status</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('payment-methods.index') }}" class="dropdown-item ">Payment Method</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('payment-statuses.index') }}" class="dropdown-item ">Payment Status</a>
+                                </li>
+                            </ul>
+                        </li> 
+                        <li class="dropdown-submenu dropend">
+                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                Projects
+                            </a>
+                            <ul class="dropdown-menu animate slideIn">
+                                <li>
+                                    <a href="{{ route('project-types.index') }}" class="dropdown-item ">Project Type</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('project-statuses.index') }}" class="dropdown-item ">Project Status</a>
+                                </li>
+                            </ul>
+                        </li> 
+                        <li class="dropdown-submenu dropend">
+                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                Inventory
+                            </a>
+                            <ul class="dropdown-menu animate slideIn">
+                                <li>
+                                    <a href="{{ route('inventory-types.index') }}" class="dropdown-item ">Inventory Type</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('inventory-statuses.index') }}" class="dropdown-item ">Inventory Status</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu dropend">
+                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                Employee
+                            </a>
+                            <ul class="dropdown-menu animate slideIn">
+                                <li>
+                                    <a href="{{ route('employee-types.index') }}" class="dropdown-item ">Employee Type</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('blood-groups.index') }}" class="dropdown-item ">Blood Group</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('genders.index') }}" class="dropdown-item ">Gender</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('designations.index') }}" class="dropdown-item ">Designation</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('departments.index') }}" class="dropdown-item ">Department</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('skills.index') }}" class="dropdown-item ">Skills</a>
+                                </li>
+                            </ul>
+                        </li> 
+                        <li class="dropdown-submenu dropend">
+                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                Vendor
+                            </a>
+                            <ul class="dropdown-menu animate slideIn">
+                                <li>
+                                    <a href="{{ route('vendor-types.index') }}" class="dropdown-item ">Vendor Type</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('vendor-statuses.index') }}" class="dropdown-item ">Vendor Status</a>
+                                </li>
+                            </ul>
+                        </li> 
+                        <li>
+                            <a href="apps-chat.html" class="dropdown-item">
+                                Example
+                            </a>
+                        </li>                    
+                    </ul><!--end submenu-->
+                </li><!--end nav-item-->
+                
+                @if (Auth::user()->hasPermission('admin-menu'))
+                <li class="nav-item">
+                    <a href="" nav-link>Admin Menu</a>
+                </li>
+                @endif
+
+                @if (Auth::user()->hasPermission('manager-menu'))
+                <li class="nav-item">
+                    <a href="" nav-link>Manager Menu</a>
+                </li>
+                @endif
+
+                @if (Auth::user()->hasPermission('supervisor-menu'))
+                <li class="nav-item">
+                    <a href="" nav-link>Supervisor Menu</a>
+                </li>
+                @endif
+
+                @if (Auth::user()->hasPermission('accounts-menu'))
+                <li class="nav-item">
+                    <a href="" nav-link>Accounts Menu</a>
+                </li>
+                @endif
+
+                @if (Auth::user()->hasPermission('hr-menu'))
+                <li class="nav-item">
+                    <a href="" nav-link>HR Menu</a>
+                </li>
+                @endif
+
+                @if (Auth::user()->hasPermission('employee-menu'))
+                <li class="nav-item">
+                    <a href="" nav-link>Employee Menu</a>
+                </li>
+                @endif
+
+                @if (Auth::user()->hasPermission('vendor-menu'))
+                <li class="nav-item">
+                    <a href="" nav-link>Vendor Menu</a>
+                </li>
+                @endif
+
+                @if (Auth::user()->hasPermission('client-menu'))
+                <li class="nav-item">
+                    <a href="" nav-link>Client Menu</a>
+                </li>
+                @endif
+            </ul><!-- End navigation menu -->
+        </div> <!-- end navigation -->
+    </div>
+    <!-- Navbar -->
+</nav>
+<!-- end navbar-->
+@include('notify::components.notify')

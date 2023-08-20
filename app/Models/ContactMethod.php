@@ -11,4 +11,9 @@ class ContactMethod extends Model
     use HasFactory, AuditableTrait;
 
     protected $fillable =['name'];
+
+    public function leads()
+    {
+        return $this->hasMany(Lead::class, 'contact_method_id');
+    }
 }

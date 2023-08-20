@@ -10,54 +10,63 @@ use App\Http\Controllers\Dashboard\HrDashboardController;
 use App\Http\Controllers\Dashboard\ManagerDashboardController;
 use App\Http\Controllers\Dashboard\SupervisorDashboardController;
 use App\Http\Controllers\Dashboard\VendorDashboardController;
+use App\Http\Controllers\Fields\BillStatusController;
+use App\Http\Controllers\Fields\BillTypeController;
+use App\Http\Controllers\Fields\BloodGroupController;
 use App\Http\Controllers\Fields\ContactLanguageController;
 use App\Http\Controllers\Fields\ContactMethodController;
+use App\Http\Controllers\Fields\DepartmentController;
+use App\Http\Controllers\Fields\DesignationController;
+use App\Http\Controllers\Fields\EmployeeTypeController;
+use App\Http\Controllers\Fields\GenderController;
+use App\Http\Controllers\Fields\InventoryStatusController;
+use App\Http\Controllers\Fields\InventoryTypeController;
+use App\Http\Controllers\Fields\InvoiceStatusController;
+use App\Http\Controllers\Fields\InvoiceTypeController;
 use App\Http\Controllers\Fields\LeadSourceController;
 use App\Http\Controllers\Fields\LeadStatusController;
+use App\Http\Controllers\Fields\PaymentMethodController;
+use App\Http\Controllers\Fields\PaymentStatusController;
+use App\Http\Controllers\Fields\ProjectStatusController;
+use App\Http\Controllers\Fields\ProjectTypeController;
+use App\Http\Controllers\Fields\SkillController;
+use App\Http\Controllers\Fields\VendorStatusController;
+use App\Http\Controllers\Fields\VendorTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Auth::routes();
+Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// Admin Routes
-Route::group(['middleware' => 'role:admin', 'prefix' => 'admin'], function () {
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('users', UserController::class);
-    Route::resource('lead-sources', LeadSourceController::class);
-    Route::resource('lead-statuses', LeadStatusController::class);
-    Route::resource('contact-methods', ContactMethodController::class);
-    Route::resource('contact-languages', ContactLanguageController::class);
-    Route::resource('leads', LeadController::class);
-});
+// // Admin Routes
+// Route::group(['middleware' => 'role:admin', 'prefix' => 'admin'], function () {
+//     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+// });
 
-Route::group(['middleware' => 'role:manager', 'prefix' => 'manager'], function () {
-    Route::get('/', [ManagerDashboardController::class, 'index'])->name('manager.dashboard');
-});
-
-Route::group(['middleware' => 'role:supervisor', 'prefix' => 'supervisor'], function () {
-    Route::get('/', [SupervisorDashboardController::class, 'index'])->name('supervisor.dashboard');
-});
-
-Route::group(['middleware' => 'role:accounts', 'prefix' => 'accounts'], function () {
-    Route::get('/', [AccountDashboardController::class, 'index'])->name('accounts.dashboard');
-});
-
-Route::group(['middleware' => 'role:hr', 'prefix' => 'hr'], function () {
-    Route::get('/', [HrDashboardController::class, 'index'])->name('hr.dashboard');
-});
-
-Route::group(['middleware' => 'role:employee', 'prefix' => 'employee'], function () {
-    Route::get('/', [EmployeeDashboardController::class, 'index'])->name('employee.dashboard');
-});
-
-Route::group(['middleware' => 'role:vendor', 'prefix' => 'vendor'], function () {
-    Route::get('/', [VendorDashboardController::class, 'indexr'])->name('vendor.dashboard');
-});
-
-Route::group(['middleware' => 'role:client', 'prefix' => 'client'], function () {
-    Route::get('/', [ClientDashboardController::class, 'index'])->name('client.dashboard');
-});
+Route::resource('leads', LeadController::class);
+Route::resource('users', UserController::class);
+Route::resource('lead-sources', LeadSourceController::class);
+Route::resource('lead-statuses', LeadStatusController::class);
+Route::resource('contact-methods', ContactMethodController::class);
+Route::resource('contact-languages', ContactLanguageController::class);
+Route::resource('bill-statuses', BillStatusController::class);
+Route::resource('bill-types', BillTypeController::class);
+Route::resource('employee-types', EmployeeTypeController::class);
+Route::resource('blood-groups', BloodGroupController::class);
+Route::resource('departments', DepartmentController::class);
+Route::resource('designations', DesignationController::class);
+Route::resource('skills', SkillController::class);
+Route::resource('genders', GenderController::class);
+Route::resource('invoice-statuses', InvoiceStatusController::class);
+Route::resource('invoice-types', InvoiceTypeController::class);
+Route::resource('inventory-statuses', InventoryStatusController::class);
+Route::resource('inventory-types', InventoryTypeController::class);
+Route::resource('payment-methods', PaymentMethodController::class);
+Route::resource('payment-statuses', PaymentStatusController::class);
+Route::resource('project-types', ProjectTypeController::class);
+Route::resource('project-statuses', ProjectStatusController::class);
+Route::resource('vendor-statuses', VendorStatusController::class);
+Route::resource('vendor-types', VendorTypeController::class);

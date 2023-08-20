@@ -38,26 +38,26 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function redirectTo()
-    {
-        if (auth()->user()->hasRole('admin')) {
-            return route('admin.dashboard');
-        } elseif (auth()->user()->hasRole('manager')) {
-            return route('manager.dashboard');
-        } elseif (auth()->user()->hasRole('supervisor')) {
-            return route('supervisor.dashboard');
-        } elseif (auth()->user()->hasRole('accounts')) {
-            return route('accounts.dashboard');
-        } elseif (auth()->user()->hasRole('hr')) {
-            return route('hr.dashboard');
-        } elseif (auth()->user()->hasRole('employee')) {
-            return route('employee.dashboard');
-        } elseif (auth()->user()->hasRole('vendor')) {
-            return route('vendor.dashboard');
-        } elseif (auth()->user()->hasRole('client')) {
-            return route('client.dashboard');
-        }
+    // protected function redirectTo()
+    // {
+    //     if (auth()->user()->hasRole('admin')) {
+    //         return route('admin.dashboard');
+    //     } elseif (auth()->user()->hasRole('manager')) {
+    //         return route('manager.dashboard');
+    //     } elseif (auth()->user()->hasRole('supervisor')) {
+    //         return route('supervisor.dashboard');
+    //     } elseif (auth()->user()->hasRole('accounts')) {
+    //         return route('accounts.dashboard');
+    //     } elseif (auth()->user()->hasRole('hr')) {
+    //         return route('hr.dashboard');
+    //     } elseif (auth()->user()->hasRole('employee')) {
+    //         return route('employee.dashboard');
+    //     } elseif (auth()->user()->hasRole('vendor')) {
+    //         return route('vendor.dashboard');
+    //     } elseif (auth()->user()->hasRole('client')) {
+    //         return route('client.dashboard');
+    //     }
 
-        return $this->redirectTo;
-    }
+    //     return $this->redirectTo;
+    // }
 }

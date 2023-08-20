@@ -23,13 +23,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 </head>
-<body id="body">
-    <!-- leftbar-tab-menu -->
-    <div class="leftbar-tab-menu">
-        @include('layouts.partials.side-bar')
-    </div>
-    <!-- end leftbar-tab-menu-->
-
+<body id="body" data-layout="horizontal">
     <!-- Top Bar Start -->
     <div class="topbar">
         @include('layouts.partials.top-bar')

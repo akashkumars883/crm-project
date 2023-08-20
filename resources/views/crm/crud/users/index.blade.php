@@ -17,7 +17,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
-                    <a href="{{ route('users.create') }}" class="btn btn-primary">Add a New Lead</a>
+                    <a href="{{ route('users.create') }}" class="btn btn-primary">Add a New User</a>
                 </div>
                 <div class="col-md-6 mb-3 d-flex justify-content-end">
                     <form action="{{ route('users.index') }}" method="GET" class="d-flex">

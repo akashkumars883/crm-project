@@ -25,8 +25,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->foreignId('contact_method_id')->nullable()->constrained('contact_methods')->onDelete('cascade');
             $table->foreignId('contact_language_id')->nullable()->constrained('contact_languages')->onDelete('cascade');
-            $table->foreignId('assignedTo')->nullable()->constrained('users')->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('assignee_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->auditable();
             $table->timestamps();
         });

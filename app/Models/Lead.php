@@ -23,8 +23,7 @@ class Lead extends Model
         'notes',
         'contact_method_id',
         'contact_language_id',
-        'assignedTo',
-        'user_id',
+        'assignee_id',
     ];
 
     public function leadSource()
@@ -37,13 +36,18 @@ class Lead extends Model
         return $this->belongsTo(LeadStatus::class, 'lead_status_id');
     }
 
-    public function assignedTo()
+    public function contactMethod()
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(ContactMethod::class, 'contact_method_id');
     }
 
-    public function user()
+    public function contactLanguage()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(ContactLanguage::class, 'contact_language_id');
+    }
+
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class, 'assignee_id');
     }
 }
