@@ -62,17 +62,25 @@ Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
 Route::get('/fix-role', function () {
-    $user = \App\Models\User::where('email', 'superadmin@homeglazer.com')->first();
-    if ($user) {
-        $role = \App\Models\Role::where('name', 'super-admin')->first();
-        if ($role) {
-            $user->roles()->syncWithoutDetaching([$role->id]);
-            app()[\Laratrust\Laratrust::class]->flushCache();
-            return 'Role attached and cache cleared! Now go to /home';
+    try {
+        // Fix any missing user_type in the DB
+        \Illuminate\Support\Facades\DB::statement("UPDATE role_user SET user_type = 'App\\\\Models\\\\User' WHERE user_type IS NULL OR user_type = ''");
+
+        $superadmin = \App\Models\User::where('email', 'superadmin@homeglazer.com')->first();
+        if ($superadmin && !$superadmin->hasRole('super-admin')) {
+            $superadmin->addRole('super-admin');
         }
-        return 'Role not found';
+
+        $admin = \App\Models\User::where('email', 'admin@homeglazer.com')->first();
+        if ($admin && !$admin->hasRole('admin')) {
+            $admin->addRole('admin');
+        }
+
+        app()[\Laratrust\Laratrust::class]->flushCache();
+        return 'SUCCESS: Roles have been properly assigned and cache cleared. You can now go to /home';
+    } catch (\Exception $e) {
+        return 'ERROR: ' . $e->getMessage();
     }
-    return 'User not found';
 });
 
 // // Admin Routes
