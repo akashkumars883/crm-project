@@ -76,10 +76,12 @@ Route::get('/fix-role', function () {
             $admin->addRole('admin');
         }
 
-        app()[\Laratrust\Laratrust::class]->flushCache();
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        
         return 'SUCCESS: Roles have been properly assigned and cache cleared. You can now go to /home';
-    } catch (\Exception $e) {
-        return 'ERROR: ' . $e->getMessage();
+    } catch (\Throwable $e) {
+        return 'ERROR: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine();
     }
 });
 
