@@ -61,13 +61,18 @@ Route::get('/', function () {
 Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
-Route::get('/test-db', function () {
-    try {
-        \DB::connection()->getPdo();
-        return 'DB Connection: OK. Tables: ' . implode(',', \DB::connection()->getDoctrineSchemaManager()->listTableNames());
-    } catch (\Exception $e) {
-        return 'DB Error: ' . $e->getMessage();
+Route::get('/fix-role', function () {
+    $user = \App\Models\User::where('email', 'superadmin@homeglazer.com')->first();
+    if ($user) {
+        $role = \App\Models\Role::where('name', 'super-admin')->first();
+        if ($role) {
+            $user->roles()->syncWithoutDetaching([$role->id]);
+            app()[\Laratrust\Laratrust::class]->flushCache();
+            return 'Role attached and cache cleared! Now go to /home';
+        }
+        return 'Role not found';
     }
+    return 'User not found';
 });
 
 // // Admin Routes
