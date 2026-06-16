@@ -27,15 +27,4 @@ class Handler extends ExceptionHandler
             //
         });
     }
-
-    /**
-     * Render an exception into an HTTP response.
-     */
-    public function render($request, \Throwable $e)
-    {
-        // Add enough padding so Chrome doesn't block it as a "short" 500 response
-        $padding = str_repeat("<!-- padding to bypass chrome friendly error pages padding to bypass chrome friendly error pages padding to bypass chrome friendly error pages -->\n", 20);
-        $html = "<html><body><h1>System Error Encountered</h1><h2>Error Message:</h2><pre>" . e($e->getMessage()) . "</pre><h2>File:</h2><p>" . e($e->getFile()) . " at line " . e($e->getLine()) . "</p><h2>Stack Trace:</h2><pre>" . e($e->getTraceAsString()) . "</pre>" . $padding . "</body></html>";
-        return response($html, 500);
-    }
 }
