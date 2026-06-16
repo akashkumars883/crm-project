@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laratrust\Contracts\LaratrustUser;
@@ -12,6 +14,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements LaratrustUser
 {
+    use BelongsToCompany;
+
     use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
 
     /**

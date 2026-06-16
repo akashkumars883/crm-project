@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Yajra\Auditable\AuditableTrait;
@@ -9,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class Lead extends Model
 {
+    use BelongsToCompany;
+
     use HasFactory, AuditableTrait;
 
     protected $fillable = [

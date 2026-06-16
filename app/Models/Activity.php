@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Yajra\Auditable\AuditableTrait;
 
 class Activity extends Model
 {
+    use BelongsToCompany;
+
     use HasFactory, AuditableTrait;
 
     protected $fillable = ['activity_type_id', 'lead_id', 'customer_id', 'project_id', 'contact_method_id', 'title', 'description'];
