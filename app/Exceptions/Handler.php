@@ -19,12 +19,10 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Register the exception handling callbacks for the application.
+     * Render an exception into an HTTP response.
      */
-    public function register(): void
+    public function render($request, \Throwable $e)
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        return response($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() . "\nStack trace:\n" . $e->getTraceAsString(), 500);
     }
 }
