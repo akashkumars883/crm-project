@@ -48,9 +48,9 @@ class HomeController extends Controller
             $supervisorsCount = User::whereHasRole('supervisor')->count();
             $accountsCount    = User::whereHasRole('accounts')->count();
             $hrCount          = User::whereHasRole('hr')->count();
-            $employeesCount   = EmployeeUser::count();
+            $employeesCount   = Employee::count();
             $customersCount   = Customer::count();
-            $vendorsCount     = VendorUser::count();
+            $vendorsCount     = Vendor::count();
 
             $leadsByMonth       = new LaravelChart(['chart_title' => 'Leads',       'report_type' => 'group_by_date', 'model' => 'App\Models\Lead',       'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
             $invoicesByMonth    = new LaravelChart(['chart_title' => 'Invoices',    'report_type' => 'group_by_date', 'model' => 'App\Models\Invoice',    'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
@@ -90,9 +90,9 @@ class HomeController extends Controller
             $supervisorsCount = User::whereHasRole('supervisor')->count();
             $accountsCount    = User::whereHasRole('accounts')->count();
             $hrCount          = User::whereHasRole('hr')->count();
-            $employeesCount   = EmployeeUser::count();
+            $employeesCount   = Employee::count();
             $customersCount   = Customer::count();
-            $vendorsCount     = VendorUser::count();
+            $vendorsCount     = Vendor::count();
 
             $leadsByMonth       = new LaravelChart(['chart_title' => 'Leads',       'report_type' => 'group_by_date', 'model' => 'App\Models\Lead',      'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
             $invoicesByMonth    = new LaravelChart(['chart_title' => 'Invoices',    'report_type' => 'group_by_date', 'model' => 'App\Models\Invoice',   'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
@@ -123,9 +123,9 @@ class HomeController extends Controller
             $supervisorsCount = User::whereHasRole('supervisor')->count();
             $accountsCount    = User::whereHasRole('accounts')->count();
             $hrCount          = User::whereHasRole('hr')->count();
-            $employeesCount   = EmployeeUser::count();
+            $employeesCount   = Employee::count();
             $customersCount   = Customer::count();
-            $vendorsCount     = VendorUser::count();
+            $vendorsCount     = Vendor::count();
 
             $leadsByMonth       = new LaravelChart(['chart_title' => 'Leads',       'report_type' => 'group_by_date', 'model' => 'App\Models\Lead',      'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
             $invoicesByMonth    = new LaravelChart(['chart_title' => 'Invoices',    'report_type' => 'group_by_date', 'model' => 'App\Models\Invoice',   'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
