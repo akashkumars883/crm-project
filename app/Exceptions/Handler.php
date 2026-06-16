@@ -27,12 +27,4 @@ class Handler extends ExceptionHandler
             //
         });
     }
-
-    /**
-     * Render an exception into an HTTP response.
-     */
-    public function render($request, \Throwable $e)
-    {
-        return response($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() . "\nStack trace:\n" . $e->getTraceAsString(), 500);
-    }
 }
