@@ -59,6 +59,11 @@ Route::get('/', function () {
 });
 // Auth::routes();
 Auth::routes(['register' => false]);
+
+// SaaS Registration Routes
+Route::get('/register-company', [App\Http\Controllers\CompanyRegistrationController::class, 'showRegistrationForm'])->name('company.register');
+Route::post('/register-company', [App\Http\Controllers\CompanyRegistrationController::class, 'register'])->name('company.register.submit');
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
 Route::get('/fix-role', function () {

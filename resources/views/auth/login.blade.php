@@ -62,6 +62,9 @@
                                             </div>
                                         </div><!--end col-->
                                     </div> <!--end form-group-->
+                                    <div class="m-3 text-center text-muted">
+                                        <p class="mb-0">Want to use this CRM for your business? <br> <a href="{{ route('company.register') }}" class="text-primary ms-2 fw-bold">Register Your Business</a></p>
+                                    </div>
                                 </form><!--end form-->
                             </div><!--end card-body-->
                         </div><!--end card-->
