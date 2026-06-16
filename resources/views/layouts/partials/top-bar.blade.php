@@ -14,7 +14,7 @@
                 aria-haspopup="true" aria-expanded="false">
                 <div class="d-flex align-items-center">
                     @if(Auth::user()->avatar)
-                        <img src="{{ (\Illuminate\Support\Str::startsWith(Auth::user(, 'http') ? Auth::user( : asset('storage/' . Auth::user())->avatar) }}" alt="{{ Auth::user()->name }}" class="rounded-circle me-2 thumb-sm" style="width: 32px; height: 32px; object-fit: cover;" />
+                        <img src="{{ \Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http') ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="rounded-circle me-2 thumb-sm" style="width: 32px; height: 32px; object-fit: cover;" />
                     @else
                         <div class="rounded-circle me-2 thumb-sm bg-soft-primary text-primary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-weight: bold;">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
