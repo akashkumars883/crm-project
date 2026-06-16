@@ -70,6 +70,9 @@ class DatabaseSeeder extends Seeder
         Department::firstOrCreate(['name' => 'Operations']);
 
         // ── Users ───────────────────────────────────────────
+        $superadmin = User::firstOrCreate(['email' => 'superadmin@homeglazer.com'], ['name' => 'Super Admin', 'password' => Hash::make('password123')]);
+        $this->attachRole($superadmin, 'super-admin');
+
         $admin = User::firstOrCreate(['email' => 'admin@homeglazer.com'], ['name' => 'Admin User', 'password' => Hash::make('password123')]);
         $this->attachRole($admin, 'admin');
 
