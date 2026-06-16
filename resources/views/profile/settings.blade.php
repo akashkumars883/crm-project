@@ -68,7 +68,7 @@
                                             <label class="form-label">Company Logo</label>
                                             <div class="d-flex align-items-center gap-3">
                                                 @if(get_setting('company_logo'))
-                                                    <img src="{{ (\Illuminate\Support\Str::startsWith(get_setting('company_logo', 'http') ? get_setting('company_logo' : asset('storage/' . get_setting('company_logo'))) }}" alt="Logo" class="img-thumbnail" style="height: 60px; object-fit: contain;">
+                                                    <img src="{{ \Illuminate\Support\Str::startsWith(get_setting('company_logo'), 'http') ? get_setting('company_logo') : asset('storage/' . get_setting('company_logo')) }}" alt="Logo" class="img-thumbnail" style="height: 60px; object-fit: contain;">
                                                 @endif
                                                 <input type="file" class="form-control" name="company_logo" accept="image/*">
                                             </div>
