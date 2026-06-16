@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('lead_source_id')->nullable()->constrained('lead_sources')->onDelete('cascade');
             $table->foreignId('lead_status_id')->nullable()->constrained('lead_statuses')->onDelete('cascade');
             $table->string('name');
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->string('email');
             $table->string('address')->nullable();
             $table->string('city')->nullable();

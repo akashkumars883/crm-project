@@ -1,37 +1,35 @@
-<!-- LOGO -->
-<div class="brand">
-    <a href="index.html" class="logo">
-        {{-- <span>
-            <img src="{{ asset('assets/images/logo.webp') }}" alt="logo-small" class="logo-sm">
-        </span> --}}
-        <span>
-            {{-- <img src="{{ asset('assets/images/logo.webp') }}" alt="logo-large" class="logo-lg logo-light"> --}}
-            <img src="{{ asset('assets/images/logo.webp') }}" alt="logo-large" class="logo-lg logo-dark" style="height: 50px;">
-        </span> 
-    </a>
-</div>
-<!--end logo-->  
 <!-- Navbar -->
-<nav class="navbar-custom">    
-    <ul class="list-unstyled topbar-nav float-end mb-0"> 
+<nav class="navbar-custom">
+    <ul class="list-unstyled topbar-nav float-end mb-0 ms-auto"> 
         @auth
+        @if(!Auth::user()->hasRole('client'))
+        <li class="d-none d-md-inline-block align-self-center me-3">
+            <a class="btn btn-sm btn-outline-primary fw-semibold px-3 py-1.5" href="javascript:void(0);" onclick="startQuickTour()" style="font-size: 13px; border-radius: 20px; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.1);">
+                <i class="ti ti-help font-15 me-1 align-text-bottom"></i> Quick Tour
+            </a>
+        </li>
+        @endif
         <li class="dropdown">
             <a class="nav-link dropdown-toggle nav-user" data-bs-toggle="dropdown" href="#" role="button"
                 aria-haspopup="true" aria-expanded="false">
                 <div class="d-flex align-items-center">
-                    <img src="{{ Avatar::create(Auth::user()->name)->toBase64() }}" alt="{{ Auth::user()->name }}"  class="me-3"/>
-                    {{-- <img src="{{ asset('assets/images/users/user-4.jpg') }}" alt="profile-user" class="rounded-circle me-2 thumb-sm" /> --}}
+                    @if(Auth::user()->avatar)
+                        <img src="{{ (\Illuminate\Support\Str::startsWith(Auth::user(, 'http') ? Auth::user( : asset('storage/' . Auth::user())->avatar) }}" alt="{{ Auth::user()->name }}" class="rounded-circle me-2 thumb-sm" style="width: 32px; height: 32px; object-fit: cover;" />
+                    @else
+                        <div class="rounded-circle me-2 thumb-sm bg-soft-primary text-primary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-weight: bold;">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                    @endif
                     <div>
-                        <small class="d-none d-md-block font-11">{{ Auth::user()->email }}</small>
                         <span class="d-none d-md-block fw-semibold font-12">{{ Auth::user()->name }} <i
                                 class="mdi mdi-chevron-down"></i></span>
                     </div>
                 </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end">
-                {{-- <a class="dropdown-item" href="#"><i class="ti ti-user font-16 me-1 align-text-bottom"></i> Profile</a> --}}
-                {{-- <a class="dropdown-item" href="#"><i class="ti ti-settings font-16 me-1 align-text-bottom"></i> Settings</a> --}}
-                {{-- <div class="dropdown-divider mb-0"></div> --}}
+                 <a class="dropdown-item" href="{{ route('profile.index') }}"><i class="ti ti-user font-16 me-1 align-text-bottom"></i> Profile</a>
+                 <a class="dropdown-item" href="{{ route('profile.settings') }}"><i class="ti ti-settings font-16 me-1 align-text-bottom"></i> Settings</a>
+                <div class="dropdown-divider mb-0"></div>
                 <a class="dropdown-item" href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="ti ti-power font-16 me-1 align-text-bottom"></i> Logout
@@ -45,227 +43,357 @@
         <li>
             <a href="{{ route('login') }}">Login</a>
         </li>
-        @endauth<!--end menu item--> 
+        @endauth<!--end menu item-->
+        @auth
+        <li class="d-inline-block d-lg-none">
+            <a class="custom-navbar-toggle" id="customMobileToggle" onclick="customToggleMenu(event)">
+                <div class="lines">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </a>
+        </li>
+        @endauth
     </ul><!--end topbar-nav-->
 
-    <div class="navbar-custom-menu active">
+    @auth
+    <div class="navbar-custom-menu">
         <div id="navigation">
+            <!-- LOGO -->
+            <div class="brand border-bottom" style="height: 60px; display: flex; justify-content: flex-start; align-items: center; padding-left: 20px;">
+                <a href="{{ route('dashboard') }}" class="logo">
+                    <img src="{{ asset('assets/images/logo.webp') }}" alt="logo-large" class="logo-lg" style="height: 52px; object-fit: contain;">
+                </a>
+            </div>
+            <!-- Mobile Close Button and Header -->
+            <div class="d-flex d-lg-none justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h6 class="fw-bold mb-0 text-dark"><i class="fa fa-bars me-2 text-primary"></i>Menu</h6>
+                <button type="button" class="btn-close" onclick="customToggleMenu()" style="background-color: transparent; border: none; font-size: 1.25rem; font-weight: bold; color: #495057;">✕</button>
+            </div>
             <!-- Navigation Menu-->
-            <ul class="navigation-menu active">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ route('home') }}">Dashboard</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarApps" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span>CRM Management</span>
-                    </a>
-                    <ul class="dropdown-menu animate slideIn" aria-labelledby="navbarApps"> 
-                        <li>
-                            <a href="{{ route('users.index') }}" class="dropdown-item">
-                                Users
-                            </a>
-                        </li> 
-                        <li class="dropdown-submenu dropend">
-                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                Sales
-                            </a>
-                            <ul class="dropdown-menu animate slideIn">
-                                <li>
-                                    <a href="{{ route('leads.index') }}" class="dropdown-item ">Leads</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('lead-statuses.index') }}" class="dropdown-item ">Invoices</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('contact-methods.index') }}" class="dropdown-item ">Projects</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('contact-languages.index') }}" class="dropdown-item ">Contact Language</a>
-                                </li>
-                            </ul>
-                        </li>                    
-                    </ul><!--end submenu-->
-                </li><!--end nav-item-->
-                
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarApps" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span>Fields Management</span>
-                    </a>
-                    <ul class="dropdown-menu animate slideIn" aria-labelledby="navbarApps"> 
-                        <li class="dropdown-submenu dropend">
-                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                Leads
-                            </a>
-                            <ul class="dropdown-menu animate slideIn">
-                                <li>
-                                    <a href="{{ route('lead-sources.index') }}" class="dropdown-item ">Lead Source</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('lead-statuses.index') }}" class="dropdown-item ">Lead Status</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('contact-methods.index') }}" class="dropdown-item ">Contact Method</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('contact-languages.index') }}" class="dropdown-item ">Contact Language</a>
-                                </li>
-                            </ul>
-                        </li> 
-                        <li class="dropdown-submenu dropend">
-                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                Invoices
-                            </a>
-                            <ul class="dropdown-menu animate slideIn">
-                                <li>
-                                    <a href="{{ route('invoice-types.index') }}" class="dropdown-item ">Invoice Type</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('invoice-statuses.index') }}" class="dropdown-item ">Invoice Status</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown-submenu dropend">
-                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                Payments
-                            </a>
-                            <ul class="dropdown-menu animate slideIn">
-                                <li>
-                                    <a href="{{ route('bill-types.index') }}" class="dropdown-item ">Bill Type</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('bill-statuses.index') }}" class="dropdown-item ">Bill Status</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('payment-methods.index') }}" class="dropdown-item ">Payment Method</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('payment-statuses.index') }}" class="dropdown-item ">Payment Status</a>
-                                </li>
-                            </ul>
-                        </li> 
-                        <li class="dropdown-submenu dropend">
-                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                Projects
-                            </a>
-                            <ul class="dropdown-menu animate slideIn">
-                                <li>
-                                    <a href="{{ route('project-types.index') }}" class="dropdown-item ">Project Type</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('project-statuses.index') }}" class="dropdown-item ">Project Status</a>
-                                </li>
-                            </ul>
-                        </li> 
-                        <li class="dropdown-submenu dropend">
-                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                Inventory
-                            </a>
-                            <ul class="dropdown-menu animate slideIn">
-                                <li>
-                                    <a href="{{ route('inventory-types.index') }}" class="dropdown-item ">Inventory Type</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('inventory-statuses.index') }}" class="dropdown-item ">Inventory Status</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown-submenu dropend">
-                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                Employee
-                            </a>
-                            <ul class="dropdown-menu animate slideIn">
-                                <li>
-                                    <a href="{{ route('employee-types.index') }}" class="dropdown-item ">Employee Type</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('blood-groups.index') }}" class="dropdown-item ">Blood Group</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('genders.index') }}" class="dropdown-item ">Gender</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('designations.index') }}" class="dropdown-item ">Designation</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('departments.index') }}" class="dropdown-item ">Department</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('skills.index') }}" class="dropdown-item ">Skills</a>
-                                </li>
-                            </ul>
-                        </li> 
-                        <li class="dropdown-submenu dropend">
-                            <a class="dropdown-item  dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                Vendor
-                            </a>
-                            <ul class="dropdown-menu animate slideIn">
-                                <li>
-                                    <a href="{{ route('vendor-types.index') }}" class="dropdown-item ">Vendor Type</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('vendor-statuses.index') }}" class="dropdown-item ">Vendor Status</a>
-                                </li>
-                            </ul>
-                        </li> 
-                        <li>
-                            <a href="apps-chat.html" class="dropdown-item">
-                                Example
-                            </a>
-                        </li>                    
-                    </ul><!--end submenu-->
-                </li><!--end nav-item-->
-                
-                @if (Auth::user()->hasPermission('admin-menu'))
-                <li class="nav-item">
-                    <a href="" nav-link>Admin Menu</a>
-                </li>
-                @endif
+            @if (Auth::user()->hasRole('super-admin'))
+                @include('layouts.partials.super-admin-menu')
+            @endif
 
-                @if (Auth::user()->hasPermission('manager-menu'))
-                <li class="nav-item">
-                    <a href="" nav-link>Manager Menu</a>
-                </li>
-                @endif
+            @if (Auth::user()->hasRole('admin'))
+                @include('layouts.partials.admin-menu')
+            @endif
 
-                @if (Auth::user()->hasPermission('supervisor-menu'))
-                <li class="nav-item">
-                    <a href="" nav-link>Supervisor Menu</a>
-                </li>
-                @endif
+            @if (Auth::user()->hasRole('manager'))
+                @include('layouts.partials.manager-menu')
+            @endif
 
-                @if (Auth::user()->hasPermission('accounts-menu'))
-                <li class="nav-item">
-                    <a href="" nav-link>Accounts Menu</a>
-                </li>
-                @endif
+            @if (Auth::user()->hasRole('supervisor'))
+                @include('layouts.partials.supervisor-menu')
+            @endif
 
-                @if (Auth::user()->hasPermission('hr-menu'))
-                <li class="nav-item">
-                    <a href="" nav-link>HR Menu</a>
-                </li>
-                @endif
+            @if (Auth::user()->hasRole('accounts'))
+                @include('layouts.partials.accounts-menu')
+            @endif
 
-                @if (Auth::user()->hasPermission('employee-menu'))
-                <li class="nav-item">
-                    <a href="" nav-link>Employee Menu</a>
-                </li>
-                @endif
+            @if (Auth::user()->hasRole('hr'))
+                @include('layouts.partials.hr-menu')
+            @endif
 
-                @if (Auth::user()->hasPermission('vendor-menu'))
-                <li class="nav-item">
-                    <a href="" nav-link>Vendor Menu</a>
-                </li>
-                @endif
+            @if (Auth::user()->hasRole('employee'))
+                @include('layouts.partials.employee-menu')
+            @endif
 
-                @if (Auth::user()->hasPermission('client-menu'))
-                <li class="nav-item">
-                    <a href="" nav-link>Client Menu</a>
-                </li>
-                @endif
-            </ul><!-- End navigation menu -->
+            @if (Auth::user()->hasRole('vendor'))
+                @include('layouts.partials.vendor-menu')
+            @endif
+            @if (Auth::user()->hasRole('client'))
+                @include('layouts.partials.client-menu')
+            @endif
         </div> <!-- end navigation -->
     </div>
+    @endauth
     <!-- Navbar -->
 </nav>
 <!-- end navbar-->
 @include('notify::components.notify')
+
+@auth
+<!-- Drawer Menu Backdrop Overlay -->
+<div id="menuBackdrop" class="menu-backdrop-overlay" onclick="customToggleMenu(event)"></div>
+@endauth
+<style>
+/* Prevent horizontal scrolling on mobile viewports */
+html, body, .page-wrapper {
+    overflow-x: hidden !important;
+}
+
+/* Drawer Backdrop */
+.menu-backdrop-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+}
+.menu-backdrop-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =========================================================
+   SIDEBAR LAYOUT (Desktop Default)
+   ========================================================= */
+body {
+    background-color: #f8f9fa !important;
+}
+
+/* Topbar Fixed */
+.topbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 260px !important;
+    right: 0 !important;
+    width : calc(100% - 260px) !important;
+    height: 60px !important;
+    z-index: 1000 !important;
+    background: #fff !important;
+    border-bottom: 1px solid #eceff5 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 15px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02) !important;
+    transition :  all 0.3s ease !important
+}
+
+.topbar .brand {
+    display: flex !important;
+    align-items: center !important;
+    height: 60px !important;
+}
+
+.navbar-custom {
+    flex-grow: 1 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    height: 60px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Left Sidebar Fixed */
+#navigation {
+    position: fixed !important;
+    top: 0 !important; /* Below topbar */
+    left: 0 !important;
+    width: 260px !important;
+    height: 100vh !important;
+    background: #ffffff !important;
+    border-right: none !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.04) !important;
+    z-index: 1001 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    padding: 15px 12px !important;
+    overflow-y: auto !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Page Wrapper Margin for Sidebar */
+.page-wrapper {
+    margin-left: 260px !important;
+    width: calc(100% - 260px) !important;
+    padding-top: 60px !important;
+    transition: all 0.3s ease !important;
+}
+.page-wrapper .page-content-tab {
+    padding: 12px 16px !important;
+}
+
+/* Sidebar Navigation Items */
+#navigation .navigation-menu {
+    display: block !important;
+    float: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    width: 100% !important;
+}
+
+#navigation .navigation-menu > li {
+    display: block !important;
+    float: none !important;
+    width: 100% !important;
+    margin: 0 0 2px 0 !important;
+    padding: 0 !important;
+}
+
+#navigation .navigation-menu > li > a {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 30px !important; /* Vertically height kam ki gayi hai */
+    padding: 0 15px !important; /* Horizontal padding pehle jaisi (15px) wapas kar di gayi hai */
+    border-radius: 8px !important;
+    color: #4b5563 !important;
+    background: transparent !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    text-align: left !important;
+}
+
+#navigation .navigation-menu > li > a:hover,
+#navigation .navigation-menu > li > a[aria-expanded="true"] {
+    background: #f1f5f9 !important;
+    color: #0d6efd !important;
+}
+
+#navigation .navigation-menu > li > a .menu-icon {
+    font-size: 18px !important;
+    margin-right: 10px !important;
+    color: #6c757d !important;
+}
+
+#navigation .navigation-menu > li > a:hover .menu-icon,
+#navigation .navigation-menu > li > a[aria-expanded="true"] .menu-icon {
+    color: #0d6efd !important;
+}
+
+/* Sidebar Submenus (Restored Dropdowns) */
+#navigation .navigation-menu .dropdown-menu,
+#navigation .navigation-menu .submenu {
+    position: static !important;
+    float: none !important;
+    display: none !important; 
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 2px 0 2px 28px !important;
+    border: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    transform: none !important;
+}
+
+#navigation .navigation-menu .dropdown-menu.show,
+#navigation .navigation-menu .nav-item.show > .dropdown-menu {
+    display: block !important;
+}
+
+#navigation .navigation-menu .dropdown-menu li a {
+    padding: 3px 10px !important; /* Top/Bottom padding kam (3px), Left/Right pehle jaisi (10px) */
+    margin-bottom: 1px !important;
+    color: #6b7280 !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    border-radius: 6px !important;
+    display: block !important;
+    transition: all 0.2s ease !important;
+}
+
+#navigation .navigation-menu .dropdown-menu li a:hover {
+    color: #0d6efd !important;
+    background: #f8f9fa !important;
+}
+
+/* Toggle Hamburger */
+.custom-navbar-toggle {
+    display: block !important;
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    position: relative !important;
+    margin-left: 10px !important;
+    cursor: pointer !important;
+}
+.custom-navbar-toggle .lines {
+    width: 20px !important;
+    height: 15px !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    display: block !important;
+}
+.custom-navbar-toggle .lines span {
+    height: 2px !important;
+    width: 20px !important;
+    background-color: #303e67 !important;
+    display: block !important;
+    margin-bottom: 4px !important;
+    transition: all 0.3s ease !important;
+}
+.custom-navbar-toggle .lines span:last-child {
+    margin-bottom: 0 !important;
+}
+/* Removed sidebar-collapsed CSS */
+
+/* =========================================================
+   MOBILE OVERRIDES (Slide-in Drawer)
+   ========================================================= */
+@media (max-width: 991.98px) {
+    #navigation {
+        top: 0 !important;
+        left: -280px !important;
+        width: 280px !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+    
+    #navigation.drawer-open {
+        left: 0 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+    
+    .page-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .custom-navbar-toggle.open .lines span:nth-child(1) {
+        transform: rotate(45deg) translate(4px, 4px) !important;
+    }
+    .custom-navbar-toggle.open .lines span:nth-child(2) {
+        opacity: 0 !important;
+    }
+    .custom-navbar-toggle.open .lines span:nth-child(3) {
+        transform: rotate(-45deg) translate(4px, -4px) !important;
+    }
+}
+</style>
+
+<script>
+function customToggleMenu(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    var nav = document.getElementById("navigation");
+    var backdrop = document.getElementById("menuBackdrop");
+    var toggleBtn = document.getElementById("customMobileToggle");
+    
+    if (nav.classList.contains("drawer-open")) {
+        nav.classList.remove("drawer-open");
+        backdrop.classList.remove("show");
+        toggleBtn?.classList.remove("open");
+    } else {
+        nav.classList.add("drawer-open");
+        backdrop.classList.add("show");
+        toggleBtn?.classList.add("open");
+    }
+}
+
+
+</script>

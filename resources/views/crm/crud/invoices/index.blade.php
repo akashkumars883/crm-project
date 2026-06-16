@@ -1,144 +1,100 @@
 @extends('layouts.app')
-@section('title', 'All Invoices')
+@section('title', 'Tax Invoices')
 @section('content')
 <div class="p-3 bg-light">
-    <!-- Page-Title -->
     <div class="row">
         <div class="col-sm-12">
             <div class="page-title-box">
-                <h4 class="page-title">Invoices</h4>
-            </div><!--end page-title-box-->
-        </div><!--end col-->
-    </div>
-    <!-- end page title end breadcrumb -->
-    <!-- end page title end breadcrumb -->
-
-    <div class="row">
-        <div>
-            <h6>Leads By Status</h6>
-        </div>
-        <div class="row justify-content-center">
-            @foreach($leadStatusAnalytics as $status)
-                <div class="col">
-                    <div class="card border">
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-center">
-                                <div class="">
-                                    <p class="text-dark mb-0 fw-semibold">{{ $status->name }}</p>
-                                    <h3 class="my-1 font-20 fw-bold">{{ $status->leads_count }}</h3>
-                                    {{-- <p class="mb-0 text-truncate text-muted"><span class="text-success"><i class="mdi mdi-trending-up"></i>8.5%</span> New Sessions Today</p> --}}
-                                </div><!--end col-->
-                            </div><!--end row-->
-                        </div><!--end card-body-->
-                    </div><!--end card-->
-                </div> <!--end col-->
-            @endforeach
+                <h4 class="page-title">Tax Invoices</h4>
+            </div>
         </div>
     </div>
-
-    <div class="row">
-        <div>
-            <h6>Leads By Source</h6>
-        </div>
-        <div class="row justify-content-center">
-            @foreach($leadSourceAnalytics as $status)
-                <div class="col">
-                    <div class="card border">
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-center">
-                                <div class="">
-                                    <p class="text-dark mb-0 fw-semibold">{{ $status->name }}</p>
-                                    <h3 class="my-1 font-20 fw-bold">{{ $status->leads_count }}</h3>
-                                    {{-- <p class="mb-0 text-truncate text-muted"><span class="text-success"><i class="mdi mdi-trending-up"></i>8.5%</span> New Sessions Today</p> --}}
-                                </div><!--end col-->
-                            </div><!--end row-->
-                        </div><!--end card-body-->
-                    </div><!--end card-->
-                </div> <!--end col-->
-            @endforeach
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div>
-                        <a href="{{ route('leads.create') }}" class="btn btn-primary">Add a New Lead</a>
+                        <a href="{{ route('invoices.create') }}" class="btn btn-primary"><i class="ti ti-plus"></i> New Invoice</a>
                     </div>
                     <div class="col-md-6 mb-3 d-flex justify-content-end">
-                        <form action="{{ route('leads.index') }}" method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search leads">
+                        <form action="{{ route('invoices.index') }}" method="GET" class="d-flex">
+                            <input type="text" name="search" class="form-control me-2" placeholder="Search invoice / customer" value="{{ request('search') }}">
                             <button type="submit" class="btn btn-primary">Search</button>
                         </form>
                     </div>
                 </div>
-
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>Source</th>
+                                    <th>Invoice #</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Items</th>
+                                    <th>Amount</th>
                                     <th>Status</th>
-                                    <th>Assigned To</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($leads as $lead)
+                                @forelse($invoices as $invoice)
                                 <tr>
-                                    <td>{{ $lead->name }}</td>
-                                    <td>{{ $lead->phone }}</td>
-                                    <td>{{ $lead->email }}</td>
-                                    <td>{{ $lead->leadSource->name }}</td>
-                                    <td>{{ $lead->leadStatus->name }}</td>
-                                    <td>{{ $lead->assignedTo ? $lead->assignedTo->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
+                                    <td><a href="{{ route('invoices.show', $invoice->id) }}" class="text-primary fw-bold">{{ $invoice->invoice_number ?? 'INV-'.$invoice->id }}</a></td>
+                                    <td>{{ $invoice->invoice_date ? $invoice->invoice_date->format('d-M-Y') : 'N/A' }}</td>
                                     <td>
-                                        <a href="{{ route('leads.show', $lead->id) }}" class="btn btn-sm btn-success">View</a>
-                                        <a href="{{ route('leads.edit', $lead->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $lead->id }}">Delete</button>
+                                        {{ $invoice->bill_to_name }}<br>
+                                        <small class="text-muted">{{ optional($invoice->lead)->name ?? '' }}</small>
+                                    </td>
+                                    <td>{{ $invoice->items->count() }} items</td>
+                                    <td class="fw-bold">₹{{ number_format($invoice->balance_due, 0) }}</td>
+                                    <td>
+                                        @php
+                                            $status = strtolower($invoice->invoiceStatus->name ?? 'pending');
+                                            $cls = 'badge bg-warning text-dark';
+                                            if(str_contains($status,'paid')) $cls = 'badge bg-success';
+                                            elseif(str_contains($status,'overdue')) $cls = 'badge bg-danger';
+                                        @endphp
+                                        <span class="{{ $cls }}">{{ $invoice->invoiceStatus->name ?? 'Pending' }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('invoices.show', $invoice->id) }}" class="btn btn-sm btn-success">View</a>
+                                        <a href="{{ route('invoices.edit', $invoice->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del{{ $invoice->id }}">Delete</button>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="text-center py-5">
+                                        <h5 class="text-muted">No invoices yet</h5>
+                                        <p>Create your first tax invoice to get started</p>
+                                    </td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <!-- Pagination links -->
             <div class="pt-3">
-                {{ $leads->links('pagination::bootstrap-5') }}
-            </div>>
-        </div>
-    </div>
-
-    @foreach($leads as $lead)
-    <!-- Modal for delete confirmation -->
-    <div class="modal fade" id="confirmDeleteModal{{ $lead->id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this lead?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form action="{{ route('leads.destroy', $lead->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
+                {{ $invoices->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
-    @endforeach
 </div>
+
+@foreach($invoices as $invoice)
+<div class="modal fade" id="del{{ $invoice->id }}" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5>Confirm Delete</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">Delete invoice <strong>{{ $invoice->invoice_number }}</strong>?</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST">@csrf @method('DELETE')<button class="btn btn-danger">Delete</button></form>
+      </div>
+    </div>
+  </div>
+</div>
+@endforeach
 @endsection

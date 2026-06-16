@@ -17,17 +17,21 @@
                                     </div><!--end media body-->
                                 </div> <!--end media-->
 
-                                <p class="mb-0 font-14">Source : {{ $lead->leadSource->name }} </p>
-                                <p class="mb-0 font-14">Status : {{ $lead->leadStatus->name }} </p>
+                                <p class="mb-0 font-14">Source : {{ optional($lead->leadSource)->name }} </p>
+                                <p class="mb-0 font-14">Status : {{ optional($lead->leadStatus)->name }} </p>
                                 <p class="mb-0 font-14">Assigned To : {{ $lead->assignedTo ? $lead->assignedTo->name ?? 'Not Assigned' : 'Not Assigned' }} </p>
                                 <hr class="hr-dashed">
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <a href="{{ route('leads.edit', $lead->id) }}" class="btn  btn-primary btn-square">Update</a>
-                                        @if ($lead->user_id)
-                                            <a href="" class="btn  btn-square btn-success">Create Project</a>
+                                        @if ($lead->customer)
+                                        @if ($lead->customer->lead_id)
+                                            <a href="{{ route('customers.show', $lead->customer->id) }}" class="btn btn-square btn-success">Show Customer Record</a>
                                         @else
-                                            <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#customerModal">Convert to Customer</button>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customerModal">Convert to Customer</button>
+                                        @endif
+                                        @else
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customerModal">Convert to Customer</button>
                                         @endif
                                         <a href="{{ route('leads.index') }}" class="btn btn-primary  btn-square">Back</a>
                                     </div><!--end col-->
@@ -74,7 +78,7 @@
     </div>
 </div>
 
-{{-- <div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid border border-bottom border-5 mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -112,7 +116,7 @@
                                     <td>
                                         @if($invoice->attachments && count($invoice->attachments) > 0)
                                         @foreach($invoice->attachments as $attachment)
-                                            <a href="{{ asset('storage/' . $attachment) }}" target="_blank" class="badge bg-primary text-decoration-none me-1">{{ $attachment }}</a>
+                                            <a href="{{ (\Illuminate\Support\Str::startsWith($attachment, 'http') ? $attachment : asset('storage/' . $attachment)) }}" target="_blank" class="badge bg-primary text-decoration-none me-1">{{ $attachment }}</a>
                                         @endforeach
                                         @else
                                             No attachments
@@ -145,9 +149,9 @@
             </div><!--end card-->
         </div> <!--end col-->
     </div>
-</div> --}}
+</div>
 
-{{-- <div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid border border-bottom border-5 mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -209,10 +213,10 @@
             </div><!--end card-->
         </div> <!--end col-->
     </div>
-</div> --}}
+</div>
 
 <!-- Add the Invoice  Modal Markup -->
-{{-- <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -221,23 +225,23 @@
             </div>
             <div class="modal-body">
                 <!-- Include the 'leads.show_invoice_form' content here -->
-                @include('leads.show_invoice_form')
+                @include('crm.crud.leads.show_invoice_form')
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 
 <!-- Add the JavaScript to handle the Invoice popup -->
-{{-- <script>
+<script>
     function openInvoicePopup(event) {
         event.preventDefault();
         const popup = document.getElementById('invoicePopup');
         popup.style.display = 'block';
     }
-</script> --}}
+</script>
 
 <!-- Add the Create Customer  Modal Markup -->
-{{-- <div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
+<div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -246,23 +250,23 @@
             </div>
             <div class="modal-body">
                 <!-- Include the 'leads.create_customer_form' content here -->
-                @include('leads.create_customer_form')
+                @include('crm.crud.leads.create_customer_form')
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 
 <!-- Add the JavaScript to handle the Create Customer popup -->
-{{-- <script>
+<script>
     function openCustomerPopup(event) {
         event.preventDefault();
         const popup = document.getElementById('CustomerPopup');
         popup.style.display = 'block';
     }
-</script> --}}
+</script>
 
 <!-- Add the CreateActivity  Modal Markup -->
-{{-- <div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
+<div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -271,23 +275,23 @@
             </div>
             <div class="modal-body">
                 <!-- Include the 'leads.show_activity_form' content here -->
-                @include('leads.show_activity_form')
+                @include('crm.crud.leads.show_activity_form')
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 
 <!-- Add the JavaScript to handle the Create Activity popup -->
-{{-- <script>
+<script>
     function openActivityPopup(event) {
         event.preventDefault();
         const popup = document.getElementById('ActivityPopup');
         popup.style.display = 'block';
     }
-</script> --}}
+</script>
 
 
-{{-- @foreach($invoices as $invoice)
+@foreach($invoices as $invoice)
 <!-- Modal for delete confirmation -->
 <div class="modal fade" id="confirmInvoiceDeleteModal{{ $invoice->id }}" tabindex="-1" aria-labelledby="confirmInvoiceDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -310,9 +314,9 @@
         </div>
     </div>
 </div>
-@endforeach --}}
+@endforeach
 
-{{-- @foreach ($activities as $activity)
+@foreach ($activities as $activity)
 <div class="modal fade" id="confirmActivityDeleteModal{{ $activity->id }}" tabindex="-1" aria-labelledby="confirmActivityDeleteModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -334,5 +338,5 @@
         </div>
     </div>
 </div>
-@endforeach --}}
+@endforeach
 @endsection

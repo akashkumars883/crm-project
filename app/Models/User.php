@@ -23,7 +23,19 @@ class User extends Authenticatable implements LaratrustUser
         'name',
         'email',
         'password',
+        'avatar',
+        'phone',
+        'dob',
+        'address',
+        'bank_account_name',
+        'bank_account_number',
+        'bank_ifsc',
+        'bank_name',
+        'bank_branch',
+        'upi_id',
     ];
+
+    // protected $dates = ['created_at']; 
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,4 +56,19 @@ class User extends Authenticatable implements LaratrustUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class);
+    }
+
+    public function employeeUser()
+    {
+        return $this->hasOne(EmployeeUser::class);
+    }
+
+    public function leads()
+    {
+        return $this->hasMany(Lead::class, 'assignee_id');
+    }
 }

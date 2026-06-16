@@ -13,6 +13,14 @@ class Customer extends Model
     protected $fillable = [
         'lead_id',
         'user_id',
+        'phone',
+        'alternate_phone',
+        'address',
+        'city',
+        'state',
+        'zip',
+        'company_name',
+        'gstin',
     ];
 
     public function lead()
@@ -23,5 +31,25 @@ class Customer extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'customer_id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'lead_id', 'lead_id');
     }
 }

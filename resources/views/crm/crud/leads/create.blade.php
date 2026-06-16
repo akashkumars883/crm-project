@@ -21,7 +21,7 @@
                         @csrf
                         <div class="mb-3">
                             <label for="lead_source_id" class="form-label">Lead Source</label>
-                            <select class="form-select" name="lead_source_id" id="lead_source_id" required>
+                            <select class="form-select" name="lead_source_id" id="lead_source_id" >
                                 <option value="">Select Lead Source</option>
                                 @foreach($leadSources as $leadSource)
                                 <option value="{{ $leadSource->id }}">{{ $leadSource->name }}</option>
@@ -31,7 +31,7 @@
 
                         <div class="mb-3">
                             <label for="lead_status_id" class="form-label">Lead Status</label>
-                            <select class="form-select" name="lead_status_id" id="lead_status_id" required>
+                            <select class="form-select" name="lead_status_id" id="lead_status_id" >
                                 <option value="">Select Lead Status</option>
                                 @foreach($leadStatuses as $leadStatus)
                                 <option value="{{ $leadStatus->id }}">{{ $leadStatus->name }}</option>
@@ -41,17 +41,17 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" name="name" id="name" required>
+                            <input type="text" class="form-control" name="name" id="name" >
                         </div>
 
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" name="phone" id="phone" required>
+                            <input type="text" class="form-control" name="phone" id="phone" >
                         </div>
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" id="email" required>
+                            <input type="email" class="form-control" name="email" id="email" >
                         </div>
 
                         <div class="mb-3">
@@ -59,7 +59,7 @@
                             <input type="address" class="form-control" name="address" id="address" >
                         </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="city" class="form-label">City</label>
                             <input type="city" class="form-control" name="city" id="city" >
                         </div>
@@ -72,7 +72,7 @@
                         <div class="mb-3">
                             <label for="zip" class="form-label">Zip</label>
                             <input type="zip" class="form-control" name="zip" id="zip" >
-                        </div>
+                        </div> --}}
 
                         <div class="mb-3">
                             <label for="notes" class="form-label">Notes</label>
@@ -89,7 +89,7 @@
                             </select>
                         </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="contact_method_id" class="form-label">Contact Method</label>
                             <select class="form-select" name="contact_method_id" id="contact_method_id" >
                                 <option value="">Select</option>
@@ -100,14 +100,14 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="contact_language_id" class="form-label">Assigned To</label>
+                            <label for="contact_language_id" class="form-label">Contact Language</label>
                             <select class="form-select" name="contact_language_id" id="contact_language_id">
                                 <option value="">Select</option>
                                 @foreach($contactLanguages as $contactLanguage)
                                 <option value="{{ $contactLanguage->id }}">{{ $contactLanguage->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                         <div class="">
                             <button type="submit" class="btn btn-primary">Create Lead</button>
