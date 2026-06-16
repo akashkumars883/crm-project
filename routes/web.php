@@ -90,10 +90,11 @@ Route::get('/fix-role', function () {
     }
 });
 
-// // Admin Routes
-// Route::group(['middleware' => 'role:admin', 'prefix' => 'admin'], function () {
-//     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-// });
+// Super Admin Routes
+Route::group(['middleware' => ['auth', 'role:super-admin'], 'prefix' => 'superadmin'], function () {
+    Route::get('companies', [App\Http\Controllers\SuperAdmin\CompanyController::class, 'index'])->name('superadmin.companies.index');
+    Route::post('companies/{company}/toggle', [App\Http\Controllers\SuperAdmin\CompanyController::class, 'toggleStatus'])->name('superadmin.companies.toggle');
+});
 
 // Profile & Settings Routes
 Route::middleware('auth')->group(function () {

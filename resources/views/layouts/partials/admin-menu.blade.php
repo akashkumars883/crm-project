@@ -6,6 +6,15 @@
         </a>
     </li>
 
+    @if(Auth::user()->hasRole('super-admin'))
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('superadmin.companies.index') }}">
+            <i class="ti ti-building menu-icon me-2"></i>
+            <span>Registered Companies</span>
+        </a>
+    </li>
+    @endif
+
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="authMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="ti ti-users menu-icon me-2"></i>
