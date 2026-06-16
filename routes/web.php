@@ -61,6 +61,15 @@ Route::get('/', function () {
 Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
+Route::get('/test-db', function () {
+    try {
+        \DB::connection()->getPdo();
+        return 'DB Connection: OK. Tables: ' . implode(',', \DB::connection()->getDoctrineSchemaManager()->listTableNames());
+    } catch (\Exception $e) {
+        return 'DB Error: ' . $e->getMessage();
+    }
+});
+
 // // Admin Routes
 // Route::group(['middleware' => 'role:admin', 'prefix' => 'admin'], function () {
 //     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
