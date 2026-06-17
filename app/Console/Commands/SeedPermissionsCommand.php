@@ -69,34 +69,34 @@ class SeedPermissionsCommand extends Command
             ]);
 
             // Assign to super-admin and admin
-            $roles['super-admin']->givePermission($permission);
-            $roles['admin']->givePermission($permission);
+            $roles['super-admin']->permissions()->syncWithoutDetaching([$permission->id]);
+            $roles['admin']->permissions()->syncWithoutDetaching([$permission->id]);
 
             // Logic to assign permissions based on keywords
             if (Str::startsWith($permName, 'my-') || in_array($permName, ['create-ticket', 'read-ticket'])) {
-                $roles['client']->givePermission($permission);
-                $roles['manager']->givePermission($permission);
-                $roles['supervisor']->givePermission($permission);
+                $roles['client']->permissions()->syncWithoutDetaching([$permission->id]);
+                $roles['manager']->permissions()->syncWithoutDetaching([$permission->id]);
+                $roles['supervisor']->permissions()->syncWithoutDetaching([$permission->id]);
             }
 
             if (Str::startsWith($permName, 'vendor-')) {
-                $roles['vendor']->givePermission($permission);
+                $roles['vendor']->permissions()->syncWithoutDetaching([$permission->id]);
             }
 
             if (in_array($permName, ['employee-bills', 'employee-profile', 'my-attendance', 'my-bank-accounts'])) {
-                $roles['employee']->givePermission($permission);
+                $roles['employee']->permissions()->syncWithoutDetaching([$permission->id]);
             }
 
             // Manager usually gets a lot of permissions
             if (Str::contains($permName, ['project', 'lead', 'customer', 'inventory', 'invoice', 'bill', 'payment', 'attendance', 'activity', 'ticket'])) {
                 if (!Str::contains($permName, ['delete-'])) {
-                    $roles['manager']->givePermission($permission);
+                    $roles['manager']->permissions()->syncWithoutDetaching([$permission->id]);
                 }
             }
             
             // Supervisor gets read permissions for projects and leads, etc.
             if (Str::startsWith($permName, 'read-') && Str::contains($permName, ['project', 'lead', 'customer', 'inventory', 'attendance', 'activity'])) {
-                $roles['supervisor']->givePermission($permission);
+                $roles['supervisor']->permissions()->syncWithoutDetaching([$permission->id]);
             }
         }
 
