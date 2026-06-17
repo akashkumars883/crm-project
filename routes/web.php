@@ -81,6 +81,9 @@ Route::get('/fix-role', function () {
             $admin->addRole('admin');
         }
 
+        // Run the seeder to guarantee permissions are in the DB
+        \Illuminate\Support\Facades\Artisan::call('app:seed-permissions');
+
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         
