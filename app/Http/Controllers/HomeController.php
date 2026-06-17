@@ -39,8 +39,31 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // ── Admin / Super-Admin ───────────────────────────────────────────
-        if (Auth::user()->hasRole(['admin', 'super-admin'])) {
+        // ── Super-Admin ───────────────────────────────────────────
+        if (Auth::user()->hasRole('super-admin')) {
+            $totalCompanies = \App\Models\Company::count();
+            $activeCompanies = \App\Models\Company::where('status', 'active')->count();
+            $totalUsers = User::count();
+            $recentCompanies = \App\Models\Company::latest()->take(5)->get();
+
+            // Additional metrics
+            $companiesByMonth = new LaravelChart([
+                'chart_title' => 'Companies Registered',
+                'report_type' => 'group_by_date',
+                'model' => 'App\Models\Company',
+                'group_by_field' => 'created_at',
+                'group_by_period' => 'month',
+                'date_format' => 'M',
+                'chart_type' => 'bar'
+            ]);
+
+            return view('dashboards.superadmin', compact(
+                'totalCompanies', 'activeCompanies', 'totalUsers', 'recentCompanies', 'companiesByMonth'
+            ));
+        }
+
+        // ── Admin ───────────────────────────────────────────
+        elseif (Auth::user()->hasRole('admin')) {
 
             $usersCount       = User::count();
             $adminsCount      = User::whereHasRole('admin')->count();
