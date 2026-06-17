@@ -155,6 +155,46 @@
         margin-bottom: 0;
     }
 
+    /* Small Counter Cards (Admins, Managers, etc.) */
+    .counter-card {
+        border-radius: 6px !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
+        background: #ffffff !important;
+        transition: all 0.2s ease;
+        margin-bottom: 6px;
+        text-align: center;
+    }
+    
+    .counter-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        border-color: #cbd5e1 !important;
+    }
+
+    .counter-card .card-body {
+        padding: 10px 8px !important;
+    }
+
+    .counter-card .card-body p {
+        font-size: 10px;
+        color: #64748b;
+        margin-bottom: 2px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .counter-card .card-body h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0;
+    }
+
     /* Charts & General Cards */
     .chart-card {
         border-radius: 16px !important;
@@ -281,78 +321,70 @@
     </div>
 
     {{-- Counters --}}
-    <div id="dashboard-counters" class="mb-2">
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-2">
+    <div id="dashboard-counters" class="mb-4">
+        <div class="row row-cols-2 row-cols-sm-4 row-cols-lg-8 g-2">
             <div class="col">
-                <div class="card stat-card admins-card">
+                <div class="card counter-card admins-card">
                     <div class="card-body">
                         <p>Admins</p>
                         <h3>{{ $adminsCount }}</h3>
                     </div>
-                    <div class="stat-accent"></div>
                 </div>
             </div>
             <div class="col">
-                <div class="card stat-card managers-card">
+                <div class="card counter-card managers-card">
                     <div class="card-body">
                         <p>Managers</p>
                         <h3>{{ $managersCount }}</h3>
                     </div>
-                    <div class="stat-accent"></div>
                 </div>
             </div>
             <div class="col">
-                <div class="card stat-card supervisors-card">
+                <div class="card counter-card supervisors-card">
                     <div class="card-body">
                         <p>Supervisors</p>
                         <h3>{{ $supervisorsCount }}</h3>
                     </div>
-                    <div class="stat-accent"></div>
                 </div>
             </div>
             <div class="col">
-                <div class="card stat-card accounts-card">
+                <div class="card counter-card accounts-card">
                     <div class="card-body">
                         <p>Accounts</p>
                         <h3>{{ $accountsCount }}</h3>
                     </div>
-                    <div class="stat-accent"></div>
                 </div>
             </div>
             <div class="col">
-                <div class="card stat-card hr-card">
+                <div class="card counter-card hr-card">
                     <div class="card-body">
                         <p>HR Staff</p>
                         <h3>{{ $hrCount }}</h3>
                     </div>
-                    <div class="stat-accent"></div>
                 </div>
             </div>
             <div class="col">
-                <div class="card stat-card employees-card">
+                <div class="card counter-card employees-card">
                     <div class="card-body">
                         <p>Employees</p>
                         <h3>{{ $employeesCount }}</h3>
                     </div>
-                    <div class="stat-accent"></div>
                 </div>
             </div>
             <div class="col">
-                <div class="card stat-card customers-card">
+                <div class="card counter-card customers-card">
                     <div class="card-body">
                         <p>Customers</p>
                         <h3>{{ $customersCount }}</h3>
                     </div>
-                    <div class="stat-accent"></div>
                 </div>
             </div>
             <div class="col">
-                <div class="card stat-card vendors-card">
+                <div class="card counter-card vendors-card">
                     <div class="card-body">
                         <p>Vendors</p>
                         <h3>{{ $vendorsCount }}</h3>
                     </div>
-                    <div class="stat-accent"></div>
                 </div>
             </div>
         </div>

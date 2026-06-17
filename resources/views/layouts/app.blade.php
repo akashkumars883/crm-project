@@ -113,6 +113,12 @@
         .introjs-progressbar {
             background-color: #2563eb !important;
         }
+
+        /* Global UI Polish: Sharper corners for a cleaner, modern look */
+        .card { border-radius: 6px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.02) !important; }
+        .btn { border-radius: 4px !important; }
+        .form-control, .form-select { border-radius: 4px !important; }
+        .badge { border-radius: 4px !important; }
     </style>
     <!-- ... other meta tags, CSS links, etc. ... -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
