@@ -37,6 +37,7 @@ class User extends Authenticatable implements LaratrustUser
         'bank_name',
         'bank_branch',
         'upi_id',
+        'company_id',
     ];
 
     // protected $dates = ['created_at']; 
