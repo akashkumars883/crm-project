@@ -259,7 +259,7 @@
                                             <span class="status-badge status-inactive">{{ ucfirst($company->status) }}</span>
                                         @endif
                                     </td>
-                                    <td>{{ $company->created_at->format('d M, Y') }}</td>
+                                    <td>{{ $company->created_at ? $company->created_at->format('d M, Y') : 'N/A' }}</td>
                                 </tr>
                                 @empty
                                 <tr>

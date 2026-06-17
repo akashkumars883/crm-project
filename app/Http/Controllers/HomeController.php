@@ -41,25 +41,29 @@ class HomeController extends Controller
     {
         // ── Super-Admin ───────────────────────────────────────────
         if (Auth::user()->hasRole('super-admin')) {
-            $totalCompanies = \App\Models\Company::count();
-            $activeCompanies = \App\Models\Company::where('status', 'active')->count();
-            $totalUsers = User::count();
-            $recentCompanies = \App\Models\Company::latest()->take(5)->get();
+            try {
+                $totalCompanies = \App\Models\Company::count();
+                $activeCompanies = \App\Models\Company::where('status', 'active')->count();
+                $totalUsers = User::count();
+                $recentCompanies = \App\Models\Company::latest()->take(5)->get();
 
-            // Additional metrics
-            $companiesByMonth = new LaravelChart([
-                'chart_title' => 'Companies Registered',
-                'report_type' => 'group_by_date',
-                'model' => 'App\Models\Company',
-                'group_by_field' => 'created_at',
-                'group_by_period' => 'month',
-                'date_format' => 'M',
-                'chart_type' => 'bar'
-            ]);
+                // Additional metrics
+                $companiesByMonth = new LaravelChart([
+                    'chart_title' => 'Companies Registered',
+                    'report_type' => 'group_by_date',
+                    'model' => 'App\Models\Company',
+                    'group_by_field' => 'created_at',
+                    'group_by_period' => 'month',
+                    'date_format' => 'M',
+                    'chart_type' => 'bar'
+                ]);
 
-            return view('dashboards.superadmin', compact(
-                'totalCompanies', 'activeCompanies', 'totalUsers', 'recentCompanies', 'companiesByMonth'
-            ));
+                return view('dashboards.superadmin', compact(
+                    'totalCompanies', 'activeCompanies', 'totalUsers', 'recentCompanies', 'companiesByMonth'
+                ));
+            } catch (\Throwable $e) {
+                return response('Super Admin Dashboard Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine(), 500);
+            }
         }
 
         // ── Admin ───────────────────────────────────────────
