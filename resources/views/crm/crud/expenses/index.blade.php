@@ -2,21 +2,25 @@
 @section('title', 'Expenses')
 @section('content')
 
-<div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 mt-3 gap-2">
     <h4 class="mb-0 fw-bold">Expense Management</h4>
-    <a href="{{ route('expenses.create') }}" class="btn btn-primary shadow-sm"><i class="ti ti-plus"></i> Add New Expense</a>
+    <div class="d-grid d-md-block">
+        <a href="{{ route('expenses.create') }}" class="btn btn-sm btn-primary shadow-sm"><i class="ti ti-plus"></i> Add New Expense</a>
+    </div>
 </div>
 
 <div class="card shadow-sm border-0">
     <div class="card-header bg-white border-bottom p-3">
-        <form action="{{ route('expenses.index') }}" method="GET" class="d-flex gap-2">
-            <select name="status" class="form-select w-auto">
+        <form action="{{ route('expenses.index') }}" method="GET" class="d-flex flex-column flex-md-row gap-2">
+            <select name="status" class="form-select form-select-sm w-100">
                 <option value="">All Statuses</option>
                 <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
                 <option value="Approved" {{ request('status') == 'Approved' ? 'selected' : '' }}>Approved</option>
                 <option value="Rejected" {{ request('status') == 'Rejected' ? 'selected' : '' }}>Rejected</option>
             </select>
-            <button type="submit" class="btn btn-light border"><i class="ti ti-filter"></i> Filter</button>
+            <div class="d-grid d-md-block">
+                <button type="submit" class="btn btn-sm btn-light border"><i class="ti ti-filter"></i> Filter</button>
+            </div>
         </form>
     </div>
     <div class="table-responsive">

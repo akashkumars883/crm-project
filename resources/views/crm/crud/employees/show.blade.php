@@ -134,7 +134,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -179,7 +179,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-md-12">
             <div class="card">

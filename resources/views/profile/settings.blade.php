@@ -1,10 +1,10 @@
 @extends('layouts.app')
-@section('title', 'System Settings')
+@section('title', 'Company Profile & Settings')
 
 @section('content')
 <div class="row mt-4 justify-content-center">
     <div class="col-lg-12">
-        <h4 class="mb-4 fw-bold">System Settings</h4>
+        <h4 class="mb-4 fw-bold">Company Profile & Settings</h4>
 
         @if(session('success'))
             <div class="alert alert-success shadow-sm">
@@ -23,9 +23,14 @@
                         <a class="nav-link fw-semibold mb-2" id="smtp-tab" data-bs-toggle="pill" href="#smtp" role="tab" aria-controls="smtp" aria-selected="false">
                             <i class="ti ti-mail me-2"></i> Mail / SMTP
                         </a>
-                        <a class="nav-link fw-semibold" id="api-tab" data-bs-toggle="pill" href="#api" role="tab" aria-controls="api" aria-selected="false">
+                        <a class="nav-link fw-semibold mb-2" id="api-tab" data-bs-toggle="pill" href="#api" role="tab" aria-controls="api" aria-selected="false">
                             <i class="ti ti-plug me-2"></i> API Integrations
                         </a>
+                        @if(Auth::user()->hasRole('admin') && !Auth::user()->hasRole('super-admin'))
+                        <a class="nav-link fw-semibold" id="subscription-tab" data-bs-toggle="pill" href="#subscription" role="tab" aria-controls="subscription" aria-selected="false">
+                            <i class="ti ti-currency-rupee me-2"></i> My Subscription
+                        </a>
+                        @endif
                     </div>
                 </div>
 
@@ -218,6 +223,61 @@ fetch("{{ url('/api/website-leads') }}", {
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Subscription Tab -->
+                        @if(Auth::user()->hasRole('admin') && !Auth::user()->hasRole('super-admin'))
+                        <div class="tab-pane fade" id="subscription" role="tabpanel" aria-labelledby="subscription-tab">
+                            <div class="p-4">
+                                <h5 class="fw-bold mb-4">Billing & Subscription</h5>
+                                
+                                @if($currentSubscription)
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="card bg-primary bg-gradient text-white border-0 shadow-sm">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-white">Current Plan: {{ $currentSubscription->plan->name }}</h5>
+                                                <p class="mb-0">Valid until: {{ $currentSubscription->ends_at ? $currentSubscription->ends_at->format('d M, Y') : 'Lifetime' }}</p>
+                                                <p class="mb-0">Limits: {{ $currentSubscription->plan->max_users }} Users, {{ $currentSubscription->plan->max_customers }} Customers</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+
+                                <h6 class="fw-bold mb-3">Available Plans</h6>
+                                <div class="row">
+                                    @foreach($plans as $plan)
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card text-center border shadow-sm h-100 {{ $currentSubscription && $currentSubscription->subscription_plan_id == $plan->id ? 'border-primary' : '' }}">
+                                            <div class="card-header border-bottom-0 bg-transparent pt-3">
+                                                <h5 class="mb-0 {{ $currentSubscription && $currentSubscription->subscription_plan_id == $plan->id ? 'text-primary' : '' }}">{{ $plan->name }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 class="mb-3">₹{{ number_format($plan->price) }}<small class="text-muted fs-6">/yr</small></h3>
+                                                <ul class="list-unstyled text-start px-3 mb-4" style="font-size: 13px;">
+                                                    <li class="mb-2"><i class="ti ti-check text-success me-2"></i> {{ $plan->max_users }} Employees</li>
+                                                    <li class="mb-2"><i class="ti ti-check text-success me-2"></i> {{ $plan->max_customers }} Customers</li>
+                                                    <li class="mb-2"><i class="ti ti-check text-success me-2"></i> {{ $plan->max_projects }} Projects</li>
+                                                </ul>
+                                                
+                                                @if($currentSubscription && $currentSubscription->subscription_plan_id == $plan->id)
+                                                    <button class="btn btn-outline-primary btn-sm w-100" disabled>Current Plan</button>
+                                                @else
+                                                    <form action="{{ route('company.subscription.checkout') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="plan_id" value="{{ $plan->id }}">
+                                                        <button type="submit" class="btn btn-primary btn-sm w-100">Subscribe</button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                     </div>
                 </div>
             </div>

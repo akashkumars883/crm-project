@@ -4,8 +4,8 @@
 <div class="p-3 bg-light">
     <!-- Page-Title -->
     <div class="row">
-        <div class="col-sm-12">
-            <div class="page-title-box px-3">
+        <div class="col-12">
+            <div class="page-title-box">
                 <h4 class="page-title">Bills</h4>
             </div><!--end page-title-box-->
         </div><!--end col-->
@@ -14,11 +14,11 @@
     <!-- end page title end breadcrumb -->
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table class="table table-striped text-nowrap">
                             <thead>
                                 <tr>
                                     <th>Ref #</th>
@@ -50,7 +50,7 @@
             <!-- Pagination links -->
             <div class="pt-3">
                 {{ $bills->links('pagination::bootstrap-5') }}
-            </div>>
+            </div>
         </div>
     </div>
 

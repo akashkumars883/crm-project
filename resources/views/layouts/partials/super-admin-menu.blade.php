@@ -14,6 +14,13 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link" href="{{ route('superadmin.subscription_plans.index') }}">
+            <i class="ti ti-currency-rupee menu-icon me-2"></i>
+            <span>Subscription Plans</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link" href="{{ route('users.index') }}">
             <i class="ti ti-users menu-icon me-2"></i>
             <span>Global Users</span>

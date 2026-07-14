@@ -204,6 +204,7 @@ class EmployeeController extends Controller
         if (Auth::user()->hasPermission('my-attendance')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
+            if (!$empUser) return redirect()->back()->with('error', 'Employee profile not linked.');
             $eId = $empUser->employee_id;
             $employee = Employee::where('id', $eId)->first();
             $attendanceRecords = $employee->attendanceRecords()->latest()->paginate(10);
@@ -219,6 +220,7 @@ class EmployeeController extends Controller
         if (Auth::user()->hasPermission('employee-bills')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
+            if (!$empUser) return redirect()->back()->with('error', 'Employee profile not linked.');
             $eId = $empUser->employee_id;
             $employee = Employee::where('id', $eId)->first();
             $bills = $employee->bills()->latest()->paginate(10);
@@ -233,6 +235,7 @@ class EmployeeController extends Controller
         if (Auth::user()->hasPermission('my-bank-accounts')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
+            if (!$empUser) return redirect()->back()->with('error', 'Employee profile not linked.');
             $eId = $empUser->employee_id;
             $employee = Employee::where('id', $eId)->first();
             $employeeBankAccount = $employee->employeeBankAccount;
@@ -248,11 +251,81 @@ class EmployeeController extends Controller
         if (Auth::user()->hasPermission('employee-profile')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
+            if (!$empUser) return redirect()->back()->with('error', 'Employee profile not linked.');
             $eId = $empUser->employee_id;
             $employee = Employee::where('id', $eId)->first();
             return view('crm.employees.profile', compact('employee'));
         } else {
             abort(403, 'Unauthorized Access');
         }
+    }
+
+    public function checkIn(Request $request)
+    {
+        $request->validate([
+            'project_id' => 'required|exists:projects,id',
+            'latitude' => 'nullable|string',
+            'longitude' => 'nullable|string',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120'
+        ]);
+
+        $authId = Auth::user()->id;
+        $empUser = EmployeeUser::where('user_id', $authId)->first();
+        if (!$empUser) return redirect()->back()->with('error', 'Employee profile not found.');
+        
+        $employeeId = $empUser->employee_id;
+
+        $attendance = new AttendanceRecord();
+        $attendance->employee_id = $employeeId;
+        $attendance->project_id = $request->project_id;
+        $attendance->date = now()->toDateString();
+        // Fallback to first attendance type and status if not provided
+        $firstType = \App\Models\AttendanceType::first();
+        $firstStatus = \App\Models\AttendanceStatus::first();
+        $attendance->attendance_type_id = $firstType ? $firstType->id : 1; 
+        $attendance->attendance_status_id = $firstStatus ? $firstStatus->id : 1;
+        $attendance->latitude = $request->latitude;
+        $attendance->longitude = $request->longitude;
+        $attendance->created_by = $authId;
+        $attendance->updated_by = $authId;
+
+        if ($request->hasFile('photo')) {
+            $extension = $request->file('photo')->getClientOriginalExtension();
+            $filename = 'attendance_' . time() . '.' . $extension;
+            $path = $request->file('photo')->storeAs('public/attendance/' . $employeeId, $filename);
+            $attendance->photo = 'attendance/' . $employeeId . '/' . $filename;
+        }
+
+        $attendance->save();
+
+        notify()->success('Checked In Successfully!');
+        return redirect()->back();
+    }
+
+    public function checkOut(Request $request)
+    {
+        $request->validate([
+            'daily_report' => 'required|string|max:1000'
+        ]);
+
+        $authId = Auth::user()->id;
+        $empUser = EmployeeUser::where('user_id', $authId)->first();
+        if (!$empUser) return redirect()->back()->with('error', 'Employee profile not found.');
+
+        $employeeId = $empUser->employee_id;
+        $todayRecord = AttendanceRecord::where('employee_id', $employeeId)
+                        ->whereDate('date', now()->toDateString())
+                        ->first();
+                        
+        if ($todayRecord) {
+            $todayRecord->checkout_time = now();
+            $todayRecord->daily_report = $request->daily_report;
+            $todayRecord->save();
+            notify()->success('Checked Out Successfully!');
+        } else {
+            notify()->error('No Check-In record found for today.');
+        }
+
+        return redirect()->back();
     }
 }

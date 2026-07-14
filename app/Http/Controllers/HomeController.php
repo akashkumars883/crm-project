@@ -91,6 +91,10 @@ class HomeController extends Controller
 
             $recentLeads   = Lead::latest()->take(5)->get();
             $activeProjects = \App\Models\Project::with('projectStatus', 'customer.lead')->latest()->take(5)->get();
+            $mapProjects = \App\Models\Project::with(['projectStatus', 'customer.lead'])
+                            ->whereNotNull('latitude')
+                            ->whereNotNull('longitude')
+                            ->get();
 
             // New Analytics for Dashboard
             $totalRevenue = Payment::sum('amount');
@@ -99,12 +103,14 @@ class HomeController extends Controller
             $totalLeads = Lead::count();
             $leadConversionRate = $totalLeads > 0 ? round(($customersCount / $totalLeads) * 100, 2) : 0;
 
+            $recentActivities = \App\Models\Activity::latest()->take(10)->get();
+
             return view('dashboards.admin', compact(
                 'usersCount', 'vendorsCount', 'customersCount', 'employeesCount',
                 'hrCount', 'adminsCount', 'managersCount', 'supervisorsCount', 'accountsCount',
                 'leadsByMonth', 'invoicesByMonth', 'projectsByMonth', 'inventoriesByMonth',
-                'paymentsByMonth', 'billsByMonth', 'rolesChart', 'recentLeads', 'activeProjects',
-                'totalRevenue', 'totalExpenses', 'leadConversionRate'
+                'paymentsByMonth', 'billsByMonth', 'rolesChart', 'recentLeads', 'activeProjects', 'mapProjects',
+                'totalRevenue', 'totalExpenses', 'leadConversionRate', 'recentActivities'
             ));
         }
 
@@ -132,12 +138,16 @@ class HomeController extends Controller
 
             $recentLeads   = Lead::latest()->take(5)->get();
             $activeProjects = \App\Models\Project::with('projectStatus', 'customer.lead')->latest()->take(5)->get();
+            $mapProjects = \App\Models\Project::with(['projectStatus', 'customer.lead'])
+                            ->whereNotNull('latitude')
+                            ->whereNotNull('longitude')
+                            ->get();
 
             return view('dashboards.manager', compact(
                 'usersCount', 'vendorsCount', 'customersCount', 'employeesCount',
                 'hrCount', 'adminsCount', 'managersCount', 'supervisorsCount', 'accountsCount',
                 'leadsByMonth', 'invoicesByMonth', 'projectsByMonth', 'inventoriesByMonth',
-                'paymentsByMonth', 'billsByMonth', 'recentLeads', 'activeProjects'
+                'paymentsByMonth', 'billsByMonth', 'recentLeads', 'activeProjects', 'mapProjects'
             ));
         }
 
@@ -212,9 +222,15 @@ class HomeController extends Controller
             $AttendanceTypeAnalytics   = AttendanceType::select('id','name')->withCount('attendanceRecords')->get();
             $AttendanceStatusAnalytics = AttendanceStatus::select('id','name')->withCount('attendanceRecords')->get();
 
+            $assignedProjects = $employee ? $employee->projects()->with('customer.lead')->get() : collect();
+            $todayRecord = $employee ? AttendanceRecord::where('employee_id', $employee->id)->whereDate('date', $currentDate)->first() : null;
+
             return view('dashboards.employee', compact(
                 'AttendanceTypeAnalytics',
                 'AttendanceStatusAnalytics',
+                'assignedProjects',
+                'todayRecord',
+                'employee'
             ));
         }
 

@@ -6,110 +6,99 @@
 @endphp
 <div class="p-3 bg-light">
     <div class="row">
-        <div class="col">
-            <div class="card mb-0">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">My Profile</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 border-0">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="media mb-3">
-                                        <div class="media-body align-self-center">
-                                            @if ($employee->photograph)
-                                                <img src="{{ (\Illuminate\Support\Str::startsWith($employee->photograph, 'http') ? $employee->photograph : asset('storage/' . $employee->photograph)) }}" alt="Employee Photograph" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
-                                            @else
-                                                <p>No Photograph Uploaded</p>
-                                            @endif
-                                        </div><!--end media body-->
-                                    </div> <!--end media-->
-
-                                    <hr class="hr-dashed">
-                                    
-                                </div><!--end card-body-->
-                            </div>  <!--end card-->
-                        </div><!--end col-->
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="media mb-3">
-                                        <div class="media-body align-self-center">
-                                            <h4 class="text-primary mt-0 font-24">{{ $employee->name }} </h4>
-                                            <p class="mb-0 font-14"><i class="fas fa-phone-square"></i> : {{ $employee->phone }} </p>
-                                            <p class="mb-0 font-14"><i class="fas fa-phone-square"></i> : {{ $employee->email }} </p>
-                                            <p class="mb-0 font-14"><i class="fas fa-home"></i> : {{ $employee->address }}, {{ $employee->city }}, {{ $employee->state }} - {{ $employee->zip_code }} </p>
-                                        </div><!--end media body-->
-                                    </div> <!--end media-->
-
-                                    <p class="mb-0 font-14">Gemder : {{ $employee->gender->name }} </p>
-                                    <p class="mb-0 font-14">Blood Group : {{ $employee->bloodGroup->name }} </p>
-                                    <p class="mb-0 font-14">Date of Birth: {{ Carbon::parse($employee->date_of_birth)->format('M, d Y') }}</p>
-                                    <p class="mb-0 font-14">Age: {{ Carbon::parse($employee->date_of_birth)->age }} years</p>
-                                    <hr class="hr-dashed">
-                                    <p class="mb-0 font-14">Documents</p>
-                                    @if ($employee->pan)
-                                    <a href="{{ (\Illuminate\Support\Str::startsWith($employee->pan, 'http') ? $employee->pan : asset('storage/' . $employee->pan)) }}" target="_blank" class="badge bg-primary text-decoration-none me-1">PAN</a>
-                                    @else
-                                        No PAN Uploaded
-                                    @endif
-                                    @if ($employee->aadhaar)
-                                        <a href="{{ (\Illuminate\Support\Str::startsWith($employee->aadhaar, 'http') ? $employee->aadhaar : asset('storage/' . $employee->aadhaar)) }}" target="_blank" class="badge bg-primary text-decoration-none me-1">Aadhaar</a>
-                                    @else
-                                        No Aadhaar Uploaded
-                                    @endif
-                                </div><!--end card-body-->
-                            </div>  <!--end card-->
-                        </div><!--end col-->
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="media mb-3">
-                                        <div class="media-body align-self-center">
-                                            <p class="mb-0 font-14">Employee ID : {{ $employee->emp_id }} </p>
-                                            <p class="mb-0 font-14">Employee Type : {{ $employee->employeeType->name }} </p>
-                                            <p class="mb-0 font-14">Joining Date: {{ Carbon::parse($employee->joining_date)->format('M, d Y') }}</p>
-                                            <p class="mb-0 font-14">Salary : {{ $employee->salary }} </p>
-                                            <p class="mb-0 font-14">Department : {{ $employee->department->name }} </p>
-                                            <p class="mb-0 font-14">Designation : {{ $employee->designation->name }} </p>
-                                            <p class="mb-0 font-14">Skill Paint : {{ $employee->skillPaint->name }} </p>
-                                            <p class="mb-0 font-14">Skill Polish : {{ $employee->skillPolish->name }} </p>
-                                            <hr class="hr-dashed">
-                                            {{-- <p class="mb-0 font-14">Created at : {{ $employee->created_at->format('D, d M Y h:i A') }} by {{ $employee->creator->name }} </p> --}}
-                                            {{-- <p class="mb-0 font-14">Last updated at : {{ $employee->updated_at->format('D, d M Y h:i A') }} by {{ $employee->updater->name }}</p> --}}
-                                        </div><!--end media body-->
-                                    </div> <!--end media-->
-                                </div><!--end card-body-->
-                            </div>  <!--end card-->
-                        </div><!--end col-->
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="media mb-3">
-                                        <div class="media-body align-self-center">
-                                            <h4 class="mt-0 mb-0 font-13">Banking Information </h4>
-                                            @if($employee->employeeBankAccount)
-                                                <p class="mb-0 font-14">Bank Name : {{ $employee->employeeBankAccount->bank_name }}  days</p>
-                                                <p class="mb-0 font-14">Branch : {{ $employee->employeeBankAccount->branch }}  days</p>
-                                                <p class="mb-0 font-14">IFSC : {{ $employee->employeeBankAccount->ifsc }}</p>
-                                                <p class="mb-0 font-14">Account Name : {{ $employee->employeeBankAccount->account_name }}</p>
-                                                <p class="mb-0 font-14">Account Number : {{ $employee->employeeBankAccount->account_number }}</p>
-                                                <p class="mb-0 font-14">UPI : {{ $employee->employeeBankAccount->upi }}</p>
-                                                <p class="mb-0 font-14">Phonepe : {{ $employee->employeeBankAccount->phonepe }}</p>
-                                                <p class="mb-0 font-14">Googlepay : {{ $employee->employeeBankAccount->googlepay }}</p>
-                                                <p class="mb-0 font-14">Paytm : {{ $employee->employeeBankAccount->paytm }}</p>
-                                            @else
-                                                <p class="mb-0 font-14">No bank account details available for this employee</p>
-                                                <button type="button" class="btn btn-primary  btn-square btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#bankModal">Add Bank Account</button>
-                                                {{-- <a class="btn btn-primary  btn-square btn-sm mt-2" href="">Add Bank Account</a> --}}
-                                            @endif
-                                        </div><!--end media body-->
-                                    </div> <!--end media-->
-
-                                    {{-- <p class="mb-0 font-14">Assigned To : {{ $customer->lead->assignedTo->name }} </p> --}}
-                                    {{-- <p class="mb-0 font-14">Since : {{ $customer->lead->assignedTo->created_at->diffInDays(now()) }} days </p> --}}
-                                </div><!--end card-body-->
-                            </div>  <!--end card-->
-                        </div><!--end col-->
+                    <div class="media mb-3 text-center">
+                        <div class="media-body align-self-center">
+                            @if ($employee->photograph)
+                                <img src="{{ (\Illuminate\Support\Str::startsWith($employee->photograph, 'http') ? $employee->photograph : asset('storage/' . $employee->photograph)) }}" alt="Employee Photograph" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                            @else
+                                <div class="bg-light d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px; border-radius: 50%;">
+                                    <i class="fas fa-user fa-4x text-muted"></i>
+                                </div>
+                                <p class="text-muted mt-2">No Photograph Uploaded</p>
+                            @endif
+                        </div>
                     </div>
+                    <hr class="hr-dashed">
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 border-0">
+                <div class="card-body">
+                    <h4 class="text-primary mt-0 font-24 mb-3">{{ $employee->name }}</h4>
+                    <p class="mb-2 font-14"><i class="fas fa-phone text-muted me-2"></i> {{ $employee->phone }} </p>
+                    <p class="mb-2 font-14"><i class="fas fa-envelope text-muted me-2"></i> {{ $employee->email }} </p>
+                    <p class="mb-3 font-14"><i class="fas fa-map-marker-alt text-muted me-2"></i> {{ $employee->address }}, {{ $employee->city }}, {{ $employee->state }} - {{ $employee->zip_code }} </p>
+
+                    <p class="mb-1 font-14"><strong>Gender:</strong> {{ $employee->gender->name }} </p>
+                    <p class="mb-1 font-14"><strong>Blood Group:</strong> {{ $employee->bloodGroup->name }} </p>
+                    <p class="mb-1 font-14"><strong>Date of Birth:</strong> {{ Carbon::parse($employee->date_of_birth)->format('M d, Y') }}</p>
+                    <p class="mb-3 font-14"><strong>Age:</strong> {{ Carbon::parse($employee->date_of_birth)->age }} years</p>
+                    
+                    <hr class="hr-dashed">
+                    <p class="mb-2 font-14 fw-bold">Documents</p>
+                    @if ($employee->pan)
+                        <a href="{{ (\Illuminate\Support\Str::startsWith($employee->pan, 'http') ? $employee->pan : asset('storage/' . $employee->pan)) }}" target="_blank" class="badge bg-primary text-decoration-none me-1">PAN Card</a>
+                    @else
+                        <span class="text-muted small">No PAN</span>
+                    @endif
+                    @if ($employee->aadhaar)
+                        <a href="{{ (\Illuminate\Support\Str::startsWith($employee->aadhaar, 'http') ? $employee->aadhaar : asset('storage/' . $employee->aadhaar)) }}" target="_blank" class="badge bg-primary text-decoration-none me-1">Aadhaar Card</a>
+                    @else
+                        <span class="text-muted small">No Aadhaar</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 border-0">
+                <div class="card-body">
+                    <p class="mb-2 font-14"><strong>Employee ID:</strong> {{ $employee->emp_id }} </p>
+                    <p class="mb-2 font-14"><strong>Employee Type:</strong> {{ $employee->employeeType->name }} </p>
+                    <p class="mb-2 font-14"><strong>Joining Date:</strong> {{ Carbon::parse($employee->joining_date)->format('M d, Y') }}</p>
+                    <p class="mb-2 font-14"><strong>Salary:</strong> ₹{{ $employee->salary }} </p>
+                    <p class="mb-2 font-14"><strong>Department:</strong> {{ $employee->department->name }} </p>
+                    <p class="mb-2 font-14"><strong>Designation:</strong> {{ $employee->designation->name }} </p>
+                    <p class="mb-2 font-14"><strong>Skill Paint:</strong> {{ $employee->skillPaint->name }} </p>
+                    <p class="mb-2 font-14"><strong>Skill Polish:</strong> {{ $employee->skillPolish->name }} </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 border-0">
+                <div class="card-body">
+                    <h4 class="mt-0 mb-3 font-16 fw-bold">Banking Information</h4>
+                    @if($employee->employeeBankAccount)
+                        <p class="mb-2 font-14"><strong>Bank Name:</strong> {{ $employee->employeeBankAccount->bank_name }}</p>
+                        <p class="mb-2 font-14"><strong>Branch:</strong> {{ $employee->employeeBankAccount->branch }}</p>
+                        <p class="mb-2 font-14"><strong>IFSC:</strong> {{ $employee->employeeBankAccount->ifsc }}</p>
+                        <p class="mb-2 font-14"><strong>Account Name:</strong> {{ $employee->employeeBankAccount->account_name }}</p>
+                        <p class="mb-2 font-14"><strong>Account Number:</strong> {{ $employee->employeeBankAccount->account_number }}</p>
+                        <hr class="hr-dashed">
+                        <p class="mb-2 font-14"><strong>UPI:</strong> {{ $employee->employeeBankAccount->upi }}</p>
+                        <p class="mb-2 font-14"><strong>PhonePe:</strong> {{ $employee->employeeBankAccount->phonepe }}</p>
+                        <p class="mb-2 font-14"><strong>GooglePay:</strong> {{ $employee->employeeBankAccount->googlepay }}</p>
+                        <p class="mb-2 font-14"><strong>Paytm:</strong> {{ $employee->employeeBankAccount->paytm }}</p>
+                    @else
+                        <div class="text-center text-muted mt-4">
+                            <i class="fas fa-university fa-3x mb-2"></i>
+                            <p class="mb-0 font-14">No bank details added.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

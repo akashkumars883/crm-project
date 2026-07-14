@@ -168,7 +168,8 @@ class AttendanceRecordController extends Controller
     public function show(AttendanceRecord $attendanceRecord)
     {
         if (Auth::user()->hasPermission('read-attendance-record')) {
-            # code...
+            $attendanceRecord->load(['employee', 'project', 'attendanceType', 'attendanceStatus']);
+            return view('crm.crud.attendance-records.show', compact('attendanceRecord'));
         } else {
             abort(403, 'Unauthorized Access');
         }

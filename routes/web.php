@@ -97,6 +97,7 @@ Route::get('/fix-role', function () {
 Route::group(['middleware' => ['auth', 'role:super-admin'], 'prefix' => 'superadmin'], function () {
     Route::get('companies', [App\Http\Controllers\SuperAdmin\CompanyController::class, 'index'])->name('superadmin.companies.index');
     Route::post('companies/{company}/toggle', [App\Http\Controllers\SuperAdmin\CompanyController::class, 'toggleStatus'])->name('superadmin.companies.toggle');
+    Route::resource('subscription_plans', App\Http\Controllers\SuperAdmin\SubscriptionPlanController::class)->names('superadmin.subscription_plans');
 });
 
 // Profile & Settings Routes
@@ -104,11 +105,23 @@ Route::middleware('auth')->group(function () {
     // Admin / CRM Routes
     Route::resource('leads', LeadController::class);
     Route::resource('users', UserController::class);
+
+    // Task Management
+    Route::resource('tasks', App\Http\Controllers\TaskController::class);
+
+    // Notifications & Search
+    Route::post('/notifications/mark-as-read', function() {
+        auth()->user()->unreadNotifications->markAsRead();
+        return redirect()->back();
+    })->name('notifications.markAllAsRead');
+    Route::get('/search', [App\Http\Controllers\GlobalSearchController::class, 'index'])->name('global.search');
+
     Route::resource('invoices', InvoiceController::class);
     Route::get('invoices/{invoice}/print', [InvoiceController::class, 'print'])->name('invoices.print');
     Route::post('invoices/{invoice}/convert', [InvoiceController::class, 'convertProforma'])->name('invoices.convert');
     Route::resource('customers', CustomerController::class);
     Route::resource('projects', ProjectController::class);
+    Route::post('projects/{project}/assign-team', [ProjectController::class, 'assignTeam'])->name('projects.assign-team');
     Route::resource('project-tasks', ProjectTaskController::class)->only(['store', 'update', 'destroy']);
     Route::post('project-tasks/{projectTask}/update-status', [ProjectTaskController::class, 'updateStatus'])->name('project-tasks.update-status');
     Route::resource('activities', ActivityController::class);
@@ -153,6 +166,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('ticket-categories', TicketCategoryController::class);
     Route::resource('attachment-types', AttachmentTypeController::class);
 
+    // Subscriptions
+    Route::get('my-subscription', [App\Http\Controllers\Company\SubscriptionController::class, 'index'])->name('company.subscription.index');
+    Route::post('my-subscription/checkout', [App\Http\Controllers\Company\SubscriptionController::class, 'checkout'])->name('company.subscription.checkout');
+    Route::post('my-subscription/verify', [App\Http\Controllers\Company\SubscriptionController::class, 'verify'])->name('company.subscription.verify');
+
     // Manager and Supervisor Routes
     Route::resource('my-tickets', MyTicketsController::class);
     Route::resource('my-projects', MyProjectsController::class);
@@ -177,6 +195,8 @@ Route::middleware('auth')->group(function () {
 
     // Employee Routes
     Route::get('/my-attendance', [EmployeeController::class, 'myAttendance'])->name('myAttendance');
+    Route::post('/employee/check-in', [EmployeeController::class, 'checkIn'])->name('employee.check-in');
+    Route::post('/employee/check-out', [EmployeeController::class, 'checkOut'])->name('employee.check-out');
     Route::get('/emp-bills', [EmployeeController::class, 'empBills'])->name('empBills');
     Route::get('/my-bank-accounts', [EmployeeController::class, 'myBank'])->name('myBank');
     // Route::get('/emp-projects', [EmployeeController::class, 'empProjects'])->name('empProjects');

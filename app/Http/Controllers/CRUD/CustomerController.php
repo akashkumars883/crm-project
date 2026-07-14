@@ -127,7 +127,7 @@ class CustomerController extends Controller
             $newUser = User::create([
                 'name' => $lead->name,
                 'email' => $lead->email,
-                'password' => Hash::make($password),
+                'password' => $password,
             ]);
 
             // Attach the "client" role to the user
@@ -277,7 +277,7 @@ class CustomerController extends Controller
             // Only update password if admin has entered one
             if ($request->filled('user_password')) {
                 $customer->user->update([
-                    'password' => Hash::make($request->user_password),
+                    'password' => $request->user_password,
                 ]);
             }
 

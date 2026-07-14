@@ -31,7 +31,9 @@
                                     <th>Invoice #</th>
                                     <th>Date</th>
                                     <th>Customer</th>
-                                    <th>Items</th>
+                                    <th>Output GST</th>
+                                    <th>Input Credit</th>
+                                    <th>Net Payable</th>
                                     <th>Amount</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -46,7 +48,14 @@
                                         {{ $invoice->bill_to_name }}<br>
                                         <small class="text-muted">{{ optional($invoice->lead)->name ?? '' }}</small>
                                     </td>
-                                    <td>{{ $invoice->items->count() }} items</td>
+                                    @php
+                                        $itc = $invoice->getInputTaxCredit();
+                                        $outputGst = $invoice->igst_amount ?? 0;
+                                        $netPayable = $invoice->getNetGstPayable();
+                                    @endphp
+                                    <td class="text-success fw-bold">₹{{ number_format($outputGst, 2) }}</td>
+                                    <td class="text-primary fw-bold">₹{{ number_format($itc, 2) }}</td>
+                                    <td class="text-danger fw-bold">₹{{ number_format($netPayable, 2) }}</td>
                                     <td class="fw-bold">₹{{ number_format($invoice->balance_due, 0) }}</td>
                                     <td>
                                         @php

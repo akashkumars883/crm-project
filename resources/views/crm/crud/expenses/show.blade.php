@@ -7,9 +7,9 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0 fw-bold">Expense Details</h4>
             <div>
-                <a href="{{ route('expenses.index') }}" class="btn btn-outline-secondary"><i class="ti ti-arrow-left"></i> Back</a>
+                <a href="{{ route('expenses.index') }}" class="btn btn-sm btn-outline-secondary"><i class="ti ti-arrow-left"></i> Back</a>
                 @if(Auth::user()->hasRole('super_admin|admin|manager'))
-                    <a href="{{ route('expenses.edit', $expense->id) }}" class="btn btn-warning"><i class="ti ti-pencil"></i> Edit / Update Status</a>
+                    <a href="{{ route('expenses.edit', $expense->id) }}" class="btn btn-sm btn-warning"><i class="ti ti-pencil"></i> Edit / Update Status</a>
                 @endif
             </div>
         </div>

@@ -51,7 +51,20 @@
     <div class="mb-4">
         <h6 class="mb-3 text-secondary fw-bold text-uppercase" style="font-size: 13px; letter-spacing: 0.5px;">Leads By Status</h6>
         <div class="row g-3">
+            @php
+                $importantKeywords = ['new', 'contact', 'qualif', 'convert', 'progress', 'follow', 'won', 'active'];
+            @endphp
             @foreach($leadStatusAnalytics as $status)
+                @php
+                    $isImportant = false;
+                    foreach($importantKeywords as $keyword) {
+                        if(str_contains(strtolower($status->name), $keyword)) {
+                            $isImportant = true;
+                            break;
+                        }
+                    }
+                @endphp
+                @if($isImportant)
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card shadow-sm border-0 h-100">
                         <div class="card-body text-center p-3">
@@ -60,25 +73,12 @@
                         </div>
                     </div>
                 </div> 
+                @endif
             @endforeach
         </div>
     </div>
 
-    <div class="mb-4">
-        <h6 class="mb-3 text-secondary fw-bold text-uppercase" style="font-size: 13px; letter-spacing: 0.5px;">Leads By Source</h6>
-        <div class="row g-3">
-            @foreach($leadSourceAnalytics as $status)
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body text-center p-3">
-                            <p class="text-muted mb-1 fw-semibold" style="font-size: 14px;">{{ $status->name }}</p>
-                            <h3 class="mb-0 text-dark fw-bold">{{ $status->leads_count }}</h3>
-                        </div>
-                    </div>
-                </div> 
-            @endforeach
-        </div>
-    </div>
+
 
     <div class="row">
         <div class="col-12">

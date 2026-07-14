@@ -14,7 +14,7 @@
     <!-- end page title end breadcrumb -->
 
     {{-- Analytics --}}
-    <div class="p-3 row bg-white">
+    <div class="row g-3 mb-4">
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
@@ -104,7 +104,7 @@
             <!-- Pagination links -->
             <div class="pt-3">
                 {{ $inventories->links('pagination::bootstrap-5') }}
-            </div>>
+            </div>
         </div>
     </div>
 

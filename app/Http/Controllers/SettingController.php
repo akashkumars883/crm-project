@@ -8,11 +8,31 @@ class SettingController extends Controller
 {
     public function index()
     {
-        return view('profile.settings');
+        $user = \Illuminate\Support\Facades\Auth::user();
+        
+        if (!$user->hasRole('admin') && !$user->hasRole('super-admin')) {
+            abort(403, 'Unauthorized access to company settings.');
+        }
+
+        $plans = [];
+        $currentSubscription = null;
+
+        if ($user->hasRole('admin') && !$user->hasRole('super-admin')) {
+            $company = $user->company;
+            $currentSubscription = $company->subscription;
+            $plans = \App\Models\SubscriptionPlan::where('is_active', true)->get();
+        }
+
+        return view('profile.settings', compact('plans', 'currentSubscription'));
     }
 
     public function update(Request $request)
     {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user->hasRole('admin') && !$user->hasRole('super-admin')) {
+            abort(403, 'Unauthorized access to company settings.');
+        }
+
         // General Settings
         if ($request->has('company_name')) set_setting('company_name', $request->company_name);
         if ($request->has('company_email')) set_setting('company_email', $request->company_email);

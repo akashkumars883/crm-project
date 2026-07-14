@@ -6,7 +6,9 @@
     <div class="col-md-8">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0 fw-bold">Log New Expense</h4>
-            <a href="{{ route('expenses.index') }}" class="btn btn-outline-secondary"><i class="ti ti-arrow-left"></i> Back</a>
+            <div>
+                <a href="{{ route('expenses.index') }}" class="btn btn-sm btn-outline-secondary w-auto"><i class="ti ti-arrow-left"></i> Back</a>
+            </div>
         </div>
 
         <div class="card shadow-sm border-0">

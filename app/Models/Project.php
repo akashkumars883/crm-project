@@ -32,6 +32,9 @@ class Project extends Model
         'previous_leftover_material_cost',
         'administrative_cost',
         'invoice_value',
+        'location_name',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [
@@ -85,5 +88,79 @@ class Project extends Model
     public function attendance()
     {
         return $this->hasMany(AttendanceRecord::class);
+    }
+
+    public function bills()
+    {
+        return $this->hasMany(Bill::class);
+    }
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_project');
+    }
+
+    // Custom methods to calculate values
+    public function totalLabor()
+    {
+        return $this->attendance
+            ->where('project_id', $this->id)
+            ->pluck('employee_id')
+            ->unique()
+            ->count();
+    }
+
+    public function totalLaborCost()
+    {
+        $totalEmployees = $this->totalLabor(); // Total number of employees
+        $laborCostPerDay = $this->labor_cost; // Labor cost per day from the project model
+        $totalDays = $this->attendance->count(); // Total number of attendance records for the project
+
+        // Calculate cumulative labor cost
+        $cumulativeLaborCostPerDay = $totalEmployees * $laborCostPerDay * $totalDays;
+        $cumulativeLaborCost = $cumulativeLaborCostPerDay * $totalDays;
+        return $cumulativeLaborCost;
+    }
+
+    public function totalMaterial()
+    {
+        return $this->inventories->count();
+    }
+
+    public function totalMaterialCost()
+    {
+        $previousLeftoverMaterial = $this->previous_leftover_material_cost ?? 0;
+        $totalMaterialPurchased = $this->inventories->sum('cost');
+
+        return $previousLeftoverMaterial + $totalMaterialPurchased;
+    }
+
+    public function administrativeCost()
+    {
+        return $this->administrative_cost ?? 0;
+    }
+
+    public function totalCostIncurred()
+    {
+        $totalLaborCost = $this->totalLaborCost();
+        $totalMaterialCost = $this->totalMaterialCost();
+        $miscellaneousExpenses = $this->bills->sum('amount');
+        $administrativeCost = $this->administrativeCost();
+
+        return $totalLaborCost + $totalMaterialCost + $miscellaneousExpenses + $administrativeCost;
+    }
+
+    public function result()
+    {
+        $invoiceValue = $this->invoice_value ?? 0;
+        $totalCostIncurred = $this->totalCostIncurred();
+
+        $profitLossValue = $invoiceValue - $totalCostIncurred;
+        $profitLossPercentage = $invoiceValue > 0 ? ($profitLossValue / $invoiceValue) * 100 : 0;
+
+        return [
+            'profitLossValue' => $profitLossValue,
+            'profitLossPercentage' => $profitLossPercentage,
+        ];
     }
 }

@@ -78,7 +78,7 @@ class Employee extends Model
 
     public function projects()
     {
-        return $this->hasMany(Project::class);
+        return $this->belongsToMany(Project::class, 'employee_project');
     }
 
     public function attendanceRecords()

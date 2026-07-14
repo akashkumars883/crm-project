@@ -4,7 +4,7 @@
 @php
     use Carbon\Carbon;
 @endphp
-<div class="row pt-3  border border-bottom border-5 mb-4">
+<div class="row pt-3 mb-4">
     <div class="col">
         <div class="card mb-0">
             <div class="card-body">
@@ -99,7 +99,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="row justify-content-center">
             <div class="col-2">
@@ -262,7 +262,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -321,7 +321,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -386,7 +386,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -445,7 +445,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">

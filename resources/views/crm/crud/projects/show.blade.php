@@ -4,7 +4,7 @@
 @php
     use Carbon\Carbon;
 @endphp
-<div class="row pt-3  border border-bottom border-5 mb-4">
+<div class="row pt-3 mb-4">
     <div class="col">
         <div class="card mb-0">
             <div class="card-body">
@@ -99,7 +99,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="row justify-content-center">
             <div class="col-2">
@@ -262,10 +262,55 @@
     </div>
 </div>
 
+<div class="container-fluid mb-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>Assigned Team / Labors</h5>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary btn-sm mt-0 mb-3" data-bs-toggle="modal" data-bs-target="#assignTeamModal">Assign Team</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Emp ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Designation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($project->employees as $emp)
+                                <tr>
+                                    <td>{{ $emp->emp_id }}</td>
+                                    <td>{{ $emp->name }}</td>
+                                    <td>{{ $emp->phone }}</td>
+                                    <td>{{ $emp->designation ? $emp->designation->name : 'N/A' }}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4">No employees assigned to this project yet.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Include the Kanban Board for Tasks -->
 @include('crm.crud.projects.kanban')
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -324,7 +369,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -389,7 +434,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -448,7 +493,7 @@
     </div>
 </div>
 
-<div class="container-fluid border border-bottom border-5 mb-4">
+<div class="container-fluid mb-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -709,5 +754,37 @@
     </div>
 </div>
 @endforeach
+
+<!-- Add the Assign Team Modal Markup -->
+<div class="modal fade" id="assignTeamModal" tabindex="-1" aria-labelledby="assignTeamModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="assignTeamModalLabel">Assign Team / Labors</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('projects.assign-team', $project->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Select Employees</label>
+                        <select class="form-select" name="employee_ids[]" multiple style="height: 200px;">
+                            @foreach($employees as $employee)
+                                <option value="{{ $employee->id }}" {{ $project->employees->contains($employee->id) ? 'selected' : '' }}>
+                                    {{ $employee->name }} - {{ $employee->designation ? $employee->designation->name : 'Labor' }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Assignment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @endsection

@@ -92,11 +92,14 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Employee ID</th>
                                     <th>Employee</th>
-                                    <th>Project ID</th>
+                                    <th>Project</th>
                                     <th>Date</th>
-                                    <th>Type</th>
+                                    <th>Photo</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>GPS</th>
+                                    <th>DWR</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -104,14 +107,35 @@
                             <tbody>
                                 @foreach($attendanceRecords as $attendanceRecord)
                                 <tr>
-                                    <td>{{ $attendanceRecord->employee->emp_id }}</td>
-                                    <td>{{ $attendanceRecord->employee->name }}</td>
-                                    <td>{{ $attendanceRecord->project_id }} - {{ $attendanceRecord->project->customer->lead->name }}</td>
+                                    <td>{{ $attendanceRecord->employee->name }}<br><small>{{ $attendanceRecord->employee->emp_id }}</small></td>
+                                    <td>{{ $attendanceRecord->project_id }} - {{ $attendanceRecord->project->customer->lead->name ?? 'N/A' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($attendanceRecord->date)->format('D d, M Y') }}</td>
-                                    <td>{{ $attendanceRecord->attendanceType->name }}</td>
-                                    <td>{{ $attendanceRecord->attendanceStatus->name }}</td>
                                     <td>
-                                        <a href="{{ route('attendance-records.edit', $attendanceRecord->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                        @if($attendanceRecord->photo)
+                                            <a href="{{ asset('storage/' . $attendanceRecord->photo) }}" target="_blank" class="badge bg-primary">View</a>
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($attendanceRecord->created_at)->format('h:i A') }}</td>
+                                    <td>{{ $attendanceRecord->checkout_time ? \Carbon\Carbon::parse($attendanceRecord->checkout_time)->format('h:i A') : 'Pending' }}</td>
+                                    <td>
+                                        @if($attendanceRecord->latitude && $attendanceRecord->longitude)
+                                            <a href="https://maps.google.com/?q={{ $attendanceRecord->latitude }},{{ $attendanceRecord->longitude }}" target="_blank" class="badge bg-success">Map</a>
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($attendanceRecord->daily_report)
+                                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="popover" title="DWR" data-bs-content="{{ $attendanceRecord->daily_report }}">Read</button>
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>{{ $attendanceRecord->attendanceStatus ? $attendanceRecord->attendanceStatus->name : 'N/A' }}</td>
+                                    <td>
+                                        <a href="{{ route('attendance-records.show', $attendanceRecord->id) }}" class="btn btn-sm btn-primary">View</a>
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $attendanceRecord->id }}">Delete</button>
                                     </td>
                                 </tr>

@@ -114,11 +114,118 @@
             background-color: #2563eb !important;
         }
 
-        /* Global UI Polish: Sharper corners for a cleaner, modern look */
-        .card { border-radius: 6px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.02) !important; }
-        .btn { border-radius: 4px !important; }
-        .form-control, .form-select { border-radius: 4px !important; }
-        .badge { border-radius: 4px !important; }
+        /* =========================================================
+           GLOBAL ENTERPRISE UI SYSTEM (Flat & Professional)
+           ========================================================= */
+        
+        /* 1. Typography & Colors */
+        body, .page-wrapper { 
+            background-color: #ffffff !important; 
+            font-family: 'Inter', system-ui, sans-serif;
+            color: #334155;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .card-title {
+            color: #0f172a !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.3px;
+        }
+
+        /* 2. Cards & Panels */
+        .card { 
+            border-radius: 6px !important; 
+            box-shadow: none !important; 
+            border: 1px solid #e2e8f0 !important; 
+            background-color: #ffffff !important;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background-color: transparent !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            padding: 16px 20px !important;
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-body {
+            padding: 20px !important;
+        }
+
+        /* 3. Inputs & Buttons */
+        .btn { 
+            border-radius: 4px !important; 
+            box-shadow: none !important; 
+            font-weight: 600; 
+        }
+        .btn:not(.btn-sm) {
+            padding: 8px 16px;
+        }
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+        .form-control, .form-select { 
+            border-radius: 4px !important; 
+            box-shadow: none !important; 
+            border: 1px solid #cbd5e1 !important; 
+            padding: 10px 14px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        }
+
+        /* 4. Tables Clean UI */
+        .table {
+            color: #334155;
+            margin-bottom: 0;
+        }
+        .table th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            border-bottom: 1px solid #e2e8f0 !important;
+            font-weight: 600;
+            padding: 14px 20px !important;
+            background: transparent !important;
+            border-top: none !important;
+        }
+        .table td {
+            padding: 14px 20px !important;
+            vertical-align: middle;
+            border-bottom: 1px solid #f8fafc;
+            font-size: 13.5px;
+            font-weight: 500;
+        }
+        .table tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+        
+        /* 5. Status Dots for Badges in Tables (Transforms bulky badges to elegant dots) */
+        .table .badge {
+            background: transparent !important;
+            font-weight: 600;
+            padding: 0;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #475569 !important;
+            text-transform: capitalize;
+            box-shadow: none !important;
+        }
+        .table .badge.bg-success::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e; }
+        .table .badge.bg-danger::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background-color: #ef4444; }
+        .table .badge.bg-warning::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background-color: #f59e0b; }
+        .table .badge.bg-info::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background-color: #0ea5e9; }
+        .table .badge.bg-primary::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background-color: #3b82f6; }
+        .table .badge.bg-secondary::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background-color: #94a3b8; }
+        .table .badge.bg-dark::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background-color: #0f172a; }
     </style>
     <!-- ... other meta tags, CSS links, etc. ... -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
@@ -126,13 +233,303 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
     {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script> --}}
+
+    <style>
+        /* =========================================================
+           GLOBAL LAYOUT CSS (Sidebar + Topbar)
+           ========================================================= */
+        :root {
+            --sidebar-width: 230px;
+            --topbar-height: 65px;
+            --primary-bg: #f8f9fa;
+            --sidebar-bg: #ffffff;
+            --topbar-bg: #ffffff;
+        }
+
+        body, html {
+            overflow-x: hidden;
+            background-color: var(--primary-bg) !important;
+        }
+
+        /* Sidebar Wrapper */
+        .sidebar-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-right: 1px solid #e2e8f0; /* Added explicit border to separate from content */
+            z-index: 1001;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #navigation {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Logo Area */
+        .brand {
+            height: var(--topbar-height);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Align left */
+            padding-left: 20px; /* Match sidebar menu visual alignment */
+            flex-shrink: 0;
+            border-bottom: none; /* Remove duplicate border */
+        }
+        
+        .brand .logo-lg {
+            height: 50px; /* Larger logo */
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* Menu Scroll Area */
+        .menu-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scrollbar styling for sidebar */
+        .menu-content::-webkit-scrollbar {
+            width: 5px;
+        }
+        .menu-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .menu-content::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+        .menu-content:hover::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+        }
+
+        /* Sidebar Navigation Items */
+        .navigation-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100%;
+        }
+
+        .navigation-menu > li.nav-item {
+            width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .navigation-menu .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #4b5563;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .navigation-menu .nav-link:hover,
+        .navigation-menu .nav-link[aria-expanded="true"] {
+            background-color: #f1f5f9;
+            color: #0d6efd;
+        }
+
+        .navigation-menu .nav-link .menu-icon {
+            font-size: 18px;
+            margin-right: 10px;
+            color: #64748b;
+            transition: color 0.2s ease;
+        }
+
+        .navigation-menu .nav-link:hover .menu-icon,
+        .navigation-menu .nav-link[aria-expanded="true"] .menu-icon {
+            color: #0d6efd;
+        }
+
+        /* Sidebar Dropdown Override for Accordion */
+        .navigation-menu .dropdown-menu {
+            position: static !important;
+            float: none !important;
+            display: none; 
+            box-shadow: none !important;
+            background: transparent !important;
+            padding: 4px 0 4px 26px !important;
+            border: none !important;
+            width: 100% !important;
+            margin: 0 !important;
+            transform: none !important;
+        }
+        .navigation-menu .dropdown-menu.show {
+            display: block;
+        }
+        
+        .navigation-menu .dropdown-menu .dropdown-item {
+            padding: 6px 10px;
+            color: #64748b;
+            font-size: 13.5px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .navigation-menu .dropdown-menu .dropdown-item:hover {
+            color: #0d6efd;
+            background-color: #f8fafc;
+            padding-left: 14px; /* slight indent on hover */
+        }
+
+        /* Dropend submenus in sidebar */
+        .navigation-menu .dropdown-submenu .dropdown-menu {
+            padding-left: 15px !important;
+        }
+
+        /* Topbar fixed */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--topbar-height);
+            background: var(--topbar-bg);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+        /* Page wrapper */
+        .page-wrapper {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width)) !important;
+            max-width: 100% !important;
+            padding-top: var(--topbar-height);
+            min-height: 100vh;
+            background-color: var(--primary-bg);
+            transition: all 0.3s ease;
+        }
+        
+        .page-content-tab {
+            padding: 16px 24px 24px 24px;
+            margin-top: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Drawer Backdrop */
+        .menu-backdrop-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .menu-backdrop-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 991.98px) {
+            .sidebar-wrapper {
+                left: calc(-1 * var(--sidebar-width)) !important;
+                visibility: hidden !important;
+                box-shadow: none !important;
+                position: fixed !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: calc(-1 * var(--sidebar-width)) !important;
+                height: 100vh !important; 
+                width: var(--sidebar-width) !important;
+                visibility: hidden !important;
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                justify-content: flex-start !important;
+                z-index: 10000 !important;
+                transform: none !important;
+            }
+            .sidebar-wrapper.drawer-open {
+                left: 0 !important;
+                visibility: visible !important;
+                box-shadow: 4px 0 24px rgba(0,0,0,0.2) !important;
+            }
+            #navigation {
+                margin: 0 !important;
+                padding: 0 !important;
+                height: 100% !important;
+                width: 100% !important;
+                border-radius: 0 !important;
+                background: #ffffff !important;
+                box-shadow: none !important;
+            }
+            .topbar {
+                left: 0;
+                padding: 0 16px;
+            }
+            .page-wrapper {
+                margin-left: 0;
+                width: 100% !important;
+            }
+            .page-content-tab {
+                padding: 16px;
+            }
+            .custom-navbar-toggle {
+                display: block;
+                width: 32px;
+                height: 32px;
+                position: relative;
+                cursor: pointer;
+            }
+            .custom-navbar-toggle .lines {
+                position: absolute;
+                top: 50%; left: 50%; transform: translate(-50%, -50%);
+                width: 20px; height: 14px;
+            }
+            .custom-navbar-toggle .lines span {
+                display: block; width: 100%; height: 2px;
+                background-color: #334155; margin-bottom: 4px;
+                transition: all 0.3s ease;
+            }
+            .custom-navbar-toggle .lines span:last-child { margin-bottom: 0; }
+            
+            .custom-navbar-toggle.open .lines span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+            .custom-navbar-toggle.open .lines span:nth-child(2) { opacity: 0; }
+            .custom-navbar-toggle.open .lines span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+        }
+    </style>
 </head>
-<body id="body" data-layout="horizontal">
+<body id="body">
+    <!-- Sidebar Start -->
+    @include('layouts.partials.sidebar')
+    <!-- Sidebar End -->
+
     <!-- Top Bar Start -->
     <div class="topbar">
         @include('layouts.partials.top-bar')
     </div>
-    <!-- Top Bar End -->
     <!-- Top Bar End -->
 
     <div class="page-wrapper">

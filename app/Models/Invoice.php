@@ -77,4 +77,26 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
+
+    public function getInputTaxCredit()
+    {
+        $itc = 0;
+        // Check if invoice has a lead and lead has a customer
+        if ($this->lead && $this->lead->customer) {
+            $customer = $this->lead->customer;
+            // Get all projects for this customer
+            $projects = Project::where('customer_id', $customer->id)->get();
+            foreach ($projects as $project) {
+                // Sum tax_amount from all bills related to this project
+                $itc += Bill::where('project_id', $project->id)->sum('tax_amount');
+            }
+        }
+        return $itc;
+    }
+
+    public function getNetGstPayable()
+    {
+        $outputTax = $this->igst_amount ?? 0;
+        return $outputTax - $this->getInputTaxCredit();
+    }
 }

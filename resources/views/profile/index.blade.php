@@ -1,10 +1,10 @@
 @extends('layouts.app')
-@section('title', 'My Profile')
+@section('title', 'My Account / Profile')
 
 @section('content')
 <div class="row mt-4 justify-content-center">
     <div class="col-lg-10">
-        <h4 class="mb-4 fw-bold">My Profile</h4>
+        <h4 class="mb-4 fw-bold">My Account / Profile</h4>
 
         @if($errors->any())
             <div class="alert alert-danger shadow-sm">

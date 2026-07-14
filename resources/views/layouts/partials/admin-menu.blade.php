@@ -38,6 +38,7 @@
             <li><a href="{{ route('invoices.index') }}" class="dropdown-item">Invoices</a></li>
             <li><a href="{{ route('projects.index') }}" class="dropdown-item">Projects</a></li>
             <li><a href="{{ route('activities.index') }}" class="dropdown-item">Activities</a></li>
+            <li><a href="{{ route('tasks.index') }}" class="dropdown-item">Tasks</a></li>
             <li><a href="{{ route('attachments.index') }}" class="dropdown-item">Attachments</a></li>
         </ul>
     </li>
@@ -59,7 +60,7 @@
             <span>Accounts</span>
         </a>
         <ul class="dropdown-menu animate slideIn" aria-labelledby="accountsMenu">
-            {{-- <li><a href="{{ route('employee-bank-accounts.index') }}" class="dropdown-item">Employee Bank Accounts</a></li> --}}
+            <li><a href="{{ route('employee-bank-accounts.index') }}" class="dropdown-item">Employee Bank Accounts</a></li>
             <li><a href="{{ route('payments.index') }}" class="dropdown-item">Payments</a></li>
             <li><a href="{{ route('bills.index') }}" class="dropdown-item">Bills</a></li>
             <li><a href="{{ route('expenses.index') }}" class="dropdown-item">Daily Expenses</a></li>
@@ -79,23 +80,38 @@
         </ul>
     </li>
 
-    {{-- <li class="nav-item dropdown">
+    <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="ticketsMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="ti ti-ticket menu-icon me-2"></i>
-            <span>Tickets</span>
+            <span>Tickets & Support</span>
         </a>
         <ul class="dropdown-menu animate slideIn" aria-labelledby="ticketsMenu">
             <li><a href="{{ route('tickets.index') }}" class="dropdown-item">Tickets</a></li>
         </ul>
-    </li> --}}
+    </li>
 
     </ul>
     
     <ul class="navigation-menu mt-auto mb-0 pt-3 border-top">
+    
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('profile.settings') }}">
+            <i class="ti ti-building-skyscraper menu-icon me-2"></i>
+            <span>Company Profile</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('profile.index') }}">
+            <i class="ti ti-user-circle menu-icon me-2"></i>
+            <span>My Account / Profile</span>
+        </a>
+    </li>
+
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="fieldsMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="ti ti-settings menu-icon me-2"></i>
-            <span>Settings & Fields</span>
+            <i class="ti ti-adjustments-horizontal menu-icon me-2"></i>
+            <span>Fields Setup</span>
         </a>
         <ul class="dropdown-menu animate slideIn" aria-labelledby="fieldsMenu">
             <li class="dropdown-submenu dropend">
@@ -144,11 +160,8 @@
                     <li><a href="{{ route('attendance-types.index') }}" class="dropdown-item">Attendance Type</a></li>
                     <li><a href="{{ route('attendance-statuses.index') }}" class="dropdown-item">Attendance Status</a></li>
                     <li><a href="{{ route('employee-types.index') }}" class="dropdown-item">Employee Type</a></li>
-                    {{-- <li><a href="{{ route('blood-groups.index') }}" class="dropdown-item">Blood Group</a></li>
-                    <li><a href="{{ route('genders.index') }}" class="dropdown-item">Gender</a></li> --}}
                     <li><a href="{{ route('designations.index') }}" class="dropdown-item">Designation</a></li>
                     <li><a href="{{ route('departments.index') }}" class="dropdown-item">Department</a></li>
-                    {{-- <li><a href="{{ route('skills.index') }}" class="dropdown-item">Skills</a></li> --}}
                 </ul>
             </li>
             <li class="dropdown-submenu dropend">
@@ -158,19 +171,15 @@
                     <li><a href="{{ route('vendor-statuses.index') }}" class="dropdown-item">Vendor Status</a></li>
                 </ul>
             </li>
-            {{-- <li class="dropdown-submenu dropend">
-                <a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" href="#">Ticket/Activity Fields</a>
-                <ul class="dropdown-menu animate slideIn">
-                    <li><a href="{{ route('activity-types.index') }}" class="dropdown-item">Activity Type</a></li>
-                    <li><a href="{{ route('ticket-categories.index') }}" class="dropdown-item">Ticket Category</a></li>
-                </ul>
-            </li> --}}
         </ul>
     </li>
 
-    {{-- <li class="nav-item">
-        <a class="nav-link" href="/laratrust">Roles/Permissions</a>
-    </li> --}}
+    <li class="nav-item">
+        <a class="nav-link" href="/laratrust">
+            <i class="ti ti-shield-lock menu-icon me-2"></i>
+            <span>Roles/Permissions</span>
+        </a>
+    </li>
     <li class="nav-item">
         <a class="nav-link text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
             <i class="ti ti-power menu-icon me-2 text-danger"></i>

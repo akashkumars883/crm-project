@@ -104,6 +104,34 @@
   @endif
 </div>
 
+@php
+    $itc = $invoice->getInputTaxCredit();
+    $outputGst = $invoice->igst_amount ?? 0;
+    $netPayable = $invoice->getNetGstPayable();
+@endphp
+
+<div class="card mb-4 border-0" style="max-width: 800px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 8px;">
+    <div class="card-header bg-white border-bottom fw-bold text-primary py-2">
+        <i class="ti ti-chart-pie me-1"></i> Internal Tax & Profitability Summary
+    </div>
+    <div class="card-body p-3">
+        <div class="row text-center">
+            <div class="col-4 border-end">
+                <div class="text-muted mb-1 fw-bold" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Output GST (Collected)</div>
+                <h4 class="text-success fw-bold mb-0">₹{{ number_format($outputGst, 2) }}</h4>
+            </div>
+            <div class="col-4 border-end">
+                <div class="text-muted mb-1 fw-bold" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Input Credit (ITC)</div>
+                <h4 class="text-primary fw-bold mb-0">₹{{ number_format($itc, 2) }}</h4>
+            </div>
+            <div class="col-4">
+                <div class="text-muted mb-1 fw-bold" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Net GST Payable</div>
+                <h4 class="text-danger fw-bold mb-0">₹{{ number_format($netPayable, 2) }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="invoiceBox" style="position: relative;">
   <!-- Watermark -->
   <div style="position: absolute; top: 25%; left: 15%; width: 70%; height: 50%; background-image: url('{{ get_setting('company_logo') ? (\Illuminate\Support\Str::startsWith(get_setting('company_logo', 'http') ? get_setting('company_logo' : asset('storage/' . get_setting('company_logo'))) : asset('assets/images/logo.webp') }}'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.05; z-index: 0; pointer-events: none; transform: rotate(-45deg);"></div>

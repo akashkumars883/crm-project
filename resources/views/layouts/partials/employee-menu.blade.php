@@ -16,6 +16,7 @@
             <i class="ti ti-receipt menu-icon me-2"></i>
             <span>Bills</span>
         </a>
+    </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('expenses.index') }}">
             <i class="ti ti-cash menu-icon me-2"></i>

@@ -141,6 +141,9 @@ class ProjectController extends Controller
             'invoiceValue' => 'required|numeric|min:0',
             'previousLeftoverMaterialCost' => 'required|numeric|min:0',
             'administrativeCost' => 'required|numeric|min:0',
+            'location_name' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
 
         Project::create($request->all());
@@ -223,6 +226,9 @@ class ProjectController extends Controller
             'invoiceValue' => 'required|numeric|min:0',
             'previousLeftoverMaterialCost' => 'required|numeric|min:0',
             'administrativeCost' => 'required|numeric|min:0',
+            'location_name' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
 
         $project->update($request->all());
@@ -243,5 +249,20 @@ class ProjectController extends Controller
             abort(403, 'Unauthorized Access');
         }
         
+    }
+
+    public function assignTeam(Request $request, Project $project)
+    {
+        if (Auth::user()->hasPermission('update-project')) {
+            $request->validate([
+                'employee_ids' => 'array',
+                'employee_ids.*' => 'exists:employees,id',
+            ]);
+            $project->employees()->sync($request->employee_ids ?? []);
+            notify()->success('Team Assigned Successfully');
+            return redirect()->back();
+        } else {
+            abort(403, 'Unauthorized Access');
+        }
     }
 }

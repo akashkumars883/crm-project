@@ -3,7 +3,7 @@
 @section('content')
 <div class="p-3 bg-light">
     <div class="row justify-content-center">
-        <div class="col-sm-6">
+        <div class="col-12 col-md-6">
             <div class="page-title-box">
                 <h4 class="page-title">My Bank Account Details</h4>
             </div><!--end page-title-box-->
@@ -12,7 +12,7 @@
     <!-- end row -->
 
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
             <div class="card">
                 <div class="card-body">
                     <p class="font-14">Bank Name: {{ $employeeBankAccount->bank_name }}</p>
