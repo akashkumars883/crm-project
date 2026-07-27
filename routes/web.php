@@ -54,6 +54,11 @@ use App\Http\Controllers\Fields\VendorTypeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+// Health Check Endpoint (For UptimeRobot / Ping Services to prevent Render sleep)
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok', 'timestamp' => now()->toIso8601String()]);
+});
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
