@@ -11,7 +11,7 @@
     border-radius: 4px !important; 
     padding: 24px 30px; 
     margin-bottom: 24px; 
-    border: 1px solid #e9ecef !important;
+    border: none !important;
     position: relative; 
     overflow: hidden;
     display: flex;

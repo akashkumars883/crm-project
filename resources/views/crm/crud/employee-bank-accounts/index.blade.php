@@ -42,8 +42,8 @@
                             <tbody>
                                 @foreach($employeeBankAccounts as $bankAccount)
                                 <tr>
-                                    <td>{{ $bankAccount->employee->emp_id }}</td>
-                                    <td>{{ $bankAccount->employee->full_name }}</td>
+                                    <td>{{ optional($bankAccount->employee)->emp_id ?? 'N/A' }}</td>
+                                    <td>{{ optional($bankAccount->employee)->name ?? 'N/A' }}</td>
                                     <td>{{ $bankAccount->bank_name }}</td>
                                     <td>{{ $bankAccount->branch }}</td>
                                     <td>{{ $bankAccount->ifsc }}</td>

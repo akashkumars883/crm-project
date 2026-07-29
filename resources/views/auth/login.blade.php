@@ -7,21 +7,21 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-4 mx-auto">
-                        <div class="card">
+                        <div class="card border-0 shadow-none">
                             <div class="card-body p-0 auth-header-box">
                                 <div class="text-center p-3">
-                                    <a href="index.html" class="logo logo-admin">
+                                    <a href="/" class="logo logo-admin">
                                         <img src="{{ asset('assets/images/logo.webp') }}" height="50" alt="logo" class="auth-logo">
                                     </a>
-                                    <h4 class="mt-3 mb-1 fw-semibold text-white font-18">Home Glazer CRM</h4>
-                                    <p class="text-muted  mb-0">Please sign in to continue.</p>
+                                    <h4 class="mt-3 mb-1 fw-semibold text-white font-18">CRM Workspace</h4>
+                                    <p class="text-muted mb-0">Please sign in to continue.</p>
                                 </div>
                             </div>
-                            <div class="card-body pt-0">
-                                <form class="my-4" method="POST" action="{{ route('login') }}">
-                                    @csrf <!-- Add CSRF token -->
+                            <div class="card-body pt-3">
+                                <form class="my-3" method="POST" action="{{ route('login') }}">
+                                    @csrf
 
-                                    <div class="form-group mb-2">
+                                    <div class="form-group mb-3">
                                         <label class="form-label text-dark" for="email">Email Address</label>
                                         <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                                         @error('email')
@@ -31,11 +31,16 @@
                                         @enderror
                                     </div><!--end form-group-->
 
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label class="form-label text-dark" for="password">Password</label>
-                                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" required autocomplete="current-password">
+                                        <div class="position-relative">
+                                            <input type="password" class="form-control pe-5 @error('password') is-invalid @enderror" name="password" id="password" required autocomplete="current-password">
+                                            <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" id="togglePasswordBtn" style="cursor: pointer; z-index: 10;">
+                                                <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                                            </span>
+                                        </div>
                                         @error('password')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
@@ -62,8 +67,8 @@
                                             </div>
                                         </div><!--end col-->
                                     </div> <!--end form-group-->
-                                    <div class="m-3 text-center text-muted">
-                                        <p class="mb-0">Want to use this CRM for your business? <br> <a href="{{ route('company.register') }}" class="text-primary ms-2 fw-bold">Register Your Business</a></p>
+                                    <div class="mt-4 text-center text-muted">
+                                        <p class="mb-0">Want to use this CRM for your business? <br> <a href="{{ route('company.register') }}" class="text-primary fw-bold text-decoration-none">Register Your Business</a></p>
                                     </div>
                                 </form><!--end form-->
                             </div><!--end card-body-->
@@ -74,4 +79,20 @@
         </div><!--end col-->
     </div><!--end row-->
 </div><!--end container-->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById('togglePasswordBtn');
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('togglePasswordIcon');
+
+    if (toggleBtn && passwordInput && toggleIcon) {
+        toggleBtn.addEventListener('click', function () {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            toggleIcon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+        });
+    }
+});
+</script>
 @endsection

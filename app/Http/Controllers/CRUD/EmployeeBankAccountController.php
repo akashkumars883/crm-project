@@ -29,7 +29,7 @@ class EmployeeBankAccountController extends Controller
             if ($searchQuery) {
                 $employeeBankAccountsQuery->whereHas('employee', function ($query) use ($searchQuery) {
                     $query->where('emp_id', 'LIKE', '%' . $searchQuery . '%')
-                        ->orWhere('full_name', 'LIKE', '%' . $searchQuery . '%')
+                        ->orWhere('name', 'LIKE', '%' . $searchQuery . '%')
                         ->orWhere('phone', 'LIKE', '%' . $searchQuery . '%')
                         ->orWhere('email', 'LIKE', '%' . $searchQuery . '%');
                 })

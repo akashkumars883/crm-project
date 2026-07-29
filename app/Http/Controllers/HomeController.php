@@ -92,8 +92,7 @@ class HomeController extends Controller
             $recentLeads   = Lead::latest()->take(5)->get();
             $activeProjects = \App\Models\Project::with('projectStatus', 'customer.lead')->latest()->take(5)->get();
             $mapProjects = \App\Models\Project::with(['projectStatus', 'customer.lead'])
-                            ->whereNotNull('latitude')
-                            ->whereNotNull('longitude')
+                            ->latest()
                             ->get();
 
             // New Analytics for Dashboard
@@ -139,8 +138,7 @@ class HomeController extends Controller
             $recentLeads   = Lead::latest()->take(5)->get();
             $activeProjects = \App\Models\Project::with('projectStatus', 'customer.lead')->latest()->take(5)->get();
             $mapProjects = \App\Models\Project::with(['projectStatus', 'customer.lead'])
-                            ->whereNotNull('latitude')
-                            ->whereNotNull('longitude')
+                            ->latest()
                             ->get();
 
             return view('dashboards.manager', compact(

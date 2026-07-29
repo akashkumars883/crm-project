@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers');
             $table->date('start_date');
             $table->date('end_date')->nullable();
-            $table->foreignId('assigned_to')->constrained('users')->nullable();
+            $table->foreignId('assigned_to')->nullable()->constrained('users');
             $table->auditable();
             $table->timestamps();
         });

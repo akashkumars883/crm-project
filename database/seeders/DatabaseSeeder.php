@@ -31,6 +31,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // ── Seed Permissions ────────────────────────────────
+        \Illuminate\Support\Facades\Artisan::call('app:seed-permissions');
+
         // ── Roles ───────────────────────────────────────────
         foreach (['super-admin','admin','manager','supervisor','accounts','hr','employee','client','vendor'] as $rn) {
             Role::firstOrCreate(['name' => $rn, 'display_name' => ucwords(str_replace('-', ' ', $rn))]);
@@ -63,11 +66,30 @@ class DatabaseSeeder extends Seeder
         TicketCategory::firstOrCreate(['name' => 'Billing Issue']);
         TicketCategory::firstOrCreate(['name' => 'Service Request']);
 
+        // ── Genders & Blood Groups ──────────────────────────
+        foreach (['Male', 'Female', 'Other'] as $g) {
+            \App\Models\Gender::firstOrCreate(['name' => $g]);
+        }
+        foreach (['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as $bg) {
+            \App\Models\BloodGroup::firstOrCreate(['name' => $bg]);
+        }
+
         $empType = EmployeeType::firstOrCreate(['name' => 'Full Time']);
+        EmployeeType::firstOrCreate(['name' => 'Part Time']);
+        EmployeeType::firstOrCreate(['name' => 'Contract']);
+        EmployeeType::firstOrCreate(['name' => 'Intern']);
+
         $desig1 = Designation::firstOrCreate(['name' => 'Project Manager']);
         $desig2 = Designation::firstOrCreate(['name' => 'Site Engineer']);
-        $desig3 = Designation::firstOrCreate(['name' => 'Painter']);
+        $desig3 = Designation::firstOrCreate(['name' => 'Supervisor']);
+        Designation::firstOrCreate(['name' => 'Painter']);
+        Designation::firstOrCreate(['name' => 'Accountant']);
+        Designation::firstOrCreate(['name' => 'HR Manager']);
+
         Department::firstOrCreate(['name' => 'Operations']);
+        Department::firstOrCreate(['name' => 'Sales']);
+        Department::firstOrCreate(['name' => 'Accounts']);
+        Department::firstOrCreate(['name' => 'HR']);
 
         // ── Users ───────────────────────────────────────────
         $superadmin = User::firstOrCreate(['email' => 'superadmin@homeglazer.com'], ['name' => 'Super Admin', 'password' => Hash::make('password123')]);

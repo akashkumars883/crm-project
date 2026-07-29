@@ -556,7 +556,7 @@
             <footer class="footer text-center text-sm-start" style="padding-top: 20px; margin-top: 30px; border-top: 1px solid #e1e1e1;">
                 &copy; <script>
                     document.write(new Date().getFullYear())
-                </script> Homeglazer. All rights reserved.
+                </script> CRM. All rights reserved.
             </footer>
             <!-- end Footer -->
             <!--end footer-->

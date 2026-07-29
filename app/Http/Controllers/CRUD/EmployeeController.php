@@ -53,17 +53,32 @@ class EmployeeController extends Controller
     public function create()
     {
         if (Auth::user()->hasPermission('create-employee')) {
+            if (Gender::count() == 0) {
+                foreach (['Male', 'Female', 'Other'] as $g) { Gender::firstOrCreate(['name' => $g]); }
+            }
+            if (BloodGroup::count() == 0) {
+                foreach (['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as $bg) { BloodGroup::firstOrCreate(['name' => $bg]); }
+            }
+            if (EmployeeType::count() == 0) {
+                foreach (['Full Time', 'Part Time', 'Contract', 'Intern'] as $et) { EmployeeType::firstOrCreate(['name' => $et]); }
+            }
+            if (Department::count() == 0) {
+                foreach (['Operations', 'Sales', 'Accounts', 'HR'] as $d) { Department::firstOrCreate(['name' => $d]); }
+            }
+            if (Designation::count() == 0) {
+                foreach (['Project Manager', 'Site Engineer', 'Supervisor', 'Painter', 'Accountant', 'HR Manager'] as $des) { Designation::firstOrCreate(['name' => $des]); }
+            }
+
             $employeeTypes = EmployeeType::all();
             $genders = Gender::all();
             $bloodGroups = BloodGroup::all();
             $departments = Department::all();
             $designations = Designation::all();
             $skills = Skill::all();
-        return view('crm.crud.employees.create', compact('genders', 'employeeTypes', 'bloodGroups', 'departments', 'designations', 'skills'));
+            return view('crm.crud.employees.create', compact('genders', 'employeeTypes', 'bloodGroups', 'departments', 'designations', 'skills'));
         } else {
             abort(403, 'Unauthorized Access');
         }
-        
     }
 
     public function store(Request $request)
@@ -87,7 +102,9 @@ class EmployeeController extends Controller
             'pan' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'aadhaar' => 'nullable|mimes:jpeg,png,jpg,gif,pdf',
         ]);        
-        $empId = 'HG' . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
+        $lastId = Employee::max('id') ?? 0;
+        $nextNum = $lastId + 1;
+        $empId = 'HG' . str_pad($nextNum, 5, '0', STR_PAD_LEFT);
         $data = $request->except(['photograph', 'pan', 'aadhaar']);
         $data['emp_id'] = $empId;
         if ($request->hasFile('photograph')) {
@@ -128,13 +145,29 @@ class EmployeeController extends Controller
     public function edit(Employee $employee)
     {
         if (Auth::user()->hasPermission('update-employee')) {
+            if (Gender::count() == 0) {
+                foreach (['Male', 'Female', 'Other'] as $g) { Gender::firstOrCreate(['name' => $g]); }
+            }
+            if (BloodGroup::count() == 0) {
+                foreach (['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as $bg) { BloodGroup::firstOrCreate(['name' => $bg]); }
+            }
+            if (EmployeeType::count() == 0) {
+                foreach (['Full Time', 'Part Time', 'Contract', 'Intern'] as $et) { EmployeeType::firstOrCreate(['name' => $et]); }
+            }
+            if (Department::count() == 0) {
+                foreach (['Operations', 'Sales', 'Accounts', 'HR'] as $d) { Department::firstOrCreate(['name' => $d]); }
+            }
+            if (Designation::count() == 0) {
+                foreach (['Project Manager', 'Site Engineer', 'Supervisor', 'Painter', 'Accountant', 'HR Manager'] as $des) { Designation::firstOrCreate(['name' => $des]); }
+            }
+
             $employeeTypes = EmployeeType::all();
             $genders = Gender::all();
             $bloodGroups = BloodGroup::all();
             $departments = Department::all();
             $designations = Designation::all();
             $skills = Skill::all();
-        return view('crm.crud.employees.edit', compact('employee', 'employeeTypes', 'genders', 'bloodGroups', 'departments', 'designations', 'skills'));
+            return view('crm.crud.employees.edit', compact('employee', 'employeeTypes', 'genders', 'bloodGroups', 'departments', 'designations', 'skills'));
         } else {
             abort(403, 'Unauthorized Access');
         }
@@ -205,11 +238,8 @@ class EmployeeController extends Controller
         if (Auth::user()->hasPermission('my-attendance')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
-            if (!$empUser) return redirect()->back()->with('error', 'Employee profile not linked.');
-            $eId = $empUser->employee_id;
-            $employee = Employee::where('id', $eId)->first();
-            $attendanceRecords = $employee->attendanceRecords()->latest()->paginate(10);
-            // return $attendanceRecords;
+            $employee = $empUser ? Employee::find($empUser->employee_id) : null;
+            $attendanceRecords = $employee ? $employee->attendanceRecords()->latest()->paginate(10) : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
             return view('crm.employees.attendance', compact('attendanceRecords'));
         } else {
             abort(403, 'Unauthorized Access');
@@ -221,10 +251,8 @@ class EmployeeController extends Controller
         if (Auth::user()->hasPermission('employee-bills')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
-            if (!$empUser) return redirect()->back()->with('error', 'Employee profile not linked.');
-            $eId = $empUser->employee_id;
-            $employee = Employee::where('id', $eId)->first();
-            $bills = $employee->bills()->latest()->paginate(10);
+            $employee = $empUser ? Employee::find($empUser->employee_id) : null;
+            $bills = $employee ? $employee->bills()->latest()->paginate(10) : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
             return view('crm.employees.bills', compact('bills'));
         } else {
             abort(403, 'Unauthorized Access');
@@ -236,11 +264,8 @@ class EmployeeController extends Controller
         if (Auth::user()->hasPermission('my-bank-accounts')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
-            if (!$empUser) return redirect()->back()->with('error', 'Employee profile not linked.');
-            $eId = $empUser->employee_id;
-            $employee = Employee::where('id', $eId)->first();
-            $employeeBankAccount = $employee->employeeBankAccount;
-            // return $employeeBankAccount;
+            $employee = $empUser ? Employee::find($empUser->employee_id) : null;
+            $employeeBankAccount = $employee ? $employee->employeeBankAccount : null;
             return view('crm.employees.bank-accounts', compact('employeeBankAccount'));
         } else {
             abort(403, 'Unauthorized Access');
@@ -252,9 +277,7 @@ class EmployeeController extends Controller
         if (Auth::user()->hasPermission('employee-profile')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
-            if (!$empUser) return redirect()->back()->with('error', 'Employee profile not linked.');
-            $eId = $empUser->employee_id;
-            $employee = Employee::where('id', $eId)->first();
+            $employee = $empUser ? Employee::find($empUser->employee_id) : null;
             return view('crm.employees.profile', compact('employee'));
         } else {
             abort(403, 'Unauthorized Access');

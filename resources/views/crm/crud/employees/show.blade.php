@@ -58,10 +58,10 @@
                                         </div><!--end media body-->
                                     </div> <!--end media-->
 
-                                    <p class="mb-0 font-14">Gender : {{ optional($employee->gender)->name }}</p>
-                                    <p class="mb-0 font-14">Blood Group : {{ optional($employee->bloodGroup)->name }} </p>
-                                    <p class="mb-0 font-14">Date of Birth: {{ Carbon::parse($employee->date_of_birth)->format('M, d Y') }}</p>
-                                    <p class="mb-0 font-14">Age: {{ Carbon::parse($employee->date_of_birth)->age }} years</p>
+                                    <p class="mb-0 font-14">Gender : {{ optional($employee->gender)->name ?? 'N/A' }}</p>
+                                    <p class="mb-0 font-14">Blood Group : {{ optional($employee->bloodGroup)->name ?? 'N/A' }} </p>
+                                    <p class="mb-0 font-14">Date of Birth: {{ $employee->date_of_birth ? Carbon::parse($employee->date_of_birth)->format('M, d Y') : 'N/A' }}</p>
+                                    <p class="mb-0 font-14">Age: {{ $employee->date_of_birth ? Carbon::parse($employee->date_of_birth)->age . ' years' : 'N/A' }}</p>
                                     <hr class="hr-dashed">
                                     <p class="mb-0 font-14">Documents</p>
                                     @if ($employee->pan)
@@ -83,16 +83,16 @@
                                     <div class="media mb-3">
                                         <div class="media-body align-self-center">
                                             <p class="mb-0 font-14">Employee ID : {{ $employee->emp_id }} </p>
-                                            <p class="mb-0 font-14">Employee Type : {{ optional($employee->employeeType)->name }} </p>
-                                            <p class="mb-0 font-14">Joining Date: {{ Carbon::parse($employee->joining_date)->format('M, d Y') }}</p>
-                                            <p class="mb-0 font-14">Salary : {{ $employee->salary }} </p>
-                                            <p class="mb-0 font-14">Department : {{ optional($employee->department)->name }} </p>
-                                            <p class="mb-0 font-14">Designation : {{ optional($employee->designation)->name }} </p>
-                                            <p class="mb-0 font-14">Skill Paint : {{ optional($employee->skillPaint)->name }} </p>
-                                            <p class="mb-0 font-14">Skill Polish : {{ optional($employee->skillPolish)->name }} </p>
+                                            <p class="mb-0 font-14">Employee Type : {{ optional($employee->employeeType)->name ?? 'N/A' }} </p>
+                                            <p class="mb-0 font-14">Joining Date: {{ $employee->joining_date ? Carbon::parse($employee->joining_date)->format('M, d Y') : 'N/A' }}</p>
+                                            <p class="mb-0 font-14">Salary : ₹{{ $employee->salary ?? '0' }} </p>
+                                            <p class="mb-0 font-14">Department : {{ optional($employee->department)->name ?? 'N/A' }} </p>
+                                            <p class="mb-0 font-14">Designation : {{ optional($employee->designation)->name ?? 'N/A' }} </p>
+                                            <p class="mb-0 font-14">Skill Paint : {{ optional($employee->skillPaint)->name ?? 'N/A' }} </p>
+                                            <p class="mb-0 font-14">Skill Polish : {{ optional($employee->skillPolish)->name ?? 'N/A' }} </p>
                                             <hr class="hr-dashed">
-                                            <p class="mb-0 font-14">Created at : {{ $employee->created_at->format('D, d M Y h:i A') }} by {{ $employee->creator->name }} </p>
-                                            <p class="mb-0 font-14">Last updated at : {{ $employee->updated_at->format('D, d M Y h:i A') }} by {{ $employee->updater->name }}</p>
+                                            <p class="mb-0 font-14">Created at : {{ $employee->created_at ? $employee->created_at->format('D, d M Y h:i A') : 'N/A' }} by {{ optional($employee->creator)->name ?? 'System' }} </p>
+                                            <p class="mb-0 font-14">Last updated at : {{ $employee->updated_at ? $employee->updated_at->format('D, d M Y h:i A') : 'N/A' }} by {{ optional($employee->updater)->name ?? 'System' }}</p>
                                         </div><!--end media body-->
                                     </div> <!--end media-->
                                 </div><!--end card-body-->
@@ -159,12 +159,12 @@
                             <tbody>
                                 @foreach($attendanceRecords as $attendanceRecord)
                                 <tr>
-                                    <td>{{ $attendanceRecord->employee->emp_id }}</td>
-                                    <td>{{ $attendanceRecord->employee->full_name }}</td>
-                                    <td>{{ $attendanceRecord->project_id }} - {{ $attendanceRecord->project->customer->lead->name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($attendanceRecord->date)->format('D d, M Y') }}</td>
-                                    <td>{{ $attendanceRecord->attendanceType->name }}</td>
-                                    <td>{{ $attendanceRecord->attendanceStatus->name }}</td>
+                                    <td>{{ optional($attendanceRecord->employee)->emp_id ?? 'N/A' }}</td>
+                                    <td>{{ optional($attendanceRecord->employee)->name ?? 'N/A' }}</td>
+                                    <td>{{ $attendanceRecord->project_id }} - {{ optional(optional(optional($attendanceRecord->project)->customer)->lead)->name ?? 'N/A' }}</td>
+                                    <td>{{ $attendanceRecord->date ? \Carbon\Carbon::parse($attendanceRecord->date)->format('D d, M Y') : 'N/A' }}</td>
+                                    <td>{{ optional($attendanceRecord->attendanceType)->name ?? 'N/A' }}</td>
+                                    <td>{{ optional($attendanceRecord->attendanceStatus)->name ?? 'N/A' }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

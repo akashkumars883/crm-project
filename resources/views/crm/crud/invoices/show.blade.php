@@ -284,13 +284,13 @@
   @endphp
 
   @php
-    $superAdmin = \App\Models\User::whereHas('roles', function($q) { $q->where('name', 'super_admin'); })->first();
-    $bName = $invoice->bank_name ?? $superAdmin->bank_name ?? 'IDFC Bank';
-    $bBranch = $invoice->bank_branch ?? $superAdmin->bank_branch ?? 'Gurgaon';
-    $bAccNo = $invoice->bank_account_no ?? $superAdmin->bank_account_number ?? '10183062134';
-    $bIfsc = $invoice->bank_ifsc ?? $superAdmin->bank_ifsc ?? 'IDFB0021014';
-    $bAccName = $invoice->bank_account_name ?? $superAdmin->bank_account_name ?? 'Home Glazer Solutions Pvt. Ltd.';
-    $bUpi = $superAdmin->upi_id ?? 'homeglazer@okicici';
+    $superAdmin = \App\Models\User::whereHas('roles', function($q) { $q->whereIn('name', ['super-admin', 'super_admin']); })->first();
+    $bName = $invoice->bank_name ?? optional($superAdmin)->bank_name ?? 'IDFC Bank';
+    $bBranch = $invoice->bank_branch ?? optional($superAdmin)->bank_branch ?? 'Gurgaon';
+    $bAccNo = $invoice->bank_account_no ?? optional($superAdmin)->bank_account_number ?? '10183062134';
+    $bIfsc = $invoice->bank_ifsc ?? optional($superAdmin)->bank_ifsc ?? 'IDFB0021014';
+    $bAccName = $invoice->bank_account_name ?? optional($superAdmin)->bank_account_name ?? 'Home Glazer Solutions Pvt. Ltd.';
+    $bUpi = optional($superAdmin)->upi_id ?? 'homeglazer@okicici';
   @endphp
 
   <div class="bottom-grid">
