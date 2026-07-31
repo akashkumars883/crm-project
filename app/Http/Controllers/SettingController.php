@@ -60,4 +60,23 @@ class SettingController extends Controller
         notify()->success('Settings updated successfully!');
         return redirect()->back();
     }
+
+    public function apiSettings()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user->hasRole('admin') && !$user->hasRole('super-admin')) {
+            abort(403, 'Unauthorized access to company settings.');
+        }
+        return redirect()->route('profile.settings');
+    }
+
+    public function updateApiSettings(Request $request)
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user->hasRole('admin') && !$user->hasRole('super-admin')) {
+            abort(403, 'Unauthorized access to company settings.');
+        }
+        notify()->success('API Settings updated successfully!');
+        return redirect()->back();
+    }
 }

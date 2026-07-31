@@ -73,9 +73,9 @@
                                 <p class="mb-0 font-12">Result: {{ $project->administrative_cost }}</p>
                                 <p class="mb-0 font-12">
                                     @if ($result['profitLossValue'] > 0)
-                                        Profit: ${{ $result['profitLossValue'] }}
+                                        Profit: {{ get_setting('currency', '₹') }}{{ $result['profitLossValue'] }}
                                     @elseif ($result['profitLossValue'] < 0)
-                                        Loss: ${{ abs($result['profitLossValue']) }}
+                                        Loss: {{ get_setting('currency', '₹') }}{{ abs($result['profitLossValue']) }}
                                     @else
                                         No Profit, No Loss
                                     @endif    

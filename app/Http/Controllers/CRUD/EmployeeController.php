@@ -15,6 +15,7 @@ use App\Models\EmployeeType;
 use App\Models\EmployeeUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
@@ -53,28 +54,39 @@ class EmployeeController extends Controller
     public function create()
     {
         if (Auth::user()->hasPermission('create-employee')) {
-            if (Gender::count() == 0) {
-                foreach (['Male', 'Female', 'Other'] as $g) { Gender::firstOrCreate(['name' => $g]); }
-            }
-            if (BloodGroup::count() == 0) {
-                foreach (['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as $bg) { BloodGroup::firstOrCreate(['name' => $bg]); }
-            }
-            if (EmployeeType::count() == 0) {
-                foreach (['Full Time', 'Part Time', 'Contract', 'Intern'] as $et) { EmployeeType::firstOrCreate(['name' => $et]); }
-            }
-            if (Department::count() == 0) {
-                foreach (['Operations', 'Sales', 'Accounts', 'HR'] as $d) { Department::firstOrCreate(['name' => $d]); }
-            }
-            if (Designation::count() == 0) {
-                foreach (['Project Manager', 'Site Engineer', 'Supervisor', 'Painter', 'Accountant', 'HR Manager'] as $des) { Designation::firstOrCreate(['name' => $des]); }
-            }
+            $masterData = Cache::remember('employee_master_dropdowns', 86400, function () {
+                if (Gender::count() == 0) {
+                    foreach (['Male', 'Female', 'Other'] as $g) { Gender::firstOrCreate(['name' => $g]); }
+                }
+                if (BloodGroup::count() == 0) {
+                    foreach (['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as $bg) { BloodGroup::firstOrCreate(['name' => $bg]); }
+                }
+                if (EmployeeType::count() == 0) {
+                    foreach (['Full Time', 'Part Time', 'Contract', 'Intern'] as $et) { EmployeeType::firstOrCreate(['name' => $et]); }
+                }
+                if (Department::count() == 0) {
+                    foreach (['Operations', 'Sales', 'Accounts', 'HR'] as $d) { Department::firstOrCreate(['name' => $d]); }
+                }
+                if (Designation::count() == 0) {
+                    foreach (['Project Manager', 'Site Engineer', 'Supervisor', 'Painter', 'Accountant', 'HR Manager'] as $des) { Designation::firstOrCreate(['name' => $des]); }
+                }
 
-            $employeeTypes = EmployeeType::all();
-            $genders = Gender::all();
-            $bloodGroups = BloodGroup::all();
-            $departments = Department::all();
-            $designations = Designation::all();
-            $skills = Skill::all();
+                return [
+                    'employeeTypes' => EmployeeType::all(),
+                    'genders'       => Gender::all(),
+                    'bloodGroups'   => BloodGroup::all(),
+                    'departments'   => Department::all(),
+                    'designations'  => Designation::all(),
+                    'skills'        => Skill::all(),
+                ];
+            });
+
+            $employeeTypes = $masterData['employeeTypes'];
+            $genders       = $masterData['genders'];
+            $bloodGroups   = $masterData['bloodGroups'];
+            $departments   = $masterData['departments'];
+            $designations  = $masterData['designations'];
+            $skills        = $masterData['skills'];
             return view('crm.crud.employees.create', compact('genders', 'employeeTypes', 'bloodGroups', 'departments', 'designations', 'skills'));
         } else {
             abort(403, 'Unauthorized Access');
@@ -145,28 +157,39 @@ class EmployeeController extends Controller
     public function edit(Employee $employee)
     {
         if (Auth::user()->hasPermission('update-employee')) {
-            if (Gender::count() == 0) {
-                foreach (['Male', 'Female', 'Other'] as $g) { Gender::firstOrCreate(['name' => $g]); }
-            }
-            if (BloodGroup::count() == 0) {
-                foreach (['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as $bg) { BloodGroup::firstOrCreate(['name' => $bg]); }
-            }
-            if (EmployeeType::count() == 0) {
-                foreach (['Full Time', 'Part Time', 'Contract', 'Intern'] as $et) { EmployeeType::firstOrCreate(['name' => $et]); }
-            }
-            if (Department::count() == 0) {
-                foreach (['Operations', 'Sales', 'Accounts', 'HR'] as $d) { Department::firstOrCreate(['name' => $d]); }
-            }
-            if (Designation::count() == 0) {
-                foreach (['Project Manager', 'Site Engineer', 'Supervisor', 'Painter', 'Accountant', 'HR Manager'] as $des) { Designation::firstOrCreate(['name' => $des]); }
-            }
+            $masterData = Cache::remember('employee_master_dropdowns', 86400, function () {
+                if (Gender::count() == 0) {
+                    foreach (['Male', 'Female', 'Other'] as $g) { Gender::firstOrCreate(['name' => $g]); }
+                }
+                if (BloodGroup::count() == 0) {
+                    foreach (['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as $bg) { BloodGroup::firstOrCreate(['name' => $bg]); }
+                }
+                if (EmployeeType::count() == 0) {
+                    foreach (['Full Time', 'Part Time', 'Contract', 'Intern'] as $et) { EmployeeType::firstOrCreate(['name' => $et]); }
+                }
+                if (Department::count() == 0) {
+                    foreach (['Operations', 'Sales', 'Accounts', 'HR'] as $d) { Department::firstOrCreate(['name' => $d]); }
+                }
+                if (Designation::count() == 0) {
+                    foreach (['Project Manager', 'Site Engineer', 'Supervisor', 'Painter', 'Accountant', 'HR Manager'] as $des) { Designation::firstOrCreate(['name' => $des]); }
+                }
 
-            $employeeTypes = EmployeeType::all();
-            $genders = Gender::all();
-            $bloodGroups = BloodGroup::all();
-            $departments = Department::all();
-            $designations = Designation::all();
-            $skills = Skill::all();
+                return [
+                    'employeeTypes' => EmployeeType::all(),
+                    'genders'       => Gender::all(),
+                    'bloodGroups'   => BloodGroup::all(),
+                    'departments'   => Department::all(),
+                    'designations'  => Designation::all(),
+                    'skills'        => Skill::all(),
+                ];
+            });
+
+            $employeeTypes = $masterData['employeeTypes'];
+            $genders       = $masterData['genders'];
+            $bloodGroups   = $masterData['bloodGroups'];
+            $departments   = $masterData['departments'];
+            $designations  = $masterData['designations'];
+            $skills        = $masterData['skills'];
             return view('crm.crud.employees.edit', compact('employee', 'employeeTypes', 'genders', 'bloodGroups', 'departments', 'designations', 'skills'));
         } else {
             abort(403, 'Unauthorized Access');

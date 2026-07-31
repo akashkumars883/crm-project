@@ -30,7 +30,7 @@
 
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="salesMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="ti ti-currency-dollar menu-icon me-2"></i>
+            <i class="ti ti-currency-rupee menu-icon me-2"></i>
             <span>Sales</span>
         </a>
         <ul class="dropdown-menu animate slideIn" aria-labelledby="salesMenu">

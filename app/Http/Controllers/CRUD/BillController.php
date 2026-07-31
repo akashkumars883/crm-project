@@ -96,7 +96,7 @@ class BillController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         if (Auth::user()->hasPermission('create-bill')) {
             $billTypes = BillType::all();
@@ -105,8 +105,10 @@ class BillController extends Controller
             $projects = Project::all();
             $inventories = Inventory::all();
             $employees = Employee::all();
+            $presetEmployeeId = $request->get('employee_id');
+            $presetAmount = $request->get('amount');
 
-            return view('crm.crud.bills.create', compact('billTypes', 'billStatuses', 'paymentMethods', 'projects', 'inventories', 'employees'));
+            return view('crm.crud.bills.create', compact('billTypes', 'billStatuses', 'paymentMethods', 'projects', 'inventories', 'employees', 'presetEmployeeId', 'presetAmount'));
         } else {
             abort(403, 'Unauthorized Access');
         }

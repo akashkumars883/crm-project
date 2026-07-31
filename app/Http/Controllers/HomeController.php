@@ -22,6 +22,7 @@ use App\Models\Expense;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
 class HomeController extends Controller
@@ -69,15 +70,29 @@ class HomeController extends Controller
         // ── Admin ───────────────────────────────────────────
         elseif (Auth::user()->hasRole('admin')) {
 
-            $usersCount       = User::count();
-            $adminsCount      = User::whereHasRole('admin')->count();
-            $managersCount    = User::whereHasRole('manager')->count();
-            $supervisorsCount = User::whereHasRole('supervisor')->count();
-            $accountsCount    = User::whereHasRole('accounts')->count();
-            $hrCount          = User::whereHasRole('hr')->count();
-            $employeesCount   = Employee::count();
-            $customersCount   = Customer::count();
-            $vendorsCount     = Vendor::count();
+            $counts = Cache::remember('dashboard_counts_admin', 300, function () {
+                return [
+                    'usersCount'       => User::count(),
+                    'adminsCount'      => User::whereHasRole('admin')->count(),
+                    'managersCount'    => User::whereHasRole('manager')->count(),
+                    'supervisorsCount' => User::whereHasRole('supervisor')->count(),
+                    'accountsCount'    => User::whereHasRole('accounts')->count(),
+                    'hrCount'          => User::whereHasRole('hr')->count(),
+                    'employeesCount'   => Employee::count(),
+                    'customersCount'   => Customer::count(),
+                    'vendorsCount'     => Vendor::count(),
+                ];
+            });
+
+            $usersCount       = $counts['usersCount'];
+            $adminsCount      = $counts['adminsCount'];
+            $managersCount    = $counts['managersCount'];
+            $supervisorsCount = $counts['supervisorsCount'];
+            $accountsCount    = $counts['accountsCount'];
+            $hrCount          = $counts['hrCount'];
+            $employeesCount   = $counts['employeesCount'];
+            $customersCount   = $counts['customersCount'];
+            $vendorsCount     = $counts['vendorsCount'];
 
             $leadsByMonth       = new LaravelChart(['chart_title' => 'Leads',       'report_type' => 'group_by_date', 'model' => 'App\Models\Lead',       'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
             $invoicesByMonth    = new LaravelChart(['chart_title' => 'Invoices',    'report_type' => 'group_by_date', 'model' => 'App\Models\Invoice',    'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
@@ -93,11 +108,16 @@ class HomeController extends Controller
             $activeProjects = \App\Models\Project::with('projectStatus', 'customer.lead')->latest()->take(5)->get();
             $mapProjects = \App\Models\Project::with(['projectStatus', 'customer.lead'])
                             ->latest()
+                            ->take(20)
                             ->get();
 
             // New Analytics for Dashboard
-            $totalRevenue = Payment::sum('amount');
-            $totalExpenses = Expense::where('status', 'Approved')->sum('amount');
+            $totalRevenue = Cache::remember('dashboard_total_revenue', 300, function() {
+                return Payment::sum('amount');
+            });
+            $totalExpenses = Cache::remember('dashboard_total_expenses', 300, function() {
+                return Expense::where('status', 'Approved')->sum('amount');
+            });
             
             $totalLeads = Lead::count();
             $leadConversionRate = $totalLeads > 0 ? round(($customersCount / $totalLeads) * 100, 2) : 0;
@@ -116,15 +136,29 @@ class HomeController extends Controller
         // ── Manager ───────────────────────────────────────────────────────
         elseif (Auth::user()->hasRole('manager')) {
 
-            $usersCount       = User::count();
-            $adminsCount      = User::whereHasRole('admin')->count();
-            $managersCount    = User::whereHasRole('manager')->count();
-            $supervisorsCount = User::whereHasRole('supervisor')->count();
-            $accountsCount    = User::whereHasRole('accounts')->count();
-            $hrCount          = User::whereHasRole('hr')->count();
-            $employeesCount   = Employee::count();
-            $customersCount   = Customer::count();
-            $vendorsCount     = Vendor::count();
+            $counts = Cache::remember('dashboard_counts_manager', 300, function () {
+                return [
+                    'usersCount'       => User::count(),
+                    'adminsCount'      => User::whereHasRole('admin')->count(),
+                    'managersCount'    => User::whereHasRole('manager')->count(),
+                    'supervisorsCount' => User::whereHasRole('supervisor')->count(),
+                    'accountsCount'    => User::whereHasRole('accounts')->count(),
+                    'hrCount'          => User::whereHasRole('hr')->count(),
+                    'employeesCount'   => Employee::count(),
+                    'customersCount'   => Customer::count(),
+                    'vendorsCount'     => Vendor::count(),
+                ];
+            });
+
+            $usersCount       = $counts['usersCount'];
+            $adminsCount      = $counts['adminsCount'];
+            $managersCount    = $counts['managersCount'];
+            $supervisorsCount = $counts['supervisorsCount'];
+            $accountsCount    = $counts['accountsCount'];
+            $hrCount          = $counts['hrCount'];
+            $employeesCount   = $counts['employeesCount'];
+            $customersCount   = $counts['customersCount'];
+            $vendorsCount     = $counts['vendorsCount'];
 
             $leadsByMonth       = new LaravelChart(['chart_title' => 'Leads',       'report_type' => 'group_by_date', 'model' => 'App\Models\Lead',      'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
             $invoicesByMonth    = new LaravelChart(['chart_title' => 'Invoices',    'report_type' => 'group_by_date', 'model' => 'App\Models\Invoice',   'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
@@ -139,6 +173,7 @@ class HomeController extends Controller
             $activeProjects = \App\Models\Project::with('projectStatus', 'customer.lead')->latest()->take(5)->get();
             $mapProjects = \App\Models\Project::with(['projectStatus', 'customer.lead'])
                             ->latest()
+                            ->take(20)
                             ->get();
 
             return view('dashboards.manager', compact(

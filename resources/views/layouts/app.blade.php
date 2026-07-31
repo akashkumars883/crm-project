@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title') - {{ config('app.name', 'Laravel') }}</title>
+    <title>@hasSection('title') @yield('title') - @endif{{ get_setting('company_name', 'CRM') }}</title>
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
@@ -518,6 +518,48 @@
             .custom-navbar-toggle.open .lines span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
             .custom-navbar-toggle.open .lines span:nth-child(2) { opacity: 0; }
             .custom-navbar-toggle.open .lines span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+        }
+
+        /* Comprehensive Mobile Responsiveness Enhancements (< 768px) */
+        @media (max-width: 767.98px) {
+            .page-content-tab {
+                padding: 12px 10px !important;
+            }
+            .card-body {
+                padding: 14px !important;
+            }
+            .card-header {
+                padding: 12px 14px !important;
+            }
+            /* Action toolbars & filters auto-wrap on mobile */
+            .d-flex.justify-content-between:not(.no-mobile-stack) {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .card-header.d-flex {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            /* Table mobile horizontal scrolling & min-width */
+            .table-responsive {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                margin-bottom: 1rem;
+            }
+            .table-responsive table {
+                min-width: 600px;
+            }
+            /* Touch-friendly inputs & buttons on mobile */
+            .form-control, .form-select, .btn:not(.btn-sm) {
+                min-height: 40px;
+            }
+            .btn-group {
+                flex-wrap: wrap;
+            }
+            /* Dashboard stat cards font scaling */
+            .card h3, .card .h3 {
+                font-size: 1.5rem !important;
+            }
         }
     </style>
 </head>

@@ -77,16 +77,23 @@ class DatabaseSeeder extends Seeder
         $empType = EmployeeType::firstOrCreate(['name' => 'Full Time']);
         EmployeeType::firstOrCreate(['name' => 'Part Time']);
         EmployeeType::firstOrCreate(['name' => 'Contract']);
+        EmployeeType::firstOrCreate(['name' => 'Daily Wager / Labour']);
         EmployeeType::firstOrCreate(['name' => 'Intern']);
 
         $desig1 = Designation::firstOrCreate(['name' => 'Project Manager']);
         $desig2 = Designation::firstOrCreate(['name' => 'Site Engineer']);
         $desig3 = Designation::firstOrCreate(['name' => 'Supervisor']);
         Designation::firstOrCreate(['name' => 'Painter']);
+        Designation::firstOrCreate(['name' => 'Laborer / Worker']);
+        Designation::firstOrCreate(['name' => 'Helper / Assistant']);
+        Designation::firstOrCreate(['name' => 'Mason / Electrician']);
         Designation::firstOrCreate(['name' => 'Accountant']);
         Designation::firstOrCreate(['name' => 'HR Manager']);
 
         Department::firstOrCreate(['name' => 'Operations']);
+        Department::firstOrCreate(['name' => 'Site Operations / Field Labour']);
+        Department::firstOrCreate(['name' => 'Painting & Finishing']);
+        Department::firstOrCreate(['name' => 'Construction & Civil']);
         Department::firstOrCreate(['name' => 'Sales']);
         Department::firstOrCreate(['name' => 'Accounts']);
         Department::firstOrCreate(['name' => 'HR']);

@@ -13,16 +13,12 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <a href="{{ route('employees.create') }}" class="btn btn-primary">Add a New Employee</a>
-                    </div>
-                    <div class="col-md-6 mb-3 d-flex justify-content-end">
-                        <form action="{{ route('employees.index') }}" method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search Employee">
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </form>
-                    </div>
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <a href="{{ route('employees.create') }}" class="btn btn-primary"><i class="ti ti-user-plus me-1"></i> Add Employee</a>
+                    <form action="{{ route('employees.index') }}" method="GET" class="d-flex gap-2">
+                        <input type="text" name="search" class="form-control" placeholder="Search Employee" value="{{ request('search') }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

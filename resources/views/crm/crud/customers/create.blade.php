@@ -1,82 +1,42 @@
-{{-- @extends('layouts.app')
-@section('title', 'Create Customer')
-@section('content')
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Add Customer</h4>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('customers.store') }}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="lead_id" class="form-label">Lead ID</label>
-                        <select name="lead_id" id="lead_id" class="form-control @error('lead_id') is-invalid @enderror" required>
-                            <option value="" disabled selected>Select Lead</option>
-                            @foreach($leads as $lead)
-                                <option value="{{ $lead->id }}" {{ old('lead_id') == $lead->id || (isset($leadId) && $leadId === $lead->id) ? 'selected' : '' }}>{{ $lead->id }} - {{ $lead->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('lead_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="user_id" class="form-label">User</label>
-                        <select name="user_id" id="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
-                            <option value="" disabled selected>Select User</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id || (isset($userId) && $iserId === $user->id) ? 'selected' : '' }}>{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('user_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <button type="submit" class="btn btn-primary">Create Customer</button>
-                    <a href="{{ route('customers.index') }}" class="btn btn-secondary">Cancel</a>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection --}}
-
 @extends('layouts.app')
 @section('title', 'Create Customer')
 @section('content')
-<div class="p-3 pt-5 bg-light">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Create Customer and User</h4>
+<div class="p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
+                    <a href="{{ route('customers.index') }}" class="text-dark me-2 text-decoration-none" title="Back">
+                        <i class="ti ti-arrow-left fs-3"></i>
+                    </a>
+                    <h5 class="card-title mb-0 fw-bold">Create Customer and User</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <form action="{{ route('customers.store') }}" method="POST">
                         @csrf
-                        <div class="mb-3">
-                            <label for="lead_id" class="form-label">Select Lead</label>
-                            <select name="lead_id" id="lead_id" class="form-select" required>
-                                <option value="">Select a Lead</option>
-                                @foreach ($leads as $lead)
-                                    <option value="{{ $lead->id }}">{{ $lead->name }}</option>
-                                @endforeach
-                            </select>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="lead_id" class="form-label fw-semibold">Select Lead <span class="text-danger">*</span></label>
+                                <select name="lead_id" id="lead_id" class="form-select" required>
+                                    <option value="">Select a Lead</option>
+                                    @foreach ($leads as $lead)
+                                        <option value="{{ $lead->id }}">{{ $lead->name }} ({{ $lead->email ?? 'No Email' }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="user_password" class="form-label fw-semibold">Password (Optional)</label>
+                                <input type="text" name="user_password" id="user_password" class="form-control" placeholder="Leave blank to auto-generate password">
+                                <small class="text-muted mt-1 d-block">
+                                    <i class="ti ti-info-circle text-primary me-1"></i>
+                                    If left blank, an 8-character secure password will be generated automatically.
+                                </small>
+                            </div>
                         </div>
-                        <!-- User Creation Form -->
-                        <div class="mb-3">
-                            <label for="user_password" class="form-label">Password (Optional)</label>
-                            <input type="text" name="user_password" id="user_password" class="form-control" placeholder="Leave blank to auto-generate a secure password">
-                            <small class="text-muted mt-2 d-block">
-                                <i class="ti ti-info-circle text-primary me-1"></i>
-                                If left blank, a secure 8-character password will be generated automatically. You'll see the generated password on the next screen so you can securely share it with the customer.
-                            </small>
+                        <div class="mt-4 pt-3 border-top text-end">
+                            <a href="{{ route('customers.index') }}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4"><i class="ti ti-check"></i> Create Customer</button>
                         </div>
-                        <!-- End User Creation Form -->
-                        <button type="submit" class="btn btn-primary">Create Customer and User</button>
-                        <a href="{{ route('customers.index') }}" class="btn btn-secondary">Cancel</a>
                     </form>
                 </div>
             </div>

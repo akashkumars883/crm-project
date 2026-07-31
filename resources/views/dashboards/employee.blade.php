@@ -19,6 +19,108 @@
         </div>
     @endif
 
+    @php
+        $user = Auth::user();
+        $employeeRecord = null;
+        if ($user->employeeUser && $user->employeeUser->employee) {
+            $employeeRecord = $user->employeeUser->employee;
+        } else {
+            $employeeRecord = \App\Models\Employee::where('email', $user->email)->orWhere('phone', $user->phone)->first();
+        }
+    @endphp
+
+    @if($employeeRecord)
+    @php
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
+        $monthName = now()->format('F Y');
+
+        $thisMonthAttendance = \App\Models\AttendanceRecord::where('employee_id', $employeeRecord->id)
+            ->whereBetween('date', [$startOfMonth->format('Y-m-d'), $endOfMonth->format('Y-m-d')])
+            ->get();
+
+        $presentCount = 0;
+        $halfDayCount = 0;
+        $absentCount = 0;
+
+        foreach($thisMonthAttendance as $att) {
+            $st = strtolower(optional($att->attendanceStatus)->name ?? '');
+            if (str_contains($st, 'present')) {
+                $presentCount++;
+            } elseif (str_contains($st, 'half')) {
+                $halfDayCount++;
+            } elseif (str_contains($st, 'absent') || str_contains($st, 'leave')) {
+                $absentCount++;
+            }
+        }
+
+        $empType = strtolower(optional($employeeRecord->employeeType)->name ?? '');
+        $isDailyWager = str_contains($empType, 'daily') || str_contains($empType, 'contract') || str_contains(strtolower(optional($employeeRecord->designation)->name ?? ''), 'labor') || str_contains(strtolower(optional($employeeRecord->designation)->name ?? ''), 'worker');
+        
+        $rate = (float) ($employeeRecord->salary ?? 0);
+        if ($isDailyWager) {
+            $earnedWages = ($presentCount * $rate) + ($halfDayCount * ($rate / 2));
+        } else {
+            $daysInMonth = now()->daysInMonth;
+            $effectiveDays = $presentCount + ($halfDayCount * 0.5);
+            $earnedWages = $daysInMonth > 0 ? round(($rate / $daysInMonth) * $effectiveDays, 2) : 0;
+        }
+
+        $totalPaid = \App\Models\Bill::where('employee_id', $employeeRecord->id)
+            ->whereBetween('bill_date', [$startOfMonth->format('Y-m-d'), $endOfMonth->format('Y-m-d')])
+            ->sum('amount');
+
+        $balanceDue = $earnedWages - $totalPaid;
+    @endphp
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h5 class="card-title mb-0 fw-bold text-dark">
+                        <i class="ti ti-wallet text-primary me-2 fs-4"></i> My Attendance & Earnings Summary ({{ $monthName }})
+                    </h5>
+                    <span class="badge bg-light text-dark border px-3 py-2 fs-6">
+                        Rate: <strong>₹{{ number_format($rate, 0) }} {{ $isDailyWager ? '/ day' : '/ month' }}</strong>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 text-center">
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-light rounded border">
+                                <small class="text-muted text-uppercase fw-bold">Present Days</small>
+                                <h3 class="fw-bold text-success mb-1 mt-2">{{ $presentCount }} <span class="fs-6 text-muted">Days</span></h3>
+                                <small class="text-warning fw-semibold">Half Days: {{ $halfDayCount }}</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-light rounded border">
+                                <small class="text-muted text-uppercase fw-bold">Wage Rate</small>
+                                <h3 class="fw-bold text-primary mb-1 mt-2">₹{{ number_format($rate, 0) }}</h3>
+                                <small class="text-muted fw-semibold">{{ $isDailyWager ? 'Per Day Rate' : 'Per Month Salary' }}</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-light rounded border">
+                                <small class="text-muted text-uppercase fw-bold">Earned Wage</small>
+                                <h3 class="fw-bold text-dark mb-1 mt-2">₹{{ number_format($earnedWages, 2) }}</h3>
+                                <small class="text-muted fw-semibold">Auto-calculated</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-light rounded border">
+                                <small class="text-muted text-uppercase fw-bold">Paid & Balance Due</small>
+                                <h3 class="fw-bold {{ $balanceDue > 0 ? 'text-danger' : 'text-success' }} mb-1 mt-2">₹{{ number_format($balanceDue, 2) }}</h3>
+                                <small class="text-muted fw-semibold">Paid: ₹{{ number_format($totalPaid, 2) }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="row">
         <div class="col-12">
             <div class="card mb-4 border-0">

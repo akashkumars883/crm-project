@@ -74,7 +74,7 @@ class GstReportController extends Controller
                 $invoice->bill_to_name,
                 $invoice->invoice_number,
                 Carbon::parse($invoice->invoice_date)->format('d-M-y'),
-                $invoice->total_amount,
+                $invoice->value ?? $invoice->balance_due,
                 $pos,
                 'N',
                 $type,

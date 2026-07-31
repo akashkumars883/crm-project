@@ -1,105 +1,88 @@
 @extends('layouts.app')
 @section('title', 'Add Employee Bank Account')
 @section('content')
-<div class="p-3 bg-light">
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <div class="page-title-box">
-                <h4 class="page-title">Add Employee Bank Account</h4>
-            </div><!--end page-title-box-->
-        </div><!--end col-->
-    </div>
-    <!-- end row -->
-
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
+<div class="p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
+                    <a href="{{ route('employee-bank-accounts.index') }}" class="text-dark me-2 text-decoration-none" title="Back">
+                        <i class="ti ti-arrow-left fs-3"></i>
+                    </a>
+                    <h5 class="card-title mb-0 fw-bold">Add Employee Bank Account</h5>
+                </div>
+                <div class="card-body p-4">
                     <form action="{{ route('employee-bank-accounts.store') }}" method="POST">
                         @csrf
-                        <div class="mb-3">
-                            <label for="emp_id" class="form-label">Employee ID</label>
-                            <select name="emp_id" id="emp_id" class="form-select @error('emp_id') is-invalid @enderror">
-                                <option value="" selected disabled>Select an employee</option>
-                                @foreach($employees as $employee)
-                                <option value="{{ $employee->id }}">{{ $employee->emp_id }} - {{ $employee->full_name }}</option>
-                                @endforeach
-                            </select>
-                            @error('emp_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="emp_id" class="form-label fw-semibold">Employee <span class="text-danger">*</span></label>
+                                <select name="emp_id" id="emp_id" class="form-select @error('emp_id') is-invalid @enderror" required>
+                                    <option value="" selected disabled>Select an employee</option>
+                                    @foreach($employees as $employee)
+                                    <option value="{{ $employee->id }}">{{ $employee->emp_id }} - {{ $employee->full_name ?? $employee->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="account_name" class="form-label fw-semibold">Account Holder Name</label>
+                                <input type="text" name="account_name" id="account_name" class="form-control" value="{{ old('account_name') }}" placeholder="Enter account holder name">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="account_number" class="form-label fw-semibold">Account Number</label>
+                                <input type="text" name="account_number" id="account_number" class="form-control" value="{{ old('account_number') }}" placeholder="Enter account number">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="bank_name" class="form-label fw-semibold">Bank Name</label>
+                                <input type="text" name="bank_name" id="bank_name" class="form-control" value="{{ old('bank_name') }}" placeholder="Enter bank name">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="branch" class="form-label fw-semibold">Branch</label>
+                                <input type="text" name="branch" id="branch" class="form-control" value="{{ old('branch') }}" placeholder="Enter branch location">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="ifsc" class="form-label fw-semibold">IFSC Code</label>
+                                <input type="text" name="ifsc" id="ifsc" class="form-control" value="{{ old('ifsc') }}" placeholder="e.g. SBIN0001234">
+                            </div>
+
+                            <!-- UPI / Digital Wallets Section -->
+                            <div class="col-12 mt-4">
+                                <div class="p-3 border rounded bg-light">
+                                    <h6 class="fw-bold mb-3 text-primary"><i class="ti ti-wallet"></i> Digital Payments / UPI (Optional)</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <label for="upi" class="form-label fw-semibold">UPI ID</label>
+                                            <input type="text" name="upi" id="upi" class="form-control" value="{{ old('upi') }}" placeholder="name@upi">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="phonepe" class="form-label fw-semibold">PhonePe Number</label>
+                                            <input type="text" name="phonepe" id="phonepe" class="form-control" value="{{ old('phonepe') }}" placeholder="10-digit number">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="googlepay" class="form-label fw-semibold">Google Pay Number</label>
+                                            <input type="text" name="googlepay" id="googlepay" class="form-control" value="{{ old('googlepay') }}" placeholder="10-digit number">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="paytm" class="form-label fw-semibold">Paytm Number</label>
+                                            <input type="text" name="paytm" id="paytm" class="form-control" value="{{ old('paytm') }}" placeholder="10-digit number">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="bank_name" class="form-label">Bank Name</label>
-                            <input type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror" value="{{ old('bank_name') }}" placeholder="Enter bank name">
-                            @error('bank_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="branch" class="form-label">Branch</label>
-                            <input type="text" name="branch" id="branch" class="form-control @error('branch') is-invalid @enderror" value="{{ old('branch') }}" placeholder="Enter branch">
-                            @error('branch')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="ifsc" class="form-label">IFSC</label>
-                            <input type="text" name="ifsc" id="ifsc" class="form-control @error('ifsc') is-invalid @enderror" value="{{ old('ifsc') }}" placeholder="Enter IFSC">
-                            @error('ifsc')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="account_name" class="form-label">Account Name</label>
-                            <input type="text" name="account_name" id="account_name" class="form-control @error('account_name') is-invalid @enderror" value="{{ old('account_name') }}" placeholder="Enter account name">
-                            @error('account_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="account_number" class="form-label">Account Number</label>
-                            <input type="text" name="account_number" id="account_number" class="form-control @error('account_number') is-invalid @enderror" value="{{ old('account_number') }}" placeholder="Enter account number">
-                            @error('account_number')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="upi" class="form-label">UPI</label>
-                            <input type="text" name="upi" id="upi" class="form-control @error('upi') is-invalid @enderror" value="{{ old('upi') }}" placeholder="Enter UPI">
-                            @error('upi')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="phonepe" class="form-label">PhonePe</label>
-                            <input type="text" name="phonepe" id="phonepe" class="form-control @error('phonepe') is-invalid @enderror" value="{{ old('phonepe') }}" placeholder="Enter PhonePe">
-                            @error('phonepe')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="googlepay" class="form-label">Google Pay</label>
-                            <input type="text" name="googlepay" id="googlepay" class="form-control @error('googlepay') is-invalid @enderror" value="{{ old('googlepay') }}" placeholder="Enter Google Pay">
-                            @error('googlepay')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="paytm" class="form-label">Paytm</label>
-                            <input type="text" name="paytm" id="paytm" class="form-control @error('paytm') is-invalid @enderror" value="{{ old('paytm') }}" placeholder="Enter Paytm">
-                            @error('paytm')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <a href="{{ route('employee-bank-accounts.index') }}" class="btn btn-secondary">Cancel</a>
+                        <div class="mt-4 pt-3 border-top text-end">
+                            <a href="{{ route('employee-bank-accounts.index') }}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4"><i class="ti ti-check"></i> Save Bank Account</button>
                         </div>
                     </form>
-                </div><!--end card-body-->
-            </div><!--end card-->
-        </div><!--end col-->
-    </div><!--end row-->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
