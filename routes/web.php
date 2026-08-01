@@ -137,6 +137,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('vendor-users', VendorUserController::class);
     Route::resource('tickets', TicketController::class);
     Route::resource('inventories', InventoryController::class);
+    Route::get('attendance-sheet', [AttendanceRecordController::class, 'sheet'])->name('attendance-records.sheet');
+    Route::post('attendance-toggle', [AttendanceRecordController::class, 'toggleAttendance'])->name('attendance-records.toggle');
+    Route::post('attendance-bulk-present', [AttendanceRecordController::class, 'bulkPresent'])->name('attendance-records.bulk-present');
     Route::resource('attendance-records', AttendanceRecordController::class);
     Route::resource('attachments', AttachmentController::class);
     Route::resource('payments', PaymentController::class);

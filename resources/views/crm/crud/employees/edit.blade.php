@@ -236,6 +236,35 @@
                             </div>
                         </div>
 
+                        <!-- Section 5: System Login & Access Credentials -->
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted fw-bold font-12 mb-3 border-bottom pb-2"><i class="ti ti-lock me-1"></i>System Login & Access Credentials</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="user_password" class="form-label fw-semibold">New Password (Optional)</label>
+                                    <input type="password" name="user_password" id="user_password" class="form-control @error('user_password') is-invalid @enderror" placeholder="Leave empty to keep existing password">
+                                    <small class="text-muted">Fill only if you want to reset/change the employee's login password.</small>
+                                    @error('user_password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="role_id" class="form-label fw-semibold">System Access Role</label>
+                                    <select name="role_id" id="role_id" class="form-select @error('role_id') is-invalid @enderror">
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->id }}" {{ (old('role_id', optional($currentRole)->id) == $role->id) ? 'selected' : '' }}>
+                                                {{ ucfirst($role->display_name ?? $role->name) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('role_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-end gap-2 pt-3 border-top">
                             <a href="{{ route('employees.index') }}" class="btn btn-secondary px-4">Cancel</a>
                             <button type="submit" class="btn btn-primary px-4"><i class="ti ti-check me-1"></i>Update Employee</button>

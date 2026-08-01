@@ -13,6 +13,9 @@ use App\Models\Skill;
 use App\Models\BloodGroup;
 use App\Models\EmployeeType;
 use App\Models\EmployeeUser;
+use App\Models\User;
+use App\Models\Role;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -87,7 +90,8 @@ class EmployeeController extends Controller
             $departments   = $masterData['departments'];
             $designations  = $masterData['designations'];
             $skills        = $masterData['skills'];
-            return view('crm.crud.employees.create', compact('genders', 'employeeTypes', 'bloodGroups', 'departments', 'designations', 'skills'));
+            $roles         = Role::all();
+            return view('crm.crud.employees.create', compact('genders', 'employeeTypes', 'bloodGroups', 'departments', 'designations', 'skills', 'roles'));
         } else {
             abort(403, 'Unauthorized Access');
         }
@@ -113,11 +117,13 @@ class EmployeeController extends Controller
             'photograph' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'pan' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'aadhaar' => 'nullable|mimes:jpeg,png,jpg,gif,pdf',
+            'user_password' => 'nullable|string|min:6',
+            'role_id' => 'nullable|exists:roles,id',
         ]);        
         $lastId = Employee::max('id') ?? 0;
         $nextNum = $lastId + 1;
         $empId = 'HG' . str_pad($nextNum, 5, '0', STR_PAD_LEFT);
-        $data = $request->except(['photograph', 'pan', 'aadhaar']);
+        $data = $request->except(['photograph', 'pan', 'aadhaar', 'user_password', 'role_id']);
         $data['emp_id'] = $empId;
         if ($request->hasFile('photograph')) {
             $extension = $request->file('photograph')->getClientOriginalExtension();
@@ -137,9 +143,33 @@ class EmployeeController extends Controller
             $path = $request->file('aadhaar')->storeAs('public/employees/' . $empId, $filename);
             $data['aadhaar'] = 'employees/' . $empId . '/' . $filename;
         }
-        Employee::create($data);
-        notify()->success('Created Employee');
-        return redirect($this->previousUrl);
+        $password = $request->filled('user_password') ? $request->user_password : ($request->phone ?: '12345678');
+        $data['user_password'] = $password;
+        $employee = Employee::create($data);
+
+        // Create User account and link via EmployeeUser
+        $existingUser = User::where('email', $employee->email)->first();
+        if (!$existingUser) {
+            $user = User::create([
+                'name' => $employee->name,
+                'email' => $employee->email,
+                'password' => Hash::make($password),
+            ]);
+            $role = $request->filled('role_id') ? Role::find($request->role_id) : Role::where('name', 'employee')->first();
+            if ($role) {
+                $user->roles()->attach($role);
+            }
+        } else {
+            $user = $existingUser;
+        }
+
+        EmployeeUser::firstOrCreate([
+            'employee_id' => $employee->id,
+            'user_id' => $user->id,
+        ]);
+
+        notify()->success('Created Employee & System Login Account');
+        return redirect()->route('employees.index');
     }
 
     public function show(Employee $employee)
@@ -148,7 +178,28 @@ class EmployeeController extends Controller
             $employeeId = $employee->id;
             $bills = Bill::where('employee_id', $employeeId)->paginate(8);
             $attendanceRecords = AttendanceRecord::where('employee_id', $employeeId)->paginate(8);
-            return view('crm.crud.employees.show', compact('employee', 'bills', 'attendanceRecords'));
+            
+            if (\App\Models\BillType::count() == 0) {
+                foreach (['Salary / Payout', 'Daily Wage', 'Advance Payment', 'Expense Reimbursement'] as $type) {
+                    \App\Models\BillType::firstOrCreate(['name' => $type]);
+                }
+            }
+            if (\App\Models\BillStatus::count() == 0) {
+                foreach (['Paid', 'Pending', 'Approved', 'Cancelled'] as $status) {
+                    \App\Models\BillStatus::firstOrCreate(['name' => $status]);
+                }
+            }
+            if (\App\Models\PaymentMethod::count() == 0) {
+                foreach (['Cash', 'Bank Transfer', 'UPI / GPay / PhonePe'] as $pm) {
+                    \App\Models\PaymentMethod::firstOrCreate(['name' => $pm]);
+                }
+            }
+
+            $billTypes = \App\Models\BillType::all();
+            $billStatuses = \App\Models\BillStatus::all();
+            $paymentMethods = \App\Models\PaymentMethod::all();
+            
+            return view('crm.crud.employees.show', compact('employee', 'bills', 'attendanceRecords', 'billTypes', 'billStatuses', 'paymentMethods'));
         } else {
             abort(403, 'Unauthorized Access');
         }
@@ -190,7 +241,13 @@ class EmployeeController extends Controller
             $departments   = $masterData['departments'];
             $designations  = $masterData['designations'];
             $skills        = $masterData['skills'];
-            return view('crm.crud.employees.edit', compact('employee', 'employeeTypes', 'genders', 'bloodGroups', 'departments', 'designations', 'skills'));
+            $roles         = Role::all();
+            
+            $empUser = $employee->employeeUser;
+            $currentUser = $empUser ? $empUser->user : User::where('email', $employee->email)->first();
+            $currentRole = $currentUser ? $currentUser->roles->first() : null;
+
+            return view('crm.crud.employees.edit', compact('employee', 'employeeTypes', 'genders', 'bloodGroups', 'departments', 'designations', 'skills', 'roles', 'currentUser', 'currentRole'));
         } else {
             abort(403, 'Unauthorized Access');
         }
@@ -216,8 +273,10 @@ class EmployeeController extends Controller
             'photograph' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'pan' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'aadhaar' => 'nullable|mimes:jpeg,png,jpg,gif,pdf',
+            'user_password' => 'nullable|string|min:6',
+            'role_id' => 'nullable|exists:roles,id',
         ]);        
-        $data = $request->except(['photograph', 'pan', 'aadhaar']);
+        $data = $request->except(['photograph', 'pan', 'aadhaar', 'user_password', 'role_id']);
         if ($request->hasFile('photograph')) {
             Storage::delete('public/' . $employee->photograph);
             $extension = $request->file('photograph')->getClientOriginalExtension();
@@ -239,31 +298,133 @@ class EmployeeController extends Controller
             $path = $request->file('aadhaar')->storeAs('public/employees/' . $employee->emp_id, $filename);
             $data['aadhaar'] = 'employees/' . $employee->emp_id . '/' . $filename;
         }
+        if ($request->filled('user_password')) {
+            $data['user_password'] = $request->user_password;
+        }
         $employee->update($data);
-        notify()->success('Updated Employee');
-        return redirect($this->previousUrl);
+
+        // Update or create linked User account
+        $empUser = $employee->employeeUser;
+        $user = $empUser ? $empUser->user : User::where('email', $employee->email)->first();
+
+        if ($user) {
+            $user->update([
+                'name' => $employee->name,
+                'email' => $employee->email,
+            ]);
+            if ($request->filled('user_password')) {
+                $user->update([
+                    'password' => Hash::make($request->user_password),
+                ]);
+            }
+            if ($request->filled('role_id')) {
+                $role = Role::find($request->role_id);
+                if ($role) {
+                    $user->roles()->sync([$role->id]);
+                }
+            }
+        } else {
+            // Create user if didn't exist before
+            $password = $request->filled('user_password') ? $request->user_password : ($request->phone ?: '12345678');
+            $user = User::create([
+                'name' => $employee->name,
+                'email' => $employee->email,
+                'password' => Hash::make($password),
+            ]);
+            $role = $request->filled('role_id') ? Role::find($request->role_id) : Role::where('name', 'employee')->first();
+            if ($role) {
+                $user->roles()->attach($role);
+            }
+        }
+
+        EmployeeUser::firstOrCreate([
+            'employee_id' => $employee->id,
+            'user_id' => $user->id,
+        ]);
+
+        notify()->success('Updated Employee & Login Account');
+        return redirect()->route('employees.index');
     }
 
     public function destroy(Employee $employee)
     {
         if (Auth::user()->hasPermission('delete-employee')) {
             Storage::deleteDirectory('public/employees/' . $employee->emp_id);
+            
+            // Delete associated EmployeeUser mapping & User login account
+            if ($employee->employeeUser) {
+                $user = $employee->employeeUser->user;
+                $employee->employeeUser->delete();
+                if ($user) {
+                    $user->delete();
+                }
+            }
+
             $employee->delete();
-            notify()->success('Deleted Employee');
-            return redirect($this->previousUrl);
+            notify()->success('Deleted Employee and associated User Account');
+            return redirect()->route('employees.index');
         } else {
             abort(403, 'Unauthorized Access');
         }        
     }
 
-    public function myAttendance()
+    public function myAttendance(Request $request)
     {
         if (Auth::user()->hasPermission('my-attendance')) {
             $authId = Auth::user()->id;
             $empUser = EmployeeUser::where('user_id', $authId)->first();
             $employee = $empUser ? Employee::find($empUser->employee_id) : null;
-            $attendanceRecords = $employee ? $employee->attendanceRecords()->latest()->paginate(10) : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
-            return view('crm.employees.attendance', compact('attendanceRecords'));
+
+            // Month selector — default to current month
+            $selectedMonth = $request->input('month', now()->format('Y-m'));
+            $startOfMonth  = \Carbon\Carbon::parse($selectedMonth . '-01')->startOfMonth();
+            $endOfMonth    = \Carbon\Carbon::parse($selectedMonth . '-01')->endOfMonth();
+            $monthName     = $startOfMonth->format('F Y');
+
+            // All attendance records for selected month (day-wise table)
+            $attendanceRecords = $employee
+                ? $employee->attendanceRecords()
+                    ->with('attendanceStatus', 'attendanceType', 'project.customer.lead')
+                    ->whereBetween('date', [$startOfMonth->format('Y-m-d'), $endOfMonth->format('Y-m-d')])
+                    ->orderBy('date', 'asc')
+                    ->get()
+                : collect();
+
+            // Count summary for selected month
+            $presentCount = 0; $halfDayCount = 0; $absentCount = 0;
+            foreach ($attendanceRecords as $att) {
+                $st = strtolower(optional($att->attendanceStatus)->name ?? '');
+                if (str_contains($st, 'present'))      $presentCount++;
+                elseif (str_contains($st, 'half'))     $halfDayCount++;
+                elseif (str_contains($st, 'absent') || str_contains($st, 'leave')) $absentCount++;
+            }
+
+            // Earned wage calculation (30-day base for monthly staff)
+            $rate = (float) ($employee->salary ?? 0);
+            $empType = strtolower(optional(optional($employee)->employeeType)->name ?? '');
+            $isDailyWager = str_contains($empType, 'daily') || str_contains($empType, 'contract');
+            if ($isDailyWager) {
+                $earnedWages = ($presentCount * $rate) + ($halfDayCount * ($rate / 2));
+            } else {
+                $effectiveDays = $presentCount + ($halfDayCount * 0.5);
+                $earnedWages   = round(($rate / 30) * $effectiveDays, 2);
+            }
+
+            // Total paid that month
+            $totalPaid = $employee
+                ? \App\Models\Bill::where('employee_id', $employee->id)
+                    ->whereBetween('bill_date', [$startOfMonth->format('Y-m-d'), $endOfMonth->format('Y-m-d')])
+                    ->sum('amount')
+                : 0;
+
+            $netBalance = $earnedWages - $totalPaid;
+
+            return view('crm.employees.attendance', compact(
+                'employee', 'attendanceRecords',
+                'selectedMonth', 'monthName',
+                'presentCount', 'halfDayCount', 'absentCount',
+                'rate', 'isDailyWager', 'earnedWages', 'totalPaid', 'netBalance'
+            ));
         } else {
             abort(403, 'Unauthorized Access');
         }

@@ -1,12 +1,12 @@
 @extends('layouts.app')
-@section('title', 'My Bills')
+@section('title', 'My Salary & Payouts')
 @section('content')
 <div class="p-3 bg-light">
     <!-- Page-Title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Bills</h4>
+                <h4 class="page-title"><i class="ti ti-cash text-primary me-2"></i>Salary &amp; Payouts</h4>
             </div><!--end page-title-box-->
         </div><!--end col-->
     </div>
@@ -25,8 +25,8 @@
                                     <th>Type</th>
                                     <th>Amount</th>
                                     <th>Employee</th>
-                                    <th>Bill Date</th>
-                                    <th>Due Date</th>
+                                    <th>Payout Date</th>
+                                    <th>Due On</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -64,7 +64,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete this Bill?
+                    Are you sure you want to delete this payout record?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

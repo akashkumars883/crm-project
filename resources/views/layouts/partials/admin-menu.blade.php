@@ -50,7 +50,7 @@
         </a>
         <ul class="dropdown-menu animate slideIn" aria-labelledby="hrMenu">
             <li><a href="{{ route('employees.index') }}" class="dropdown-item">Employees</a></li>
-            <li><a href="{{ route('attendance-records.index') }}" class="dropdown-item">Attendance Records</a></li>
+            <li><a href="{{ route('attendance-records.sheet') }}" class="dropdown-item">Attendance Management</a></li>
         </ul>
     </li>
 

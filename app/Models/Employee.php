@@ -34,6 +34,7 @@ class Employee extends Model
         'photograph',
         'pan',
         'aadhaar',
+        'user_password',
     ];
 
     public function employeeType()

@@ -23,78 +23,188 @@ class AttendanceRecordController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display 1-Click Daily Attendance Matrix Sheet
      */
-    public function index(Request $request)
+    /**
+     * Display Unified Attendance Management Dashboard (1-Click Sheet + History Logs)
+     */
+    /**
+     * Display Unified 1-Click Master Attendance Management Dashboard
+     */
+    public function sheet(Request $request)
     {
         if (Auth::user()->hasPermission('manage-attendance-record')) {
-            $chart_options = [
-                'chart_title' => 'Attendance by day',
-                'report_type' => 'group_by_date',
-                'model' => 'App\Models\AttendanceRecord',
-                'group_by_field' => 'created_at',
-                'group_by_period' => 'day',
-                'date_format' => 'D',
-                'chart_type' => 'bar',
-            ];
+            $date = $request->input('date', now()->toDateString());
+            $month = $request->input('month');
+            $search = $request->input('search');
+            $employeeId = $request->input('employee_id');
+            $statusId = $request->input('attendance_status_id');
 
-            $chart1 = new LaravelChart($chart_options);
-
-            $chart_options = [
-                'chart_title' => 'Attendance by Type',
-                'report_type' => 'group_by_relationship',
-                'model' => 'App\Models\AttendanceRecord',
-                'relationship_name' => 'attendanceType',
-                'group_by_field' => 'name',
-                'chart_type' => 'bar',
-            ];
-
-            $chart2 = new LaravelChart($chart_options);
-
-            $chart_options = [
-                'chart_title' => 'Activities by Status',
-                'report_type' => 'group_by_relationship',
-                'model' => 'App\Models\AttendanceRecord',
-                'relationship_name' => 'attendanceStatus',
-                'group_by_field' => 'name',
-                'chart_type' => 'bar',
-            ];
-
-            $chart3 = new LaravelChart($chart_options);
-
-            $attendanceRecords = AttendanceRecord::with(['employee', 'project', 'attendanceType', 'attendanceStatus']);
-
-            if ($request->filled('employee_id')) {
-                $attendanceRecords->whereIn('employee_id', $request->input('employee_id'));
+            $employeesQuery = Employee::with(['designation', 'department', 'employeeType']);
+            if ($search) {
+                $employeesQuery->where(function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('emp_id', 'LIKE', "%{$search}%")
+                      ->orWhere('phone', 'LIKE', "%{$search}%");
+                });
             }
-
-            if ($request->filled('project_id')) {
-                $attendanceRecords->whereIn('project_id', $request->input('project_id'));
+            if ($employeeId) {
+                $employeesQuery->where('id', $employeeId);
             }
+            $employees = $employeesQuery->orderBy('name', 'asc')->get();
 
-            if ($request->filled('date')) {
-                $attendanceRecords->whereDate('date', $request->input('date'));
-            }
+            $existingRecords = AttendanceRecord::with(['attendanceStatus', 'project'])
+                ->whereDate('date', $date)
+                ->get()
+                ->keyBy('employee_id');
 
-            if ($request->filled('attendance_type_id')) {
-                $attendanceRecords->where('attendance_type_id', $request->input('attendance_type_id'));
-            }
-
-            if ($request->filled('attendance_status_id')) {
-                $attendanceRecords->where('attendance_status_id', $request->input('attendance_status_id'));
-            }
-
-            $attendanceRecords = $attendanceRecords->paginate(10);
-
-            $employees = Employee::all();
             $projects = Project::all();
             $attendanceStatuses = AttendanceStatus::all();
-            $attendanceTypes = AttendanceType::all();
 
-            return view('crm.crud.attendance-records.index', compact('attendanceRecords', 'chart1', 'chart2', 'chart3', 'employees', 'projects', 'attendanceTypes', 'attendanceStatuses'));
+            $presentStatus = AttendanceStatus::firstOrCreate(['name' => 'Present']);
+            $halfDayStatus = AttendanceStatus::firstOrCreate(['name' => 'Half Day']);
+            $absentStatus = AttendanceStatus::firstOrCreate(['name' => 'Absent']);
+
+            $stats = [
+                'total' => $employees->count(),
+                'present' => 0,
+                'half_day' => 0,
+                'absent' => 0,
+                'unmarked' => 0,
+            ];
+
+            foreach ($employees as $emp) {
+                if (isset($existingRecords[$emp->id])) {
+                    $stName = strtolower(optional($existingRecords[$emp->id]->attendanceStatus)->name ?? '');
+                    if (str_contains($stName, 'present')) {
+                        $stats['present']++;
+                    } elseif (str_contains($stName, 'half')) {
+                        $stats['half_day']++;
+                    } elseif (str_contains($stName, 'absent') || str_contains($stName, 'leave')) {
+                        $stats['absent']++;
+                    } else {
+                        $stats['unmarked']++;
+                    }
+                } else {
+                    $stats['unmarked']++;
+                }
+            }
+
+            return view('crm.crud.attendance-records.sheet', compact(
+                'employees', 
+                'existingRecords', 
+                'date', 
+                'month',
+                'search',
+                'employeeId',
+                'statusId',
+                'stats', 
+                'projects', 
+                'attendanceStatuses',
+                'presentStatus', 
+                'halfDayStatus', 
+                'absentStatus'
+            ));
         } else {
             abort(403, 'Unauthorized Access');
         }
+    }
+
+    /**
+     * AJAX 1-Click Toggle Attendance Status
+     */
+    public function toggleAttendance(Request $request)
+    {
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'date' => 'required|date',
+            'status' => 'required|string',
+            'project_id' => 'nullable|exists:projects,id',
+        ]);
+
+        $employeeId = $request->input('employee_id');
+        $date = $request->input('date');
+        $statusKey = strtolower($request->input('status'));
+
+        if ($statusKey === 'unmark' || $statusKey === 'clear') {
+            AttendanceRecord::where('employee_id', $employeeId)->whereDate('date', $date)->delete();
+            return response()->json([
+                'success' => true,
+                'status' => 'unmarked',
+                'badge_class' => 'bg-secondary',
+                'message' => 'Attendance cleared'
+            ]);
+        }
+
+        $statusName = 'Present';
+        $badgeClass = 'bg-success';
+        if ($statusKey === 'half_day' || $statusKey === 'half') {
+            $statusName = 'Half Day';
+            $badgeClass = 'bg-warning';
+        } elseif ($statusKey === 'absent') {
+            $statusName = 'Absent';
+            $badgeClass = 'bg-danger';
+        }
+
+        $statusObj = AttendanceStatus::firstOrCreate(['name' => $statusName]);
+        $typeObj = AttendanceType::firstOrCreate(['name' => 'Regular']);
+
+        $projectId = $request->input('project_id') ?: null;
+
+        $record = AttendanceRecord::updateOrCreate(
+            ['employee_id' => $employeeId, 'date' => $date],
+            [
+                'attendance_status_id' => $statusObj->id,
+                'attendance_type_id' => $typeObj->id,
+                'project_id' => $projectId,
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'status' => strtolower($statusName),
+            'status_name' => $statusName,
+            'badge_class' => $badgeClass,
+            'message' => "Marked {$statusName} for " . optional($record->employee)->name
+        ]);
+    }
+
+    /**
+     * Bulk Mark All Active Employees as Present for a Date
+     */
+    public function bulkPresent(Request $request)
+    {
+        $date = $request->input('date', now()->toDateString());
+        $presentStatus = AttendanceStatus::firstOrCreate(['name' => 'Present']);
+        $typeObj = AttendanceType::firstOrCreate(['name' => 'Regular']);
+
+        $employees = Employee::all();
+        $count = 0;
+
+        foreach ($employees as $emp) {
+            $exists = AttendanceRecord::where('employee_id', $emp->id)->whereDate('date', $date)->exists();
+            if (!$exists) {
+                AttendanceRecord::create([
+                    'employee_id' => $emp->id,
+                    'date' => $date,
+                    'attendance_status_id' => $presentStatus->id,
+                    'attendance_type_id' => $typeObj->id,
+                    'project_id' => null,
+                ]);
+                $count++;
+            }
+        }
+
+        notify()->success("Marked {$count} employees Present for {$date}.");
+        return redirect()->route('attendance-records.sheet', ['date' => $date]);
+    }
+
+    /**
+     * Display a listing of the resource (Redirects to Unified Attendance Management Sheet)
+     */
+    public function index(Request $request)
+    {
+        return redirect()->route('attendance-records.sheet', $request->all());
     }
 
     /**

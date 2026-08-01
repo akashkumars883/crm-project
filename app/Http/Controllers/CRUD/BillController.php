@@ -152,7 +152,11 @@ class BillController extends Controller
         }
 
         Bill::create($data);
-        notify()->success('Bill Created');
+        if ($request->filled('employee_id')) {
+            notify()->success('Employee Payout Recorded Successfully');
+        } else {
+            notify()->success('Bill Created');
+        }
         return redirect($this->previousUrl);
     }
 

@@ -1,378 +1,587 @@
 @extends('layouts.app')
-@section('title', $employee->full_name)
+@section('title', $employee->name . ' - Employee Profile')
 @section('content')
 @php
     use Carbon\Carbon;
-@endphp
-<div class="p-3 bg-light">
-    <div class="row">
-        <div class="col">
-            <div class="card mb-0">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="media mb-3">
-                                        <div class="media-body align-self-center">
-                                            @if ($employee->photograph)
-                                                <img src="{{ (\Illuminate\Support\Str::startsWith($employee->photograph, 'http') ? $employee->photograph : asset('storage/' . $employee->photograph)) }}" alt="Employee Photograph" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
-                                            @else
-                                                <p>No Photograph Uploaded</p>
-                                            @endif
-                                        </div><!--end media body-->
-                                    </div> <!--end media-->
-
-                                    <hr class="hr-dashed">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary btn-square">Update</a>
-                                            <a href="{{ route('employees.index') }}" class="btn btn-dark btn-square">Back</a>
-                                        </div><!--end col-->
-                                    </div>  <!--end row-->
-                                    <div class="row align-items-center mt-3">
-                                        <div class="col">
-                                            @if ($employee->employeeUser)
-                                                @if ($employee->employeeUser->employee_id)
-                                                    <a href="{{ route('employee-users.show', $employee->employeeUser->id) }}" class="btn btn-square btn-success">Employes Login Info</a>
-                                                @else
-                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeAccountModal">Create Login Access</button>
-                                                @endif
-                                                @else
-                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeAccountModal">Create Login Access</button>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div><!--end card-body-->
-                            </div>  <!--end card-->
-                        </div><!--end col-->
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="media mb-3">
-                                        <div class="media-body align-self-center">
-                                            <h4 class="text-primary mt-0 font-24">{{ $employee->name }} </h4>
-                                            <p class="mb-0 font-14"><i class="fas fa-phone-square"></i> : {{ $employee->phone }} </p>
-                                            <p class="mb-0 font-14"><i class="fas fa-phone-square"></i> : {{ $employee->email }} </p>
-                                            <p class="mb-0 font-14"><i class="fas fa-home"></i> : {{ $employee->address }}, {{ $employee->city }}, {{ $employee->state }} - {{ $employee->zip_code }} </p>
-                                        </div><!--end media body-->
-                                    </div> <!--end media-->
-
-                                    <p class="mb-0 font-14">Gender : {{ optional($employee->gender)->name ?? 'N/A' }}</p>
-                                    <p class="mb-0 font-14">Blood Group : {{ optional($employee->bloodGroup)->name ?? 'N/A' }} </p>
-                                    <p class="mb-0 font-14">Date of Birth: {{ $employee->date_of_birth ? Carbon::parse($employee->date_of_birth)->format('M, d Y') : 'N/A' }}</p>
-                                    <p class="mb-0 font-14">Age: {{ $employee->date_of_birth ? Carbon::parse($employee->date_of_birth)->age . ' years' : 'N/A' }}</p>
-                                    <hr class="hr-dashed">
-                                    <p class="mb-0 font-14">Documents</p>
-                                    @if ($employee->pan)
-                                    <a href="{{ (\Illuminate\Support\Str::startsWith($employee->pan, 'http') ? $employee->pan : asset('storage/' . $employee->pan)) }}" target="_blank" class="badge bg-primary text-decoration-none me-1">PAN</a>
-                                    @else
-                                        No PAN Uploaded
-                                    @endif
-                                    @if ($employee->aadhaar)
-                                        <a href="{{ (\Illuminate\Support\Str::startsWith($employee->aadhaar, 'http') ? $employee->aadhaar : asset('storage/' . $employee->aadhaar)) }}" target="_blank" class="badge bg-primary text-decoration-none me-1">Aadhaar</a>
-                                    @else
-                                        No Aadhaar Uploaded
-                                    @endif
-                                </div><!--end card-body-->
-                            </div>  <!--end card-->
-                        </div><!--end col-->
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="media mb-3">
-                                        <div class="media-body align-self-center">
-                                            <p class="mb-0 font-14">Employee ID : {{ $employee->emp_id }} </p>
-                                            <p class="mb-0 font-14">Employee Type : {{ optional($employee->employeeType)->name ?? 'N/A' }} </p>
-                                            <p class="mb-0 font-14">Joining Date: {{ $employee->joining_date ? Carbon::parse($employee->joining_date)->format('M, d Y') : 'N/A' }}</p>
-                                            <p class="mb-0 font-14">Salary : ₹{{ $employee->salary ?? '0' }} </p>
-                                            <p class="mb-0 font-14">Department : {{ optional($employee->department)->name ?? 'N/A' }} </p>
-                                            <p class="mb-0 font-14">Designation : {{ optional($employee->designation)->name ?? 'N/A' }} </p>
-                                            <p class="mb-0 font-14">Skill Paint : {{ optional($employee->skillPaint)->name ?? 'N/A' }} </p>
-                                            <p class="mb-0 font-14">Skill Polish : {{ optional($employee->skillPolish)->name ?? 'N/A' }} </p>
-                                            <hr class="hr-dashed">
-                                            <p class="mb-0 font-14">Created at : {{ $employee->created_at ? $employee->created_at->format('D, d M Y h:i A') : 'N/A' }} by {{ optional($employee->creator)->name ?? 'System' }} </p>
-                                            <p class="mb-0 font-14">Last updated at : {{ $employee->updated_at ? $employee->updated_at->format('D, d M Y h:i A') : 'N/A' }} by {{ optional($employee->updater)->name ?? 'System' }}</p>
-                                        </div><!--end media body-->
-                                    </div> <!--end media-->
-                                </div><!--end card-body-->
-                            </div>  <!--end card-->
-                        </div><!--end col-->
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="media mb-3">
-                                        <div class="media-body align-self-center">
-                                            <h4 class="mt-0 mb-0 font-13">Banking Information </h4>
-                                            @if($employee->employeeBankAccount)
-                                                <p class="mb-0 font-14">Bank Name : {{ $employee->employeeBankAccount->bank_name }}  days</p>
-                                                <p class="mb-0 font-14">Branch : {{ $employee->employeeBankAccount->branch }}  days</p>
-                                                <p class="mb-0 font-14">IFSC : {{ $employee->employeeBankAccount->ifsc }}</p>
-                                                <p class="mb-0 font-14">Account Name : {{ $employee->employeeBankAccount->account_name }}</p>
-                                                <p class="mb-0 font-14">Account Number : {{ $employee->employeeBankAccount->account_number }}</p>
-                                                <p class="mb-0 font-14">UPI : {{ $employee->employeeBankAccount->upi }}</p>
-                                                <p class="mb-0 font-14">Phonepe : {{ $employee->employeeBankAccount->phonepe }}</p>
-                                                <p class="mb-0 font-14">Googlepay : {{ $employee->employeeBankAccount->googlepay }}</p>
-                                                <p class="mb-0 font-14">Paytm : {{ $employee->employeeBankAccount->paytm }}</p>
-                                            @else
-                                                <p class="mb-0 font-14">No bank account details available for this employee</p>
-                                                <button type="button" class="btn btn-primary  btn-square btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#bankModal">Add Bank Account</button>
-                                                {{-- <a class="btn btn-primary  btn-square btn-sm mt-2" href="">Add Bank Account</a> --}}
-                                            @endif
-                                        </div><!--end media body-->
-                                    </div> <!--end media-->
-
-                                    {{-- <p class="mb-0 font-14">Assigned To : {{ $customer->lead->assignedTo->name }} </p> --}}
-                                    {{-- <p class="mb-0 font-14">Since : {{ $customer->lead->assignedTo->created_at->diffInDays(now()) }} days </p> --}}
-                                </div><!--end card-body-->
-                            </div>  <!--end card-->
-                        </div><!--end col-->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- Monthly Attendance & Payroll Calculation Summary --}}
-@php
-    $startOfMonth = now()->startOfMonth();
-    $endOfMonth = now()->endOfMonth();
-    $monthName = now()->format('F Y');
-
-    // Get attendance records for this month
-    $thisMonthAttendance = \App\Models\AttendanceRecord::where('employee_id', $employee->id)
-        ->whereBetween('date', [$startOfMonth->format('Y-m-d'), $endOfMonth->format('Y-m-d')])
-        ->get();
-
-    $presentCount = 0;
-    $halfDayCount = 0;
-    $absentCount = 0;
-
-    foreach($thisMonthAttendance as $att) {
-        $st = strtolower(optional($att->attendanceStatus)->name ?? '');
-        if (str_contains($st, 'present')) {
-            $presentCount++;
-        } elseif (str_contains($st, 'half')) {
-            $halfDayCount++;
-        } elseif (str_contains($st, 'absent') || str_contains($st, 'leave')) {
-            $absentCount++;
-        }
-    }
-
-    $empType = strtolower(optional($employee->employeeType)->name ?? '');
-    $isDailyWager = str_contains($empType, 'daily') || str_contains($empType, 'contract') || str_contains(strtolower(optional($employee->designation)->name ?? ''), 'labor') || str_contains(strtolower(optional($employee->designation)->name ?? ''), 'worker');
-    
-    $rate = (float) ($employee->salary ?? 0);
-    if ($isDailyWager) {
-        // Daily rate calculation
-        $earnedWages = ($presentCount * $rate) + ($halfDayCount * ($rate / 2));
-    } else {
-        // Monthly rate calculation
-        $daysInMonth = now()->daysInMonth;
-        $effectiveDays = $presentCount + ($halfDayCount * 0.5);
-        $earnedWages = $daysInMonth > 0 ? round(($rate / $daysInMonth) * $effectiveDays, 2) : 0;
-    }
-
-    $totalPaid = \App\Models\Bill::where('employee_id', $employee->id)
-        ->whereBetween('bill_date', [$startOfMonth->format('Y-m-d'), $endOfMonth->format('Y-m-d')])
-        ->sum('amount');
-
-    $balanceDue = $earnedWages - $totalPaid;
+    $empUser = $employee->employeeUser;
+    $user = $empUser ? $empUser->user : \App\Models\User::where('email', $employee->email)->first();
+    $userRole = $user ? $user->roles->first() : null;
+    $displayPassword = $employee->user_password ?: ($employee->phone ?: '12345678');
 @endphp
 
-<div class="container-fluid mb-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h5 class="card-title mb-0 fw-bold text-dark">
-                <i class="ti ti-calculator text-primary me-2 fs-4"></i> Attendance & Payment Summary ({{ $monthName }})
-            </h5>
+<div class="container-fluid p-3 p-md-4">
+    <!-- Header Hero Profile Banner -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header border-0 rounded-0 bg-primary bg-gradient py-3 px-4 text-white d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="d-flex align-items-center gap-2">
-                <a href="{{ route('attendance-records.create', ['employee_id' => $employee->id]) }}" class="btn btn-sm btn-outline-primary fw-semibold">
-                    <i class="ti ti-calendar-plus me-1"></i> Mark Attendance
-                </a>
-                <a href="{{ route('bills.create', ['employee_id' => $employee->id, 'amount' => max(0, $balanceDue)]) }}" class="btn btn-sm btn-success fw-semibold">
-                    <i class="ti ti-cash me-1"></i> Add Payout
-                </a>
-                <span class="badge bg-light text-dark border px-3 py-2 fs-6">
-                    Type: <strong>{{ optional($employee->employeeType)->name ?? 'Standard' }}</strong>
+                <i class="ti ti-id-badge fs-2"></i>
+                <span class="fw-bold fs-5 text-white text-nowrap">Employee Profile & Management</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-white text-primary px-3 py-2 fw-bold font-13 shadow-sm rounded-0 text-nowrap">
+                    ID: {{ $employee->emp_id }}
+                </span>
+                <span class="badge bg-success px-3 py-2 fw-semibold font-13 rounded-0 text-nowrap">
+                    <i class="ti ti-point-filled me-1"></i>Active Staff
                 </span>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4 bg-white rounded-0">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <!-- Left Photo & Title Block -->
+                <div class="d-flex align-items-center gap-3">
+                    <div class="flex-shrink-0">
+                        @if ($employee->photograph)
+                            <img src="{{ (\Illuminate\Support\Str::startsWith($employee->photograph, 'http') ? $employee->photograph : asset('storage/' . $employee->photograph)) }}" alt="{{ $employee->name }}" class="rounded-circle border border-2 border-primary shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">
+                        @else
+                            <div class="rounded-circle bg-primary-subtle text-primary border border-2 border-primary d-flex align-items-center justify-content-center fw-bold fs-2 shadow-sm" style="width: 80px; height: 80px;">
+                                {{ strtoupper(substr($employee->name, 0, 1)) }}
+                            </div>
+                        @endif
+                    </div>
+                    <div>
+                        <h3 class="fw-bold text-dark mb-1">{{ $employee->name }}</h3>
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                            <span class="badge bg-light text-dark border rounded-0 px-2 py-1 font-12 fw-semibold text-nowrap">
+                                <i class="ti ti-briefcase text-primary me-1"></i>{{ optional($employee->designation)->name ?? 'General Staff' }}
+                            </span>
+                            <span class="badge bg-light text-dark border rounded-0 px-2 py-1 font-12 fw-semibold text-nowrap">
+                                <i class="ti ti-building text-info me-1"></i>{{ optional($employee->department)->name ?? 'Operations' }}
+                            </span>
+                            <span class="badge bg-light text-dark border rounded-0 px-2 py-1 font-12 fw-semibold text-nowrap">
+                                <i class="ti ti-user-check text-success me-1"></i>{{ optional($employee->employeeType)->name ?? 'Full Time' }}
+                            </span>
+                        </div>
+                        <div class="text-muted font-13 d-flex flex-wrap align-items-center gap-3">
+                            <span class="text-nowrap"><i class="ti ti-mail me-1 text-secondary"></i>{{ $employee->email }}</span>
+                            <span class="text-nowrap"><i class="ti ti-phone me-1 text-secondary"></i>{{ $employee->phone ?: 'N/A' }}</span>
+                            @if($employee->address)
+                                <span><i class="ti ti-map-pin me-1 text-secondary"></i>{{ \Illuminate\Support\Str::limit($employee->address, 35) }}</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button Toolbar -->
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary btn-sm px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important; display: inline-flex !important; align-items: center;">
+                        <i class="ti ti-pencil me-1"></i> Edit Profile
+                    </a>
+                    <a href="{{ route('attendance-records.sheet') }}" class="btn btn-outline-primary btn-sm px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important; display: inline-flex !important; align-items: center;">
+                        <i class="ti ti-calendar-plus me-1"></i> Attendance Sheet
+                    </a>
+                    <button type="button" class="btn btn-success btn-sm px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important; display: inline-flex !important; align-items: center;" data-bs-toggle="modal" data-bs-target="#payoutModal">
+                        <i class="ti ti-cash me-1"></i> Record Payout
+                    </button>
+                    <a href="{{ route('employees.index') }}" class="btn btn-secondary btn-sm px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important; display: inline-flex !important; align-items: center;">
+                        <i class="ti ti-arrow-left me-1"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Full Width 4-Card Grid -->
+    <div class="row g-3 mb-4">
+        <!-- 1. System Login & Credentials Card -->
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 rounded-0 h-100">
+                <div class="card-header bg-light py-3 border-bottom rounded-0 d-flex align-items-center justify-content-between">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
+                        <i class="ti ti-shield-lock text-primary fs-4"></i> Login Credentials
+                    </h6>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-0 px-2 py-1 font-11 fw-semibold text-nowrap">System User</span>
+                </div>
+                <div class="card-body p-3 rounded-0">
+                    <div class="mb-3">
+                        <small class="text-muted d-block fw-semibold font-11 text-uppercase">Username / Email ID</small>
+                        <span class="fw-bold text-dark font-13 text-break">{{ $employee->email }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block fw-semibold font-11 text-uppercase mb-1">System Access Role</small>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-0 font-12 px-3 py-1 fw-bold text-nowrap d-inline-block">
+                            {{ ucfirst(optional($userRole)->display_name ?? optional($userRole)->name ?? 'Employee') }}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block fw-semibold font-11 text-uppercase">Login Password</small>
+                        <div class="input-group input-group-sm mt-1">
+                            <input type="password" id="empPasswordInput" class="form-control font-13 fw-bold bg-light rounded-0" value="{{ $displayPassword }}" readonly>
+                            <button class="btn btn-outline-secondary rounded-0 px-3" type="button" onclick="togglePasswordVisibility()" title="Show/Hide Password">
+                                <i class="ti ti-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-top">
+                        <a href="{{ route('employees.edit', $employee->id) }}#user_password" class="btn btn-sm btn-outline-primary w-100 py-1.5 font-13 fw-semibold rounded-0 text-nowrap">
+                            <i class="ti ti-key me-1"></i> Change / Reset Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Personal Information Card -->
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 rounded-0 h-100">
+                <div class="card-header bg-light py-3 border-bottom rounded-0">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
+                        <i class="ti ti-user text-info fs-4"></i> Personal Details
+                    </h6>
+                </div>
+                <div class="card-body p-3 rounded-0">
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted font-13">Gender:</span>
+                        <span class="fw-semibold text-dark font-13 text-nowrap">{{ optional($employee->gender)->name ?? 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted font-13">Blood Group:</span>
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-0 fw-bold font-12 text-nowrap">{{ optional($employee->bloodGroup)->name ?? 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted font-13">Date of Birth:</span>
+                        <span class="fw-semibold text-dark font-13 text-nowrap">{{ $employee->date_of_birth ? Carbon::parse($employee->date_of_birth)->format('d M Y') : 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted font-13">Age:</span>
+                        <span class="fw-semibold text-dark font-13 text-nowrap">{{ $employee->date_of_birth ? Carbon::parse($employee->date_of_birth)->age . ' Yrs' : 'N/A' }}</span>
+                    </div>
+                    <div class="pt-1">
+                        <small class="text-muted d-block fw-semibold font-11 text-uppercase mb-1">Uploaded Documents</small>
+                        <div class="d-flex flex-wrap gap-2">
+                            @if ($employee->pan)
+                                <a href="{{ (\Illuminate\Support\Str::startsWith($employee->pan, 'http') ? $employee->pan : asset('storage/' . $employee->pan)) }}" target="_blank" class="badge bg-primary rounded-0 text-decoration-none px-2 py-1 text-nowrap"><i class="ti ti-file-text me-1"></i>PAN Card</a>
+                            @endif
+                            @if ($employee->aadhaar)
+                                <a href="{{ (\Illuminate\Support\Str::startsWith($employee->aadhaar, 'http') ? $employee->aadhaar : asset('storage/' . $employee->aadhaar)) }}" target="_blank" class="badge bg-primary rounded-0 text-decoration-none px-2 py-1 text-nowrap"><i class="ti ti-file-text me-1"></i>Aadhaar Card</a>
+                            @endif
+                            @if (!$employee->pan && !$employee->aadhaar)
+                                <span class="text-muted font-12">No documents</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Job & Skill Details Card -->
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 rounded-0 h-100">
+                <div class="card-header bg-light py-3 border-bottom rounded-0">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
+                        <i class="ti ti-briefcase text-warning fs-4"></i> Employment Details
+                    </h6>
+                </div>
+                <div class="card-body p-3 rounded-0">
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted font-13">Employee Type:</span>
+                        <span class="fw-semibold text-dark font-13 text-nowrap">{{ optional($employee->employeeType)->name ?? 'Full Time' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted font-13">Joining Date:</span>
+                        <span class="fw-semibold text-dark font-13 text-nowrap">{{ $employee->joining_date ? Carbon::parse($employee->joining_date)->format('d M Y') : 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted font-13">Salary Rate:</span>
+                        <span class="fw-bold text-success font-14 text-nowrap">₹{{ number_format($employee->salary ?? 0, 2) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted font-13">Skill Paint:</span>
+                        <span class="badge bg-secondary-subtle text-dark border rounded-0 font-12 text-nowrap">{{ optional($employee->skillPaint)->name ?? 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted font-13">Skill Polish:</span>
+                        <span class="badge bg-secondary-subtle text-dark border rounded-0 font-12 text-nowrap">{{ optional($employee->skillPolish)->name ?? 'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Bank Account Details Card -->
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 rounded-0 h-100">
+                <div class="card-header bg-light py-3 border-bottom rounded-0 d-flex align-items-center justify-content-between">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
+                        <i class="ti ti-building-bank text-success fs-4"></i> Bank Account Info
+                    </h6>
+                    @if(!$employee->employeeBankAccount)
+                        <button type="button" class="btn btn-sm btn-primary rounded-0 font-12 px-2 py-1 text-nowrap" style="width: auto !important;" data-bs-toggle="modal" data-bs-target="#bankModal">+ Add</button>
+                    @endif
+                </div>
+                <div class="card-body p-3 rounded-0">
+                    @if($employee->employeeBankAccount)
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                            <span class="text-muted font-13">Bank:</span>
+                            <span class="fw-bold text-dark font-13 text-nowrap">{{ $employee->employeeBankAccount->bank_name }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                            <span class="text-muted font-13">Account No:</span>
+                            <span class="fw-semibold text-dark font-13 text-nowrap">{{ $employee->employeeBankAccount->account_number }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                            <span class="text-muted font-13">IFSC Code:</span>
+                            <span class="fw-semibold text-dark font-13 text-nowrap">{{ $employee->employeeBankAccount->ifsc }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted font-13">Branch / UPI:</span>
+                            <span class="fw-semibold text-dark font-13 text-nowrap">{{ $employee->employeeBankAccount->upi ?: ($employee->employeeBankAccount->branch ?: 'N/A') }}</span>
+                        </div>
+                    @else
+                        <div class="text-center py-3 text-muted">
+                            <i class="ti ti-credit-card-off fs-1 d-block mb-1 opacity-50"></i>
+                            <small class="d-block text-muted font-12 mb-2">No bank details added yet</small>
+                            <button type="button" class="btn btn-sm btn-outline-primary rounded-0 py-1.5 px-3 font-13 text-nowrap" style="width: auto !important; display: inline-block !important;" data-bs-toggle="modal" data-bs-target="#bankModal">+ Add Bank Details</button>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Attendance & Payroll Calculation Summary Banner -->
+    @php
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
+        $monthName = now()->format('F Y');
+
+        $thisMonthAttendance = \App\Models\AttendanceRecord::where('employee_id', $employee->id)
+            ->whereBetween('date', [$startOfMonth->format('Y-m-d'), $endOfMonth->format('Y-m-d')])
+            ->get();
+
+        $presentCount = 0;
+        $halfDayCount = 0;
+        $absentCount = 0;
+
+        foreach($thisMonthAttendance as $att) {
+            $st = strtolower(optional($att->attendanceStatus)->name ?? '');
+            if (str_contains($st, 'present')) {
+                $presentCount++;
+            } elseif (str_contains($st, 'half')) {
+                $halfDayCount++;
+            } elseif (str_contains($st, 'absent') || str_contains($st, 'leave')) {
+                $absentCount++;
+            }
+        }
+
+        $empType = strtolower(optional($employee->employeeType)->name ?? '');
+        $isDailyWager = str_contains($empType, 'daily') || str_contains($empType, 'contract') || str_contains(strtolower(optional($employee->designation)->name ?? ''), 'labor') || str_contains(strtolower(optional($employee->designation)->name ?? ''), 'worker');
+        
+        $rate = (float) ($employee->salary ?? 0);
+        $daysInMonth = 30; // Standard payroll base: 30 days per month
+
+        if ($isDailyWager) {
+            // Daily wage: present days × per-day rate
+            $earnedWages = ($presentCount * $rate) + ($halfDayCount * ($rate / 2));
+        } else {
+            // Monthly fixed salary: (Salary ÷ 30) × effective days worked
+            $effectiveDays = $presentCount + ($halfDayCount * 0.5);
+            $earnedWages = round(($rate / $daysInMonth) * $effectiveDays, 2);
+        }
+
+        $totalPaid = \App\Models\Bill::where('employee_id', $employee->id)
+            ->whereBetween('bill_date', [$startOfMonth->format('Y-m-d'), $endOfMonth->format('Y-m-d')])
+            ->sum('amount');
+
+        $netBalance = $earnedWages - $totalPaid;
+    @endphp
+
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header bg-white py-3 border-bottom rounded-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
+                <i class="ti ti-calculator text-primary fs-3"></i> Monthly Attendance & Payroll Summary ({{ $monthName }})
+            </h5>
+            <div class="d-flex align-items-center gap-2 flex-wrap ms-auto">
+                <a href="{{ route('attendance-records.sheet') }}" class="btn btn-sm btn-outline-primary py-1.5 px-3 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important; display: inline-flex !important; align-items: center;">
+                    <i class="ti ti-calendar-plus me-1"></i> Attendance Sheet
+                </a>
+                <button type="button" class="btn btn-sm btn-success py-1.5 px-3 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important; display: inline-flex !important; align-items: center;" data-bs-toggle="modal" data-bs-target="#payoutModal">
+                    <i class="ti ti-cash me-1"></i> Record Payout
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-4 rounded-0">
             <div class="row g-3 text-center">
-                <div class="col-6 col-md-3">
-                    <div class="p-3 bg-light rounded border">
-                        <small class="text-muted text-uppercase fw-bold">Present Days</small>
-                        <h3 class="fw-bold text-success mb-1 mt-2">{{ $presentCount }} <span class="fs-6 text-muted">Days</span></h3>
-                        <small class="text-warning fw-semibold">Half Days: {{ $halfDayCount }}</small>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="p-3 bg-light rounded-0 border h-100">
+                        <small class="text-muted text-uppercase fw-bold font-11">Present Days</small>
+                        <h2 class="fw-bold text-success mb-1 mt-2">{{ $presentCount }} <span class="fs-6 text-muted">Days</span></h2>
+                        <small class="text-warning fw-semibold font-12">Half Days: {{ $halfDayCount }} | Absents: {{ $absentCount }}</small>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="p-3 bg-light rounded border">
-                        <small class="text-muted text-uppercase fw-bold">Wage / Salary Rate</small>
-                        <h3 class="fw-bold text-primary mb-1 mt-2">₹{{ number_format($rate, 0) }}</h3>
-                        <small class="text-muted fw-semibold">{{ $isDailyWager ? 'Per Day Rate' : 'Per Month Salary' }}</small>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="p-3 bg-light rounded-0 border h-100">
+                        <small class="text-muted text-uppercase fw-bold font-11">Salary / Wage Rate</small>
+                        <h2 class="fw-bold text-primary mb-1 mt-2">₹{{ number_format($rate, 0) }}</h2>
+                        <small class="text-muted fw-semibold font-12">{{ $isDailyWager ? 'Per Day Rate' : 'Base Monthly Salary' }}</small>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="p-3 bg-light rounded border">
-                        <small class="text-muted text-uppercase fw-bold">Earned Wage (This Month)</small>
-                        <h3 class="fw-bold text-dark mb-1 mt-2">₹{{ number_format($earnedWages, 2) }}</h3>
-                        <small class="text-muted fw-semibold">Auto-calculated from attendance</small>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="p-3 bg-light rounded-0 border h-100">
+                        <small class="text-muted text-uppercase fw-bold font-11">Earned Wage (This Month)</small>
+                        <h2 class="fw-bold text-dark mb-1 mt-2">₹{{ number_format($earnedWages, 2) }}</h2>
+                        <small class="text-muted fw-semibold font-12">{{ $isDailyWager ? 'Calculated from attendance' : 'Base salary minus absents' }}</small>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="p-3 bg-light rounded border">
-                        <small class="text-muted text-uppercase fw-bold">Paid & Balance Due</small>
-                        <h3 class="fw-bold {{ $balanceDue > 0 ? 'text-danger' : 'text-success' }} mb-1 mt-2">₹{{ number_format($balanceDue, 2) }}</h3>
-                        <small class="text-muted fw-semibold">Paid: ₹{{ number_format($totalPaid, 2) }}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid mb-4">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>Attendance Records</h5>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Employee ID</th>
-                                    <th>Employee</th>
-                                    <th>Project ID</th>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($attendanceRecords as $attendanceRecord)
-                                <tr>
-                                    <td>{{ optional($attendanceRecord->employee)->emp_id ?? 'N/A' }}</td>
-                                    <td>{{ optional($attendanceRecord->employee)->name ?? 'N/A' }}</td>
-                                    <td>{{ $attendanceRecord->project_id }} - {{ optional(optional(optional($attendanceRecord->project)->customer)->lead)->name ?? 'N/A' }}</td>
-                                    <td>{{ $attendanceRecord->date ? \Carbon\Carbon::parse($attendanceRecord->date)->format('D d, M Y') : 'N/A' }}</td>
-                                    <td>{{ optional($attendanceRecord->attendanceType)->name ?? 'N/A' }}</td>
-                                    <td>{{ optional($attendanceRecord->attendanceStatus)->name ?? 'N/A' }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="pt-3">
-                        {{ $attendanceRecords->links('pagination::bootstrap-5') }}
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="p-3 bg-light rounded-0 border h-100">
+                        <small class="text-muted text-uppercase fw-bold font-11">Paid & Settlement Status</small>
+                        @if($netBalance > 0)
+                            <h2 class="fw-bold text-danger mb-1 mt-2">₹{{ number_format($netBalance, 2) }}</h2>
+                            <small class="text-danger fw-semibold font-12">Balance Due (To Pay)</small>
+                        @elseif($netBalance < 0)
+                            <h2 class="fw-bold text-success mb-1 mt-2">₹{{ number_format(abs($netBalance), 2) }}</h2>
+                            <small class="text-success fw-semibold font-12"><i class="ti ti-circle-check me-1"></i>Advance Paid / Overpaid</small>
+                        @else
+                            <h2 class="fw-bold text-success mb-1 mt-2">₹0.00</h2>
+                            <small class="text-success fw-semibold font-12"><i class="ti ti-circle-check me-1"></i>Fully Settled</small>
+                        @endif
+                        <div class="text-muted font-11 mt-1">Total Paid: ₹{{ number_format($totalPaid, 2) }}</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container-fluid mb-4">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>Bills</h5>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Ref #</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
-                                    <th>Employee</th>
-                                    <th>Bill Date</th>
-                                    <th>Due Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($bills as $bill)
-                                <tr>
-                                    <td>{{ $bill->reference }}</td>
-                                    <td>{{ $bill->billType ? $bill->billType->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ $bill->amount }}</td>
-                                    <td>{{ $bill->employee ? $bill->employee->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($bill->bill_date)->format('D d, M Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($bill->due_date)->format('D d, M Y') }}</td>
-                                    <td>{{ $bill->billStatus ? $bill->billStatus->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="pt-3">
-                        {{ $bills->links('pagination::bootstrap-5') }}
-                    </div>
-                </div>
+    <!-- Attendance Records Table -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header bg-white py-3 border-bottom rounded-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <h5 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
+                <i class="ti ti-calendar me-1 text-primary fs-4"></i> Attendance Log History
+            </h5>
+            <div class="ms-auto" style="width: auto !important;">
+                <a href="{{ route('attendance-records.sheet') }}" class="btn btn-sm btn-primary px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important; display: inline-block !important;">+ 1-Click Attendance Sheet</a>
             </div>
+        </div>
+        <div class="card-body p-0 rounded-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 text-nowrap">Date</th>
+                            <th class="text-nowrap">Project / Site</th>
+                            <th class="text-nowrap">Attendance Type</th>
+                            <th class="pe-4 text-nowrap">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($attendanceRecords as $attendanceRecord)
+                        <tr>
+                            <td class="ps-4 fw-semibold text-nowrap">{{ $attendanceRecord->date ? \Carbon\Carbon::parse($attendanceRecord->date)->format('D, d M Y') : 'N/A' }}</td>
+                            <td class="text-nowrap">{{ $attendanceRecord->project_id ? ('Project #' . $attendanceRecord->project_id) : 'General Site' }}</td>
+                            <td class="text-nowrap">{{ optional($attendanceRecord->attendanceType)->name ?? 'Regular' }}</td>
+                            <td class="pe-4 text-nowrap">
+                                <span class="badge {{ str_contains(strtolower(optional($attendanceRecord->attendanceStatus)->name ?? ''), 'present') ? 'bg-success' : 'bg-warning' }} rounded-0 px-3 py-1">
+                                    {{ optional($attendanceRecord->attendanceStatus)->name ?? 'Present' }}
+                                </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">No attendance records logged for this employee.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            @if($attendanceRecords->hasPages())
+                <div class="p-3 border-top">
+                    {{ $attendanceRecords->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Bills / Payouts Table -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header bg-white py-3 border-bottom rounded-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <h5 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
+                <i class="ti ti-receipt me-1 text-primary fs-4"></i> Payout & Expense Bills History
+            </h5>
+            <div class="ms-auto" style="width: auto !important;">
+                <button type="button" class="btn btn-sm btn-success px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important; display: inline-block !important;" data-bs-toggle="modal" data-bs-target="#payoutModal">
+                    + Record Payout
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0 rounded-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 text-nowrap">Reference #</th>
+                            <th class="text-nowrap">Bill Date</th>
+                            <th class="text-nowrap">Type</th>
+                            <th class="text-nowrap">Amount</th>
+                            <th class="pe-4 text-nowrap">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($bills as $bill)
+                        <tr>
+                            <td class="ps-4 fw-bold text-primary text-nowrap">{{ $bill->reference }}</td>
+                            <td class="text-nowrap">{{ \Carbon\Carbon::parse($bill->bill_date)->format('D, d M Y') }}</td>
+                            <td class="text-nowrap">{{ $bill->billType ? $bill->billType->name : 'Salary / Advance' }}</td>
+                            <td class="fw-bold text-dark text-nowrap">₹{{ number_format($bill->amount, 2) }}</td>
+                            <td class="pe-4 text-nowrap">
+                                <span class="badge bg-success rounded-0 px-3 py-1">
+                                    {{ $bill->billStatus ? $bill->billStatus->name : 'Paid' }}
+                                </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">No payout / bill records found.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            @if($bills->hasPages())
+                <div class="p-3 border-top">
+                    {{ $bills->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         </div>
     </div>
 </div>
 
-<!-- Add the Create Customer  Modal Markup -->
+<!-- Password Visibility Script -->
+<script>
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('empPasswordInput');
+        const toggleIcon = document.getElementById('togglePasswordIcon');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('ti-eye');
+            toggleIcon.classList.add('ti-eye-off');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('ti-eye-off');
+            toggleIcon.classList.add('ti-eye');
+        }
+    }
+</script>
+
+<!-- Modal for Bank Account -->
 <div class="modal fade" id="bankModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="bankModalLabel">Add Bank Account</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-primary text-white rounded-0">
+                <h5 class="modal-title fw-bold" id="bankModalLabel"><i class="ti ti-building-bank me-2"></i>Add Bank Account</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <!-- Include the 'crm.crud.employees.create_bank_account_form content here -->
+            <div class="modal-body p-4 rounded-0">
                 @include('crm.crud.employees.create_bank_account_form')
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add the JavaScript to handle the Create Bank popup -->
-<script>
-    function openBankPopup(event) {
-        event.preventDefault();
-        const popup = document.getElementById('BankPopup');
-        popup.style.display = 'block';
-    }
-</script>
-
-<!-- Add the Create Employee Account  Modal Markup -->
-<div class="modal fade" id="employeeAccountModal" tabindex="-1" aria-labelledby="employeeAccountModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="employeeAccountModalLabel">Create Employee Login Access</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Instant Inline Record Employee Payout Modal -->
+<div class="modal fade" id="payoutModal" tabindex="-1" aria-labelledby="payoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-success text-white rounded-0">
+                <h5 class="modal-title fw-bold" id="payoutModalLabel">
+                    <i class="ti ti-cash me-2"></i>Record Employee Payout - {{ $employee->name }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <!-- Include the ' content here -->
-                @include('crm.crud.employees.create_employee_user_account_form')
+            <div class="modal-body p-4 rounded-0">
+                <form action="{{ route('bills.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+                    <input type="hidden" name="reference" value="PAY-{{ $employee->id }}-{{ time() }}">
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="amount" class="form-label font-13 fw-semibold">Payout Amount (₹) <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text rounded-0">₹</span>
+                                <input type="number" step="0.01" name="amount" id="amount" class="form-control rounded-0 fw-bold fs-5 text-success @error('amount') is-invalid @enderror" value="{{ max(0, round($netBalance, 2)) }}" required>
+                            </div>
+                            <small class="text-muted font-11">Current Balance Due: ₹{{ number_format(max(0, $netBalance), 2) }}</small>
+                            @error('amount')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="bill_type_id" class="form-label font-13 fw-semibold">Payout Type <span class="text-danger">*</span></label>
+                            <select name="bill_type_id" id="bill_type_id" class="form-select rounded-0 @error('bill_type_id') is-invalid @enderror" required>
+                                <option value="" disabled>Select Payout Type</option>
+                                @foreach($billTypes as $bt)
+                                    <option value="{{ $bt->id }}" {{ str_contains(strtolower($bt->name), 'salary') || str_contains(strtolower($bt->name), 'payout') ? 'selected' : '' }}>
+                                        {{ $bt->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('bill_type_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="payment_method_id" class="form-label font-13 fw-semibold">Payment Mode</label>
+                            <select name="payment_method_id" id="payment_method_id" class="form-select rounded-0 @error('payment_method_id') is-invalid @enderror">
+                                <option value="">Select Mode (Cash / Bank / UPI)</option>
+                                @foreach($paymentMethods as $pm)
+                                    <option value="{{ $pm->id }}">{{ $pm->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('payment_method_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="bill_status_id" class="form-label font-13 fw-semibold">Payment Status <span class="text-danger">*</span></label>
+                            <select name="bill_status_id" id="bill_status_id" class="form-select rounded-0 @error('bill_status_id') is-invalid @enderror" required>
+                                <option value="" disabled>Select Payment Status</option>
+                                @foreach($billStatuses as $bs)
+                                    <option value="{{ $bs->id }}" {{ str_contains(strtolower($bs->name), 'paid') ? 'selected' : '' }}>
+                                        {{ $bs->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('bill_status_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="bill_date" class="form-label font-13 fw-semibold">Payout Date <span class="text-danger">*</span></label>
+                            <input type="date" name="bill_date" id="bill_date" class="form-control rounded-0 @error('bill_date') is-invalid @enderror" value="{{ now()->toDateString() }}" required>
+                            @error('bill_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="due_date" class="form-label font-13 fw-semibold">Settlement / Due Date <span class="text-danger">*</span></label>
+                            <input type="date" name="due_date" id="due_date" class="form-control rounded-0 @error('due_date') is-invalid @enderror" value="{{ now()->toDateString() }}" required>
+                            @error('due_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="notes" class="form-label font-13 fw-semibold">Payout Remarks / Notes</label>
+                            <input type="text" name="notes" id="notes" class="form-control rounded-0 @error('notes') is-invalid @enderror" placeholder="e.g. Salary payout for {{ $employee->name }} - {{ $monthName }}" value="Salary / Wage payout for {{ $employee->name }} ({{ $monthName }})">
+                            @error('notes')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-3">
+                            <button type="button" class="btn btn-secondary btn-sm px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important;" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success btn-sm px-4 py-1.5 font-13 fw-semibold rounded-0 text-nowrap" style="width: auto !important;"><i class="ti ti-check me-1"></i> Confirm & Record Payout</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add the JavaScript to handle the Create Employee Login Access popup -->
-<script>
-    function openEmployeeAccountPopup(event) {
-        event.preventDefault();
-        const popup = document.getElementById('EmployeeAccountPopup');
-        popup.style.display = 'block';
-    }
-</script>
 @endsection
