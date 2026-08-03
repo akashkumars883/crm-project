@@ -1,115 +1,130 @@
 @extends('layouts.app')
 @section('title', 'Edit Project')
 @section('content')
-<div class="p-3 bg-light">
-    <!-- Page-Title -->
-    <div class="row justify-content-center">
-        <div class="col-sm-6 text-center">
-            <div class="page-title-box">
-                <h4 class="page-title">Edit Project</h4>
-            </div><!--end page-title-box-->
-        </div><!--end col-->
-    </div>
-    <!-- end page title end breadcrumb -->
-    <!-- end page title end breadcrumb -->
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <form action="{{ route('projects.update', $project->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="mb-3">
-                            <label for="project_type_id" class="form-label">Project Type</label>
-                            <select name="project_type_id" id="project_type_id" class="form-control">
-                                <option value="">Select Project Type</option>
-                                @foreach($projectTypes as $projectType)
-                                    <option value="{{ $projectType->id }}" @if($project->project_type_id == $projectType->id) selected @endif>{{ $projectType->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="project_status_id" class="form-label">Project Status</label>
-                            <select name="project_status_id" id="project_status_id" class="form-control">
-                                <option value="">Select Project Status</option>
-                                @foreach($projectStatuses as $status)
-                                    <option value="{{ $status->id }}" @if($project->project_status_id == $status->id) selected @endif>{{ $status->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="customer_id" class="form-label">Customer Name</label>
-                            <select name="customer_id" id="customer_id" class="form-control">
-                                <option value="">Select Customer</option>
-                                @foreach($customers as $customer)
-                                    <option value="{{ $customer->id }}" @if($project->customer_id == $customer->id) selected @endif>{{ $customer->id }} - {{ $customer->lead->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="start_date" class="form-label">Start Date</label>
-                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $project->start_date }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="end_date" class="form-label">End Date</label>
-                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ $project->end_date }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="labor_cost" class="form-label">Labor Cost</label>
-                            <input type="text" name="labor_cost" id="labor_cost" class="form-control" value="{{ $project->labor_cost }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="invoiceValue" class="form-label">Invoice Value</label>
-                            <input type="text" name="invoiceValue" id="invoiceValue" class="form-control" value="{{ $project->invoiceValue }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="previousLeftoverMaterialCost" class="form-label">Previous LeftOver Material Cost</label>
-                            <input type="text" name="previousLeftoverMaterialCost" id="previousLeftoverMaterialCost" class="form-control" value="{{ $project->previousLeftoverMaterialCost }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="administrativeCost" class="form-label">Administrative Cost</label>
-                            <input type="text" name="administrativeCost" id="administrativeCost" class="form-control" value="{{ $project->administrativeCost }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="assigned_to" class="form-label">Assign Supervisor</label>
-                            <select name="assigned_to" id="assigned_to" class="form-control">
-                                <option value="">Select Supervisor</option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}" @if($project->assigned_to == $user->id) selected @endif>{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        
-                        <hr class="my-4">
-                        <h6 class="mb-3 text-secondary fw-bold text-uppercase" style="font-size: 13px; letter-spacing: 0.5px;">Project Location</h6>
-                        
-                        <div class="mb-3">
-                            <label for="location_name" class="form-label">Location Address / Name</label>
-                            <div class="input-group">
-                                <input type="text" name="location_name" id="location_name" class="form-control" value="{{ $project->location_name }}" placeholder="e.g. 123 Main St, New York">
-                                <button class="btn btn-outline-secondary" type="button" id="search_location_btn">Search on Map</button>
-                            </div>
-                            <small class="text-muted">Type an address and click Search, or just click anywhere on the map to drop a pin.</small>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <div id="project_map" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; z-index: 1;"></div>
-                        </div>
-
-                        <input type="hidden" name="latitude" id="latitude" value="{{ $project->latitude }}">
-                        <input type="hidden" name="longitude" id="longitude" value="{{ $project->longitude }}">
-
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <a href="{{ route('projects.index') }}" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
+<div class="container-fluid p-3 p-md-4">
+    <!-- Header Hero Banner -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header border-0 rounded-0 bg-primary bg-gradient py-3 px-4 text-white d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('projects.show', $project->id) }}" class="text-black text-decoration-none me-1" title="Back to Project"><i class="ti ti-arrow-left fs-4"></i></a>
+                <i class="ti ti-pencil fs-2"></i>
+                <div>
+                    <h5 class="fw-semibold text-black mb-0 text-capitalize">Edit Project Settings</h5>
+                    <small class="text-black-50 font-12 text-capitalize">Update operations parameters, cost metrics, and location pin</small>
                 </div>
             </div>
         </div>
+
+        <div class="card-body p-4 bg-white rounded-0">
+            <form action="{{ route('projects.update', $project->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                
+                <!-- Horizontal Form Grid -->
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label for="project_type_id" class="form-label font-12 fw-semibold text-muted text-uppercase">Project Type</label>
+                        <select name="project_type_id" id="project_type_id" class="form-select rounded-0">
+                            <option value="">Select Project Type</option>
+                            @foreach($projectTypes as $projectType)
+                                <option value="{{ $projectType->id }}" @if($project->project_type_id == $projectType->id) selected @endif>{{ $projectType->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="project_status_id" class="form-label font-12 fw-semibold text-muted text-uppercase">Project Status</label>
+                        <select name="project_status_id" id="project_status_id" class="form-select rounded-0">
+                            <option value="">Select Status</option>
+                            @foreach($projectStatuses as $status)
+                                <option value="{{ $status->id }}" @if($project->project_status_id == $status->id) selected @endif>{{ $status->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="customer_id" class="form-label font-12 fw-semibold text-muted text-uppercase">Customer Name</label>
+                        <select name="customer_id" id="customer_id" class="form-select rounded-0">
+                            <option value="">Select Customer</option>
+                            @foreach($customers as $customer)
+                                <option value="{{ $customer->id }}" @if($project->customer_id == $customer->id) selected @endif>{{ $customer->lead->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="start_date" class="form-label font-12 fw-semibold text-muted text-uppercase">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control rounded-0" value="{{ $project->start_date }}">
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="end_date" class="form-label font-12 fw-semibold text-muted text-uppercase">End Date</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control rounded-0" value="{{ $project->end_date }}">
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="assigned_to" class="form-label font-12 fw-semibold text-muted text-uppercase">Assign Supervisor</label>
+                        <select name="assigned_to" id="assigned_to" class="form-select rounded-0">
+                            <option value="">Select Supervisor</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" @if($project->assigned_to == $user->id) selected @endif>{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="labor_cost" class="form-label font-12 fw-semibold text-muted text-uppercase">Labor Cost</label>
+                        <input type="text" name="labor_cost" id="labor_cost" class="form-control rounded-0" value="{{ $project->labor_cost }}">
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="invoiceValue" class="form-label font-12 fw-semibold text-muted text-uppercase">Invoice Value</label>
+                        <input type="text" name="invoiceValue" id="invoiceValue" class="form-control rounded-0" value="{{ $project->invoiceValue }}">
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="previousLeftoverMaterialCost" class="form-label font-12 fw-semibold text-muted text-uppercase">Leftover Mat. Cost</label>
+                        <input type="text" name="previousLeftoverMaterialCost" id="previousLeftoverMaterialCost" class="form-control rounded-0" value="{{ $project->previousLeftoverMaterialCost }}">
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="administrativeCost" class="form-label font-12 fw-semibold text-muted text-uppercase">Administrative Cost</label>
+                        <input type="text" name="administrativeCost" id="administrativeCost" class="form-control rounded-0" value="{{ $project->administrativeCost }}">
+                    </div>
+
+                    <!-- Geolocation Section -->
+                    <div class="col-12">
+                        <hr class="my-3">
+                        <h6 class="mb-3 text-secondary fw-bold text-uppercase font-12" style="letter-spacing: 0.5px;"><i class="ti ti-map-pin me-1"></i>Project Location Map</h6>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="location_name" class="form-label font-12 fw-semibold text-muted text-uppercase">Location Address / Name</label>
+                        <div class="input-group rounded-0">
+                            <input type="text" name="location_name" id="location_name" class="form-control rounded-0" value="{{ $project->location_name }}" placeholder="e.g. Sangam Vihar, New Delhi">
+                            <button class="btn btn-primary btn-sm px-3 rounded-0" type="button" id="search_location_btn" style="width: auto !important;"><i class="ti ti-search me-1"></i> Search Map</button>
+                        </div>
+                        <small class="text-muted font-11 mt-1 d-block">Type address and click Search, or drag pin on map.</small>
+                    </div>
+
+                    <div class="col-12">
+                        <div id="project_map" style="height: 300px; width: 100%; border-radius: 4px; border: 1px solid #cbd5e1; z-index: 1;"></div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="latitude" id="latitude" value="{{ $project->latitude }}">
+                <input type="hidden" name="longitude" id="longitude" value="{{ $project->longitude }}">
+
+                <div class="mt-4 border-top pt-3 text-end">
+                    <button type="submit" class="btn btn-primary btn-sm px-4 py-2 font-13 rounded-0 text-nowrap" style="width: auto !important;"><i class="ti ti-device-floppy me-1"></i> Save Changes</button>
+                    <a href="{{ route('projects.show', $project->id) }}" class="btn btn-secondary btn-sm px-3 py-2 font-13 rounded-0 text-nowrap ms-2" style="width: auto !important;">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
 @endsection
 
 @section('scripts')

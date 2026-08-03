@@ -12,10 +12,10 @@
     <div class="card shadow-sm border-0 rounded-0 mb-4">
         <div class="card-header border-0 rounded-0 bg-primary bg-gradient py-3 px-4 text-white d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="d-flex align-items-center gap-2">
-                <i class="ti ti-calendar-check fs-2"></i>
+                <i class="ti ti-calendar-check fs-2 text-black"></i>
                 <div>
-                    <h5 class="fw-bold text-white mb-0">Attendance Management</h5>
-                    <small class="text-white-50 font-12">{{ $formattedDate }}</small>
+                    <h5 class="fw-bold text-black mb-0 text-capitalize">Attendance Management</h5>
+                    <small class="text-black-50 font-12">{{ $formattedDate }}</small>
                 </div>
             </div>
             
@@ -33,8 +33,8 @@
                 <form action="{{ route('attendance-records.bulk-present') }}" method="POST" class="d-inline">
                     @csrf
                     <input type="hidden" name="date" value="{{ $date }}">
-                    <button type="submit" class="btn btn-success btn-sm px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap d-inline-flex align-items-center" onclick="return confirm('Mark all unmarked employees as Present for {{ $date }}?')">
-                        <i class="ti ti-check-all me-1.5"></i> Mark All Present
+                    <button type="submit" class="btn btn-light btn-sm px-3 py-1.5 font-13 fw-semibold rounded-0 text-nowrap d-inline-flex align-items-center" style="width: auto !important;" onclick="return confirm('Mark all unmarked employees as Present for {{ $date }}?')">
+                        <i class="ti ti-check-all me-1.5 text-success"></i> Mark All Present
                     </button>
                 </form>
             </div>

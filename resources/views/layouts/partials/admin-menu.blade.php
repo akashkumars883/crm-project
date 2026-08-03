@@ -61,8 +61,9 @@
         </a>
         <ul class="dropdown-menu animate slideIn" aria-labelledby="accountsMenu">
             <li><a href="{{ route('employee-bank-accounts.index') }}" class="dropdown-item">Employee Bank Accounts</a></li>
-            <li><a href="{{ route('payments.index') }}" class="dropdown-item">Payments</a></li>
-            <li><a href="{{ route('bills.index') }}" class="dropdown-item">Bills</a></li>
+            <li><a href="{{ route('payments.index') }}" class="dropdown-item">Payments (Inward)</a></li>
+            <li><a href="{{ route('bills.index') }}" class="dropdown-item">Vendor / Material Bills</a></li>
+            <li><a href="{{ route('bills.index', ['type' => 'payout']) }}" class="dropdown-item">Employee Payouts</a></li>
             <li><a href="{{ route('expenses.index') }}" class="dropdown-item">Daily Expenses</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a href="{{ route('gst.dashboard') }}" class="dropdown-item">GST Reports</a></li>

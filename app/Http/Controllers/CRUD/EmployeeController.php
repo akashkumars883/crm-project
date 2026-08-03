@@ -149,18 +149,23 @@ class EmployeeController extends Controller
 
         // Create User account and link via EmployeeUser
         $existingUser = User::where('email', $employee->email)->first();
+        $role = $request->filled('role_id') ? Role::find($request->role_id) : Role::where('name', 'employee')->first();
+
         if (!$existingUser) {
             $user = User::create([
-                'name' => $employee->name,
-                'email' => $employee->email,
+                'name'     => $employee->name,
+                'email'    => $employee->email,
                 'password' => Hash::make($password),
             ]);
-            $role = $request->filled('role_id') ? Role::find($request->role_id) : Role::where('name', 'employee')->first();
             if ($role) {
                 $user->roles()->attach($role);
             }
         } else {
             $user = $existingUser;
+            // Ensure employee role is assigned even if user already existed
+            if ($role && !$user->roles()->where('id', $role->id)->exists()) {
+                $user->roles()->attach($role);
+            }
         }
 
         EmployeeUser::firstOrCreate([

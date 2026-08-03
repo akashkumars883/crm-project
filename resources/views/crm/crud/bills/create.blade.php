@@ -23,7 +23,9 @@
                                 <select class="form-select" id="bill_type_id" name="bill_type_id" required>
                                     <option value="">Select Bill Type</option>
                                     @foreach ($billTypes as $billType)
-                                        <option value="{{ $billType->id }}">{{ $billType->name }}</option>
+                                        @if(strtolower($billType->name) !== 'salary')
+                                            <option value="{{ $billType->id }}">{{ $billType->name }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

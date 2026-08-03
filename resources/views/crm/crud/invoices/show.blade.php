@@ -1,6 +1,70 @@
 @extends('layouts.app')
 @section('title', 'Invoice ' . ($invoice->invoice_number ?? $invoice->id))
 @section('content')
+
+<div class="container-fluid p-3 p-md-4">
+    <!-- Header Hero Invoice Banner -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header border-0 rounded-0 bg-primary bg-gradient py-3 px-4 text-white d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('invoices.index') }}" class="text-black text-decoration-none me-1" title="Back to Invoices"><i class="ti ti-arrow-left fs-4"></i></a>
+                <i class="ti ti-file-invoice fs-2"></i>
+                <div>
+                    <h5 class="fw-semibold text-black mb-0 text-capitalize">Invoice Management</h5>
+                    <small class="text-black-50 font-12 text-capitalize">Preview, update, print, or share invoices</small>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="{{ route('invoices.print', $invoice->id) }}" target="_blank" class="btn btn-light btn-sm px-3 py-2 font-13 fw-semibold rounded-0 text-nowrap d-inline-flex align-items-center" style="width: auto !important;">
+                    <i class="ti ti-printer me-2 text-primary"></i> Print / PDF
+                </a>
+                <a href="{{ route('invoices.edit', $invoice->id) }}" class="btn btn-light btn-sm px-3 py-2 font-13 fw-semibold rounded-0 text-nowrap d-inline-flex align-items-center" style="width: auto !important;">
+                    <i class="ti ti-pencil me-2 text-warning"></i> Edit
+                </a>
+                <button onclick="shareInvoice()" class="btn btn-light btn-sm px-3 py-2 font-13 fw-semibold rounded-0 text-nowrap d-inline-flex align-items-center" style="width: auto !important;">
+                    <i class="ti ti-share me-2 text-success"></i> Share
+                </button>
+                @if($invoice->invoice_type_id == 2)
+                    <form action="{{ route('invoices.convert', $invoice->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-light btn-sm px-3 py-2 font-13 fw-semibold rounded-0 text-nowrap d-inline-flex align-items-center" style="width: auto !important;" onclick="return confirm('Are you sure you want to convert this Proforma to a Tax Invoice?')">
+                            <i class="ti ti-receipt me-2 text-info"></i> Convert to Tax Invoice
+                        </button>
+                    </form>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    @php
+        $itc = $invoice->getInputTaxCredit();
+        $outputGst = $invoice->igst_amount ?? 0;
+        $netPayable = $invoice->getNetGstPayable();
+    @endphp
+
+    <!-- Internal Tax Summary Widget -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4 mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-light py-2 px-3 border-bottom rounded-0 fw-bold font-12 text-muted">
+            <i class="ti ti-chart-pie me-1 text-primary"></i> INTERNAL TAX SUMMARY
+        </div>
+        <div class="card-body p-3 rounded-0 bg-white">
+            <div class="row text-center g-3">
+                <div class="col-4 border-end">
+                    <div class="text-muted mb-1 fw-semibold font-10 text-uppercase" style="letter-spacing: 0.5px;">Output GST (Collected)</div>
+                    <h4 class="text-success fw-bold mb-0">₹{{ number_format($outputGst, 2) }}</h4>
+                </div>
+                <div class="col-4 border-end">
+                    <div class="text-muted mb-1 fw-semibold font-10 text-uppercase" style="letter-spacing: 0.5px;">Input Credit (ITC)</div>
+                    <h4 class="text-primary fw-bold mb-0">₹{{ number_format($itc, 2) }}</h4>
+                </div>
+                <div class="col-4">
+                    <div class="text-muted mb-1 fw-semibold font-10 text-uppercase" style="letter-spacing: 0.5px;">Net GST Payable</div>
+                    <h4 class="text-danger fw-bold mb-0">₹{{ number_format($netPayable, 2) }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <style>
 /* Scoped styles for the invoice box inside the show view */
 #invoiceBox { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000; font-size: 11px; margin: 0 auto; border: 2px solid #222; background: #fff; max-width: 800px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
@@ -78,63 +142,11 @@
 #invoiceBox .signature-text { border-top: 1px solid #000; padding-top: 5px; margin-top: 40px; width: 100%; font-size: 10px; }
 
 #invoiceBox .thank-you { text-align: center; font-weight: bold; font-size: 11px; padding: 5px; border-top: 1px solid #888; }
-
-.ti-actions { max-width: 800px; margin: 0 auto 20px; display: flex; gap: 8px; flex-wrap: wrap; }
-.ti-btn { padding: 8px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-.ti-btn-primary { background: #0d6efd; color: #fff; }
-.ti-btn-primary:hover { background: #0a58ca; color: #fff; }
-.ti-btn-secondary { background: #e3e7ef; color: #1f2c4d; }
-.ti-btn-secondary:hover { background: #c5cbd6; color: #1f2c4d; }
-.ti-btn-success { background: #0a7c3b; color: #fff; }
-.ti-btn-success:hover { background: #075e2c; color: #fff; }
-.ti-btn-warning { background: #b76000; color: #fff; }
-.ti-btn-warning:hover { background: #8d4a00; color: #fff; }
 </style>
 
-<div class="ti-actions">
-  <a href="{{ route('invoices.index') }}" class="ti-btn ti-btn-secondary"><i class="ti ti-arrow-left"></i> Back</a>
-  <a href="{{ route('invoices.print', $invoice->id) }}" target="_blank" class="ti-btn ti-btn-primary"><i class="ti ti-printer"></i> Print / PDF</a>
-  <a href="{{ route('invoices.edit', $invoice->id) }}" class="ti-btn ti-btn-warning"><i class="ti ti-pencil"></i> Edit</a>
-  <button onclick="shareInvoice()" class="ti-btn ti-btn-success"><i class="ti ti-share"></i> Share</button>
-  @if($invoice->invoice_type_id == 2)
-  <form action="{{ route('invoices.convert', $invoice->id) }}" method="POST" style="display:inline;">
-      @csrf
-      <button type="submit" class="ti-btn ti-btn-primary" onclick="return confirm('Are you sure you want to convert this Proforma to a Tax Invoice? This will generate a new Tax Invoice number.')"><i class="ti ti-receipt"></i> Convert to Tax Invoice</button>
-  </form>
-  @endif
-</div>
-
-@php
-    $itc = $invoice->getInputTaxCredit();
-    $outputGst = $invoice->igst_amount ?? 0;
-    $netPayable = $invoice->getNetGstPayable();
-@endphp
-
-<div class="card mb-4 border-0" style="max-width: 800px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 8px;">
-    <div class="card-header bg-white border-bottom fw-bold text-primary py-2">
-        <i class="ti ti-chart-pie me-1"></i> Internal Tax & Profitability Summary
-    </div>
-    <div class="card-body p-3">
-        <div class="row text-center">
-            <div class="col-4 border-end">
-                <div class="text-muted mb-1 fw-bold" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Output GST (Collected)</div>
-                <h4 class="text-success fw-bold mb-0">₹{{ number_format($outputGst, 2) }}</h4>
-            </div>
-            <div class="col-4 border-end">
-                <div class="text-muted mb-1 fw-bold" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Input Credit (ITC)</div>
-                <h4 class="text-primary fw-bold mb-0">₹{{ number_format($itc, 2) }}</h4>
-            </div>
-            <div class="col-4">
-                <div class="text-muted mb-1 fw-bold" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Net GST Payable</div>
-                <h4 class="text-danger fw-bold mb-0">₹{{ number_format($netPayable, 2) }}</h4>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="invoiceBox" style="position: relative;">
-  <!-- Watermark -->
-  <div style="position: absolute; top: 25%; left: 15%; width: 70%; height: 50%; background-image: url('{{ get_setting('company_logo') ? (\Illuminate\Support\Str::startsWith(get_setting('company_logo', 'http') ? get_setting('company_logo' : asset('storage/' . get_setting('company_logo'))) : asset('assets/images/logo.webp') }}'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.05; z-index: 0; pointer-events: none; transform: rotate(-45deg);"></div>
+  <div style="position: absolute; top: 25%; left: 15%; width: 70%; height: 50%; background-image: url('{{ get_setting('company_logo') ? (\Illuminate\Support\Str::startsWith(get_setting('company_logo'), 'http') ? get_setting('company_logo') : asset('storage/' . get_setting('company_logo'))) : asset('assets/images/logo.webp') }}'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.05; z-index: 0; pointer-events: none; transform: rotate(-45deg);"></div>
   
   <div style="position: relative; z-index: 1;">
   <div class="top-bar">
@@ -146,7 +158,7 @@
   <div class="company-header">
     <div class="logo-container">
       @if(get_setting('company_logo'))
-        <img src="{{ (\Illuminate\Support\Str::startsWith(get_setting('company_logo', 'http') ? get_setting('company_logo' : asset('storage/' . get_setting('company_logo'))) }}" alt="Company Logo">
+        <img src="{{ \Illuminate\Support\Str::startsWith(get_setting('company_logo'), 'http') ? get_setting('company_logo') : asset('storage/' . get_setting('company_logo')) }}" alt="Company Logo">
       @else
         <img src="{{ asset('assets/images/logo.webp') }}" alt="Default Logo">
       @endif
@@ -350,6 +362,8 @@
 
   </div> <!-- End relative z-index wrapper -->
 </div>
+
+</div> <!-- End container-fluid -->
 
 <script>
 function shareInvoice() {

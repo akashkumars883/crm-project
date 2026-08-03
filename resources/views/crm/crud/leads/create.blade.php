@@ -1,121 +1,90 @@
 @extends('layouts.app')
 @section('title', 'Create Lead')
 @section('content')
-<div class="p-3 bg-light">
-    <!-- Page-Title -->
-    <div class="row justify-content-center">
-        <div class="col-sm-6 text-center">
-            <div class="page-title-box">
-                <h4 class="page-title">Create a new Lead</h4>
-            </div><!--end page-title-box-->
-        </div><!--end col-->
-    </div>
-    <!-- end page title end breadcrumb -->
-    <!-- end page title end breadcrumb -->
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <form action="{{ route('leads.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="lead_source_id" class="form-label">Lead Source</label>
-                            <select class="form-select" name="lead_source_id" id="lead_source_id" >
-                                <option value="">Select Lead Source</option>
-                                @foreach($leadSources as $leadSource)
-                                <option value="{{ $leadSource->id }}">{{ $leadSource->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="lead_status_id" class="form-label">Lead Status</label>
-                            <select class="form-select" name="lead_status_id" id="lead_status_id" >
-                                <option value="">Select Lead Status</option>
-                                @foreach($leadStatuses as $leadStatus)
-                                <option value="{{ $leadStatus->id }}">{{ $leadStatus->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" name="name" id="name" >
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" name="phone" id="phone" >
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" id="email" >
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="address" class="form-control" name="address" id="address" >
-                        </div>
-
-                        {{-- <div class="mb-3">
-                            <label for="city" class="form-label">City</label>
-                            <input type="city" class="form-control" name="city" id="city" >
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="state" class="form-label">State</label>
-                            <input type="state" class="form-control" name="state" id="state" >
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="zip" class="form-label">Zip</label>
-                            <input type="zip" class="form-control" name="zip" id="zip" >
-                        </div> --}}
-
-                        <div class="mb-3">
-                            <label for="notes" class="form-label">Notes</label>
-                            <textarea class="form-control" name="notes" id="notes" rows="3"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="assignee_id" class="form-label">Assigned To</label>
-                            <select class="form-select" name="assignee_id" id="assignee_id" >
-                                <option value="">Select Supervisor</option>
-                                @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        {{-- <div class="mb-3">
-                            <label for="contact_method_id" class="form-label">Contact Method</label>
-                            <select class="form-select" name="contact_method_id" id="contact_method_id" >
-                                <option value="">Select</option>
-                                @foreach($contactMethods as $contactMethod)
-                                <option value="{{ $contactMethod->id }}">{{ $contactMethod->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="contact_language_id" class="form-label">Contact Language</label>
-                            <select class="form-select" name="contact_language_id" id="contact_language_id">
-                                <option value="">Select</option>
-                                @foreach($contactLanguages as $contactLanguage)
-                                <option value="{{ $contactLanguage->id }}">{{ $contactLanguage->name }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-
-                        <div class="">
-                            <button type="submit" class="btn btn-primary">Create Lead</button>
-                            <a href="{{ route('leads.index') }}" class="btn btn-secondary me-2">Cancel</a>
-                        </div>
-                    </form>
+<div class="container-fluid p-3 p-md-4">
+    <!-- Header Hero Banner -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header border-0 rounded-0 bg-primary bg-gradient py-3 px-4 text-white d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('leads.index') }}" class="text-black text-decoration-none me-1" title="Back to Leads"><i class="ti ti-arrow-left fs-4"></i></a>
+                <i class="ti ti-user-plus fs-2"></i>
+                <div>
+                    <h5 class="fw-semibold text-black mb-0 text-capitalize">Add New Lead</h5>
+                    <small class="text-black-50 font-12 text-capitalize">Create a new potential business opportunity</small>
                 </div>
             </div>
+        </div>
+
+        <div class="card-body p-4 bg-white rounded-0">
+            <form action="{{ route('leads.store') }}" method="POST">
+                @csrf
+                
+                <!-- Horizontal Row 1 -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label for="name" class="form-label font-12 fw-semibold text-muted text-uppercase">Full Name</label>
+                        <input type="text" class="form-control rounded-0 font-13" name="name" id="name" required placeholder="e.g. John Doe">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="phone" class="form-label font-12 fw-semibold text-muted text-uppercase">Phone</label>
+                        <input type="text" class="form-control rounded-0 font-13" name="phone" id="phone" placeholder="e.g. +91 9876543210">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="email" class="form-label font-12 fw-semibold text-muted text-uppercase">Email</label>
+                        <input type="email" class="form-control rounded-0 font-13" name="email" id="email" required placeholder="e.g. john@example.com">
+                    </div>
+                </div>
+
+                <!-- Horizontal Row 2 -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label for="lead_source_id" class="form-label font-12 fw-semibold text-muted text-uppercase">Lead Source</label>
+                        <select class="form-select rounded-0 font-13" name="lead_source_id" id="lead_source_id">
+                            <option value="">Select Lead Source</option>
+                            @foreach($leadSources as $leadSource)
+                                <option value="{{ $leadSource->id }}">{{ $leadSource->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="lead_status_id" class="form-label font-12 fw-semibold text-muted text-uppercase">Lead Status</label>
+                        <select class="form-select rounded-0 font-13" name="lead_status_id" id="lead_status_id">
+                            <option value="">Select Lead Status</option>
+                            @foreach($leadStatuses as $leadStatus)
+                                <option value="{{ $leadStatus->id }}">{{ $leadStatus->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="assignee_id" class="form-label font-12 fw-semibold text-muted text-uppercase">Assigned To</label>
+                        <select class="form-select rounded-0 font-13" name="assignee_id" id="assignee_id">
+                            <option value="">Select Supervisor / Manager</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Horizontal Row 3 -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-6">
+                        <label for="address" class="form-label font-12 fw-semibold text-muted text-uppercase">Address</label>
+                        <input type="text" class="form-control rounded-0 font-13" name="address" id="address" placeholder="e.g. Street name, Area">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="notes" class="form-label font-12 fw-semibold text-muted text-uppercase">Notes / Requirements</label>
+                        <textarea class="form-control rounded-0 font-13" name="notes" id="notes" rows="1" placeholder="Add custom notes here..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="d-flex align-items-center gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm rounded-0 px-4 py-2 font-13 fw-semibold" style="width: auto !important;">Create Lead</button>
+                    <a href="{{ route('leads.index') }}" class="btn btn-secondary btn-sm rounded-0 px-4 py-2 font-13 fw-semibold" style="width: auto !important;">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

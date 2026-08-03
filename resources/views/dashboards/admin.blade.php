@@ -12,7 +12,7 @@
     .welcome-banner {
         background: #ffffff;
         border-radius: 6px;
-        padding: 16px 24px;
+        padding: 10px 0;
         color: #1e293b;
         box-shadow: none;
         border: none;
@@ -40,8 +40,6 @@
 
     /* Flat Badge */
     .glass-badge {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
         padding: 10px 18px;
         border-radius: 4px;
         font-weight: 600;
@@ -126,14 +124,10 @@
         box-shadow: none !important;
     }
     
-    .stat-card .card-body {
-        padding: 12px 16px !important;
-    }
-
     .stat-card .card-body p {
         font-size: 11px;
         color: #000000ff;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
         text-transform: uppercase;
         letter-spacing: 0.8px;
         font-weight: 500;
@@ -229,7 +223,8 @@
             <p class="mb-0">Here is the active operational health of your Home Glazer CRM.</p>
         </div>
         <div class="glass-badge">
-            <i class="ti ti-calendar me-1"></i> {{ date('d-M-Y h:i A') }}
+            {{ date('d-M-Y') }} <br>
+            <span class="text-muted fw-bold text-uppercase me-2" style="font-size: 11px; letter-spacing: 1px;">{{ date('h:i A') }}</span>
         </div>
     </div>
 
@@ -240,16 +235,18 @@
     @endif
 
     {{-- Quick Actions Section --}}
-    <div class="mb-4 d-flex align-items-center flex-wrap gap-2">
+    <div class="mb-1 d-flex align-items-center flex-wrap gap-2">
         <span class="text-muted fw-bold text-uppercase me-2" style="font-size: 11px; letter-spacing: 1px;">Quick Actions:</span>
-        <a href="{{ route('leads.create') }}" class="btn btn-sm btn-outline-primary"><i class="ti ti-plus me-1"></i>New Lead</a>
-        <a href="{{ route('invoices.create') }}" class="btn btn-sm btn-outline-success"><i class="ti ti-file-invoice me-1"></i>Create Invoice</a>
-        <a href="{{ route('projects.index') }}" class="btn btn-sm btn-outline-info"><i class="ti ti-subtask me-1"></i>Projects</a>
-        <a href="{{ route('employees.index') }}" class="btn btn-sm btn-outline-warning"><i class="ti ti-users me-1"></i>Manage Team</a>
+    </div>
+    <div class="mb-3 d-flex align-items-center gap-2">
+        <a href="{{ route('leads.create') }}" class="btn btn-sm btn-outline-primary py-2"><i class="ti ti-plus me-1"></i>New Lead</a>
+        <a href="{{ route('invoices.create') }}" class="btn btn-sm btn-outline-success py-2"><i class="ti ti-file-invoice me-1"></i>Create Invoice</a>
+        <a href="{{ route('projects.index') }}" class="btn btn-sm btn-outline-info py-2"><i class="ti ti-subtask me-1"></i>Projects</a>
+        <a href="{{ route('employees.index') }}" class="btn btn-sm btn-outline-warning py-2"><i class="ti ti-users me-1"></i>Manage Team</a>
     </div>
 
     {{-- Key Analytics --}}
-    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-2 mb-4">
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-2 mb-3">
         <div class="col">
             <div class="card stat-card">
                 <div class="card-body">
@@ -280,41 +277,41 @@
     </div>
 
     {{-- Directory Overview (Grouped Counters) --}}
-    <div class="card mb-5">
+    <div class="card mb-3">
         <div class="card-header border-bottom">
             Directory & Users
         </div>
         <div class="card-body p-0">
             <div class="row g-0 text-center">
-                <div class="col-6 col-sm-3 border-end border-bottom p-3">
+                <div class="col-6 col-sm-3 border border-bottom p-3">
                     <p class="text-muted mb-1 fw-semibold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Admins</p>
                     <h4 class="mb-0 text-dark fw-bold">{{ $adminsCount }}</h4>
                 </div>
-                <div class="col-6 col-sm-3 border-end border-bottom p-3">
+                <div class="col-6 col-sm-3 border border-bottom p-3">
                     <p class="text-muted mb-1 fw-semibold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Managers</p>
                     <h4 class="mb-0 text-dark fw-bold">{{ $managersCount }}</h4>
                 </div>
-                <div class="col-6 col-sm-3 border-end border-bottom p-3">
+                <div class="col-6 col-sm-3 border border-bottom p-3">
                     <p class="text-muted mb-1 fw-semibold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Supervisors</p>
                     <h4 class="mb-0 text-dark fw-bold">{{ $supervisorsCount }}</h4>
                 </div>
-                <div class="col-6 col-sm-3 border-bottom p-3">
+                <div class="col-6 col-sm-3 border border-bottom p-3">
                     <p class="text-muted mb-1 fw-semibold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Accounts</p>
                     <h4 class="mb-0 text-dark fw-bold">{{ $accountsCount }}</h4>
                 </div>
-                <div class="col-6 col-sm-3 border-end p-3">
+                <div class="col-6 col-sm-3 border border-bottom p-3">
                     <p class="text-muted mb-1 fw-semibold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">HR Staff</p>
                     <h4 class="mb-0 text-dark fw-bold">{{ $hrCount }}</h4>
                 </div>
-                <div class="col-6 col-sm-3 border-end p-3">
+                <div class="col-6 col-sm-3 border border-bottom p-3">
                     <p class="text-muted mb-1 fw-semibold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Employees</p>
                     <h4 class="mb-0 text-dark fw-bold">{{ $employeesCount }}</h4>
                 </div>
-                <div class="col-6 col-sm-3 border-end p-3">
+                <div class="col-6 col-sm-3 border border-bottom p-3">
                     <p class="text-muted mb-1 fw-semibold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Customers</p>
                     <h4 class="mb-0 text-dark fw-bold">{{ $customersCount }}</h4>
                 </div>
-                <div class="col-6 col-sm-3 p-3">
+                <div class="col-6 col-sm-3 border border-bottom p-3">
                     <p class="text-muted mb-1 fw-semibold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Vendors</p>
                     <h4 class="mb-0 text-dark fw-bold">{{ $vendorsCount }}</h4>
                 </div>
@@ -323,69 +320,47 @@
     </div>
 
     {{-- Charts Section --}}
-    <div class="row g-4 mb-4">
-        <div class="col-md-6">
-            <div class="card chart-card h-100">
-                <div class="card-header">
-                    {{ $leadsByMonth->options['chart_title'] }}
+    <div class="row g-3 mb-4">
+
+        {{-- 1. Revenue vs Expenses (Full Width) --}}
+        <div class="col-12">
+            <div class="card chart-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="ti ti-trending-up me-1 text-success"></i> Revenue vs Expenses — {{ $year }}</span>
+                    <small class="text-muted font-12">Monthly Comparison</small>
                 </div>
                 <div class="card-body">
-                    {!! $leadsByMonth->renderHtml() !!}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card chart-card h-100">
-                <div class="card-header">
-                    {{ $invoicesByMonth->options['chart_title'] }}
-                </div>
-                <div class="card-body">
-                    {!! $invoicesByMonth->renderHtml() !!}
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6">
-            <div class="card chart-card h-100">
-                <div class="card-header">
-                    {{ $projectsByMonth->options['chart_title'] }}
-                </div>
-                <div class="card-body">
-                    {!! $projectsByMonth->renderHtml() !!}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card chart-card h-100">
-                <div class="card-header">
-                    {{ $inventoriesByMonth->options['chart_title'] }}
-                </div>
-                <div class="card-body">
-                    {!! $inventoriesByMonth->renderHtml() !!}
+                    <canvas id="revenueExpensesChart" height="90"></canvas>
                 </div>
             </div>
         </div>
 
+        {{-- 2. Leads by Month --}}
         <div class="col-md-6">
             <div class="card chart-card h-100">
-                <div class="card-header">
-                    {{ $paymentsByMonth->options['chart_title'] }}
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="ti ti-user-search me-1 text-primary"></i> Leads — {{ $year }}</span>
+                    <small class="text-muted font-12">New leads per month</small>
                 </div>
                 <div class="card-body">
-                    {!! $paymentsByMonth->renderHtml() !!}
+                    <canvas id="leadsChart" height="140"></canvas>
                 </div>
             </div>
         </div>
+
+        {{-- 3. Lead Status Breakdown --}}
         <div class="col-md-6">
             <div class="card chart-card h-100">
-                <div class="card-header">
-                    {{ $billsByMonth->options['chart_title'] }}
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="ti ti-chart-pie me-1 text-info"></i> Lead Status Breakdown</span>
+                    <small class="text-muted font-12">All-time distribution</small>
                 </div>
-                <div class="card-body">
-                    {!! $billsByMonth->renderHtml() !!}
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <canvas id="leadStatusChart" height="140"></canvas>
                 </div>
             </div>
         </div>
+
     </div>
 
     {{-- Live Projects Map --}}
@@ -404,14 +379,14 @@
     </div>
 
     {{-- Actionable Lists --}}
-    <div class="row g-2">
+    <div class="row g-3">
         <div class="col-md-6">
-            <div class="card chart-card">
+            <div class="card chart-card d-flex flex-column h-100 mb-0">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <span class="m-0">Today's Follow-ups (Recent Leads)</span>
+                    <span class="m-0 fw-bold">Today's Follow-ups (Recent Leads)</span>
                     <a href="{{ route('leads.index') }}" class="badge bg-primary text-white px-2 py-1" style="text-decoration: none; font-weight: 500;">View All</a>
                 </div>
-                <div class="card-body p-0">
+                <div class="card-body p-0 flex-grow-1 d-flex flex-column justify-content-between">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
@@ -434,16 +409,21 @@
                             </tbody>
                         </table>
                     </div>
+                    @if($recentLeads->hasPages())
+                        <div class="p-2 border-top">
+                            {!! $recentLeads->appends(request()->except('leads_page'))->links('pagination::bootstrap-5') !!}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card chart-card">
+            <div class="card chart-card d-flex flex-column h-100 mb-0">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <span class="m-0">Active Sites (Projects)</span>
+                    <span class="m-0 fw-bold">Active Sites (Projects)</span>
                     <a href="{{ route('projects.index') }}" class="badge bg-primary text-white px-2 py-1" style="text-decoration: none; font-weight: 500;">View All</a>
                 </div>
-                <div class="card-body p-0">
+                <div class="card-body p-0 flex-grow-1 d-flex flex-column justify-content-between">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
@@ -468,39 +448,11 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Activity Timeline --}}
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card chart-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span class="m-0 fw-bold"><i class="ti ti-activity me-1 text-primary"></i> Recent Activity Timeline</span>
-                    <a href="{{ route('activities.index') }}" class="badge bg-primary text-white px-2 py-1" style="text-decoration: none; font-weight: 500;">View Full Timeline</a>
-                </div>
-                <div class="card-body p-4">
-                    <div class="activity-timeline">
-                        @forelse($recentActivities as $activity)
-                            <div class="d-flex mb-4 position-relative">
-                                <div class="timeline-line position-absolute top-0 bottom-0 start-0 ms-3" style="width: 2px; background: #e2e8f0; z-index: 0; margin-left: 14px;"></div>
-                                <div class="timeline-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center position-relative shadow-sm" style="width: 32px; height: 32px; z-index: 1;">
-                                    <i class="ti ti-{{ str_contains(strtolower($activity->title), 'mail') ? 'mail' : (str_contains(strtolower($activity->title), 'call') ? 'phone' : 'check') }} font-16"></i>
-                                </div>
-                                <div class="ms-3 flex-grow-1">
-                                    <h6 class="m-0 mb-1 fw-bold text-dark">{{ $activity->title }}</h6>
-                                    <p class="m-0 text-muted" style="font-size: 13px;">{{ $activity->description ?? 'No details provided.' }}</p>
-                                    <span class="text-secondary d-block mt-1" style="font-size: 11px; font-weight: 500;">
-                                        <i class="ti ti-clock me-1"></i>{{ $activity->created_at->diffForHumans() }}
-                                    </span>
-                                </div>
-                            </div>
-                        @empty
-                            <p class="text-center text-muted m-0">No recent activities to show.</p>
-                        @endforelse
-                    </div>
+                    @if($activeProjects->hasPages())
+                        <div class="p-2 border-top">
+                            {!! $activeProjects->appends(request()->except('projects_page'))->links('pagination::bootstrap-5') !!}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -512,78 +464,98 @@
 @section('scripts')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+
+    const months = @json($months);
+    const colors = {
+        green:  { bg: 'rgba(25,135,84,0.15)',  border: '#198754' },
+        red:    { bg: 'rgba(220,53,69,0.15)',   border: '#dc3545' },
+        blue:   { bg: 'rgba(13,110,253,0.15)',  border: '#0d6efd' },
+        orange: { bg: 'rgba(253,126,20,0.15)',  border: '#fd7e14' },
+        teal:   { bg: 'rgba(32,201,151,0.15)',  border: '#20c997' },
+        purple: { bg: 'rgba(111,66,193,0.15)',  border: '#6f42c1' },
+    };
+    const pieColors = ['#0d6efd','#198754','#ffc107','#dc3545','#0dcaf0','#6f42c1','#fd7e14','#20c997','#adb5bd'];
+
+    const defaultBar = { borderWidth: 2, borderRadius: 4, barPercentage: 0.7 };
+    const defaultLine = { borderWidth: 2, tension: 0.4, fill: true, pointRadius: 4, pointHoverRadius: 6 };
+    const gridOpts = { color: 'rgba(0,0,0,0.05)' };
+    const tickOpts = { color: '#64748b', font: { size: 11 } };
+
+    // 1. Revenue vs Expenses
+    new Chart(document.getElementById('revenueExpensesChart'), {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [
+                { label: 'Revenue (₹)', data: @json($revenueData), backgroundColor: colors.green.bg, borderColor: colors.green.border, ...defaultBar },
+                { label: 'Expenses (₹)', data: @json($expensesData), backgroundColor: colors.red.bg, borderColor: colors.red.border, ...defaultBar },
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ' ₹' + ctx.parsed.y.toLocaleString('en-IN') } } },
+            scales: { x: { grid: gridOpts, ticks: tickOpts }, y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => '₹' + v.toLocaleString('en-IN') } } }
+        }
+    });
+
+    // 2. Leads by Month
+    new Chart(document.getElementById('leadsChart'), {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{ label: 'New Leads', data: @json($leadsData), backgroundColor: colors.blue.bg, borderColor: colors.blue.border, ...defaultBar }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: gridOpts, ticks: tickOpts }, y: { grid: gridOpts, ticks: { ...tickOpts, precision: 0 } } }
+        }
+    });
+
+    // 3. Lead Status Doughnut
+    new Chart(document.getElementById('leadStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: @json($leadStatusLabels),
+            datasets: [{ data: @json($leadStatusData), backgroundColor: pieColors, borderWidth: 2, hoverOffset: 6 }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'right', labels: { font: { size: 11 }, padding: 10 } } },
+            cutout: '65%'
+        }
+    });
+
+
+
+    // Leaflet Map
     var mapProjects = @json($mapProjects ?? []);
-    
-    // Default Delhi NCR center
-    var defaultLat = 28.6139;
-    var defaultLng = 77.2090;
-    
+    var defaultLat = 28.6139, defaultLng = 77.2090;
     var map = L.map('dashboard_live_map').setView([defaultLat, defaultLng], 10);
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
 
-    if(mapProjects && mapProjects.length > 0) {
+    if (mapProjects && mapProjects.length > 0) {
         var bounds = [];
-        var regionalOffsets = [
-            [28.6139, 77.2090], // New Delhi
-            [28.4595, 77.0266], // Gurgaon
-            [28.5355, 77.3910], // Noida
-            [28.4089, 77.3178], // Faridabad
-            [28.6692, 77.4538]  // Ghaziabad
-        ];
-
+        var regionalOffsets = [[28.6139,77.2090],[28.4595,77.0266],[28.5355,77.3910],[28.4089,77.3178],[28.6692,77.4538]];
         mapProjects.forEach(function(project, index) {
-            var lat = parseFloat(project.latitude);
-            var lng = parseFloat(project.longitude);
-
-            if(isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
+            var lat = parseFloat(project.latitude), lng = parseFloat(project.longitude);
+            if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
                 var base = regionalOffsets[index % regionalOffsets.length];
                 lat = base[0] + ((index * 0.015) % 0.06);
                 lng = base[1] + ((index * 0.018) % 0.07);
             }
-
             var marker = L.marker([lat, lng]).addTo(map);
-            var customerName = (project.customer && project.customer.lead) ? project.customer.lead.name : (project.name || 'Project #' + project.id);
+            var customerName = (project.customer && project.customer.lead) ? project.customer.lead.name : ('Project #' + project.id);
             var statusName = project.project_status ? project.project_status.name : 'Active';
             var projTitle = project.name ? '<b>' + project.name + '</b><br>' : '';
-            var locName = project.location_name ? '<br>📍 ' + project.location_name : '';
-            
-            var badgeBg = 'bg-primary';
-            if(statusName.toLowerCase().indexOf('complete') !== -1 || statusName.toLowerCase().indexOf('done') !== -1) {
-                badgeBg = 'bg-success';
-            } else if(statusName.toLowerCase().indexOf('hold') !== -1 || statusName.toLowerCase().indexOf('pending') !== -1) {
-                badgeBg = 'bg-warning text-dark';
-            }
-
-            marker.bindPopup(
-                '<div style="font-family:Inter; font-size:13px; min-width:180px; padding:2px;">' +
-                projTitle +
-                '<b>Customer:</b> ' + customerName + '<br>' +
-                '<b>Status:</b> <span class="badge ' + badgeBg + ' ms-1">' + statusName + '</span>' +
-                locName +
-                '</div>'
-            );
+            marker.bindPopup('<div style="font-family:Inter;font-size:13px;min-width:180px;padding:2px;">' + projTitle + '<b>Customer:</b> ' + customerName + '<br><b>Status:</b> ' + statusName + '</div>');
             bounds.push([lat, lng]);
         });
-
-        if(bounds.length > 0) {
-            map.fitBounds(bounds, {padding: [40, 40], maxZoom: 13});
-        }
+        if (bounds.length > 0) map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
     }
 });
 </script>
-
-{!! $leadsByMonth->renderChartJsLibrary() !!}
-{!! $leadsByMonth->renderJs() !!}
-{!! $invoicesByMonth->renderJs() !!}
-{!! $projectsByMonth->renderJs() !!}
-{!! $inventoriesByMonth->renderJs() !!}
-{!! $paymentsByMonth->renderJs() !!}
-{!! $billsByMonth->renderJs() !!}
-{!! $rolesChart->renderJs() !!}
 @endsection

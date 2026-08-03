@@ -70,68 +70,76 @@ class HomeController extends Controller
         // ── Admin ───────────────────────────────────────────
         elseif (Auth::user()->hasRole('admin')) {
 
-            $counts = Cache::remember('dashboard_counts_admin', 300, function () {
-                return [
-                    'usersCount'       => User::count(),
-                    'adminsCount'      => User::whereHasRole('admin')->count(),
-                    'managersCount'    => User::whereHasRole('manager')->count(),
-                    'supervisorsCount' => User::whereHasRole('supervisor')->count(),
-                    'accountsCount'    => User::whereHasRole('accounts')->count(),
-                    'hrCount'          => User::whereHasRole('hr')->count(),
-                    'employeesCount'   => Employee::count(),
-                    'customersCount'   => Customer::count(),
-                    'vendorsCount'     => Vendor::count(),
-                ];
-            });
+            $usersCount       = User::count();
+            $adminsCount      = User::whereHasRole('admin')->count();
+            $managersCount    = User::whereHasRole('manager')->count();
+            $supervisorsCount = User::whereHasRole('supervisor')->count();
+            $accountsCount    = User::whereHasRole('accounts')->count();
+            $hrCount          = User::whereHasRole('hr')->count();
+            $employeesCount   = Employee::count();
+            $customersCount   = Customer::count();
+            $vendorsCount     = Vendor::count();
 
-            $usersCount       = $counts['usersCount'];
-            $adminsCount      = $counts['adminsCount'];
-            $managersCount    = $counts['managersCount'];
-            $supervisorsCount = $counts['supervisorsCount'];
-            $accountsCount    = $counts['accountsCount'];
-            $hrCount          = $counts['hrCount'];
-            $employeesCount   = $counts['employeesCount'];
-            $customersCount   = $counts['customersCount'];
-            $vendorsCount     = $counts['vendorsCount'];
+            $year = now()->year;
+            $months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-            $leadsByMonth       = new LaravelChart(['chart_title' => 'Leads',       'report_type' => 'group_by_date', 'model' => 'App\Models\Lead',       'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
-            $invoicesByMonth    = new LaravelChart(['chart_title' => 'Invoices',    'report_type' => 'group_by_date', 'model' => 'App\Models\Invoice',    'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
-            $projectsByMonth    = new LaravelChart(['chart_title' => 'Projects',    'report_type' => 'group_by_date', 'model' => 'App\Models\Project',    'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'bar']);
-            $inventoriesByMonth = new LaravelChart(['chart_title' => 'Inventories', 'report_type' => 'group_by_date', 'model' => 'App\Models\Inventory',  'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'line']);
-            $paymentsByMonth    = new LaravelChart(['chart_title' => 'Payments',    'report_type' => 'group_by_date', 'model' => 'App\Models\Payment',    'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'line']);
-            $billsByMonth       = new LaravelChart(['chart_title' => 'Bills',       'report_type' => 'group_by_date', 'model' => 'App\Models\Bill',       'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'line']);
-            $ticketsByMonth     = new LaravelChart(['chart_title' => 'Tickets',     'report_type' => 'group_by_date', 'model' => 'App\Models\Ticket',     'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'pie']);
-            $activitiesByMonth  = new LaravelChart(['chart_title' => 'Activities',  'report_type' => 'group_by_date', 'model' => 'App\Models\Activity',   'group_by_field' => 'created_at', 'group_by_period' => 'month', 'date_format' => 'M', 'chart_type' => 'pie']);
-            $rolesChart         = new LaravelChart(['chart_title' => 'Roles',       'report_type' => 'group_by_string', 'model' => 'App\Models\Role',     'group_by_field' => 'name',                                                              'chart_type' => 'pie']);
+            // Helper: fill 12-month array
+            $fillMonths = function($query, $field = 'total') use ($months) {
+                $data = array_fill(0, 12, 0);
+                foreach ($query as $row) {
+                    $data[(int)$row->month - 1] = (float)$row->$field;
+                }
+                return $data;
+            };
 
-            $recentLeads   = Lead::latest()->take(5)->get();
-            $activeProjects = \App\Models\Project::with('projectStatus', 'customer.lead')->latest()->take(5)->get();
-            $mapProjects = \App\Models\Project::with(['projectStatus', 'customer.lead'])
-                            ->latest()
-                            ->take(20)
-                            ->get();
+            // Revenue by month (Payments)
+            $revenueRaw = Payment::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+                ->whereYear('created_at', $year)->groupBy('month')->orderBy('month')->get();
+            $revenueData = $fillMonths($revenueRaw);
 
-            // New Analytics for Dashboard
-            $totalRevenue = Cache::remember('dashboard_total_revenue', 300, function() {
-                return Payment::sum('amount');
-            });
-            $totalExpenses = Cache::remember('dashboard_total_expenses', 300, function() {
-                return Expense::where('status', 'Approved')->sum('amount');
-            });
-            
-            $totalLeads = Lead::count();
+            // Expenses by month
+            $expensesRaw = Expense::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+                ->where('status', 'Approved')->whereYear('created_at', $year)
+                ->groupBy('month')->orderBy('month')->get();
+            $expensesData = $fillMonths($expensesRaw);
+
+            // Leads by month (count)
+            $leadsRaw = Lead::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->whereYear('created_at', $year)->groupBy('month')->orderBy('month')->get();
+            $leadsData = $fillMonths($leadsRaw);
+
+            // Projects by Month (count)
+            $projectsRaw = \App\Models\Project::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->whereYear('created_at', $year)->groupBy('month')->orderBy('month')->get();
+            $projectsData = $fillMonths($projectsRaw);
+
+            // Lead status breakdown
+            $leadStatuses = Lead::selectRaw('lead_statuses.name as status, COUNT(*) as count')
+                ->join('lead_statuses', 'leads.lead_status_id', '=', 'lead_statuses.id')
+                ->groupBy('lead_statuses.name')->get();
+            $leadStatusLabels = $leadStatuses->pluck('status')->toArray();
+            $leadStatusData   = $leadStatuses->pluck('count')->map(fn($v) => (int)$v)->toArray();
+
+            $recentLeads    = Lead::latest()->paginate(5, ['*'], 'leads_page');
+            $activeProjects = \App\Models\Project::with('projectStatus', 'customer.lead')->latest()->paginate(5, ['*'], 'projects_page');
+            $mapProjects    = \App\Models\Project::with(['projectStatus', 'customer.lead'])->latest()->take(20)->get();
+
+            $totalRevenue  = Payment::sum('amount');
+            $totalExpenses = Expense::where('status', 'Approved')->sum('amount');
+            $totalLeads    = Lead::count();
             $leadConversionRate = $totalLeads > 0 ? round(($customersCount / $totalLeads) * 100, 2) : 0;
-
-            $recentActivities = \App\Models\Activity::latest()->take(10)->get();
 
             return view('dashboards.admin', compact(
                 'usersCount', 'vendorsCount', 'customersCount', 'employeesCount',
                 'hrCount', 'adminsCount', 'managersCount', 'supervisorsCount', 'accountsCount',
-                'leadsByMonth', 'invoicesByMonth', 'projectsByMonth', 'inventoriesByMonth',
-                'paymentsByMonth', 'billsByMonth', 'rolesChart', 'recentLeads', 'activeProjects', 'mapProjects',
-                'totalRevenue', 'totalExpenses', 'leadConversionRate', 'recentActivities'
+                'months', 'year',
+                'revenueData', 'expensesData', 'leadsData',
+                'leadStatusLabels', 'leadStatusData',
+                'recentLeads', 'activeProjects', 'mapProjects',
+                'totalRevenue', 'totalExpenses', 'leadConversionRate'
             ));
         }
+
 
         // ── Manager ───────────────────────────────────────────────────────
         elseif (Auth::user()->hasRole('manager')) {

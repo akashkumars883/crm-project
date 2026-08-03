@@ -1,678 +1,557 @@
 @extends('layouts.app')
-@section('title', $project->customer->lead->name)
+@section('title', $project->customer->lead->name . ' - Project Details')
 @section('content')
 @php
     use Carbon\Carbon;
 @endphp
-<div class="row pt-3 mb-4">
-    <div class="col">
-        <div class="card mb-0">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="media mb-3">
-                                    <div class="media-body align-self-center">
-                                        <h4 class="text-primary mt-0 mb-0 font-17">{{ $project->customer->lead->name }} </h4>
-                                        <p class="mb-0 font-12"><i class="fas fa-phone-square"></i> : {{ $project->customer->lead->phone }} </p>
-                                        <p class="mb-0 font-12"><i class="fas fa-phone-square"></i> : {{ $project->customer->lead->email }} </p>
-                                        <p class="mb-0 font-12"><i class="fas fa-home"></i> : {{ $project->customer->lead->address }}, {{ $project->customer->lead->city }}, {{ $project->customer->lead->state }} - {{ $project->customer->lead->zip }} </p>
-                                    </div><!--end media body-->
-                                </div> <!--end media-->
 
-                                <p class="mb-0 font-12">Source : {{ $project->customer->lead->leadSource->name }} </p>
-                                <p class="mb-0 font-14">Project Status : {{ $project->projectStatus ? $project->projectStatus->name ?? 'Not Assigned' : 'Not Assigned' }} </p>
-                                <p class="mb-0 font-14">Project Type : {{ $project->projectType ? $project->projectType->name ?? 'Not Assigned' : 'Not Assigned' }} </p>
-                                <p class="mb-0 font-14">Assigned To : {{ $project->assignedTo ? $project->assignedTo->name ?? 'Not Assigned' : 'Not Assigned' }} </p>
-                                <hr class="hr-dashed">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        @if (Auth::user()->hasPermission('update-project'))
-                                            <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-sm btn-primary btn-square">Update</a>
-                                        @endif
-                                        <a href="{{ route('projects.index') }}" class="btn btn-sm btn-primary btn-square">Back</a>
-                                    </div><!--end col-->
-                                </div>  <!--end row-->
-                            </div><!--end card-body-->
-                        </div>  <!--end card-->
-                    </div><!--end col-->
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="media mb-3">
-                                    <div class="media-body align-self-center">
-                                        <h4 class="mt-0 mb-0 font-15">Project Details </h4>
-                                    </div><!--end media body-->
-                                </div> <!--end media-->
+<div class="container-fluid p-3 p-md-4">
+    <!-- Header Hero Project Banner -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header border-0 rounded-0 bg-primary bg-gradient py-3 px-4 text-white d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('projects.index') }}" class="text-black text-decoration-none me-1" title="Back to Projects"><i class="ti ti-arrow-left fs-4"></i></a>
+                <i class="ti ti-subtask fs-2"></i>
+                <span class="fw-bold fs-5 text-black text-nowrap text-capitalize">Project Profile & Tracking</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-white text-primary px-3 py-2 fw-bold font-12 rounded-0 text-nowrap">
+                    Project ID: #{{ $project->id }}
+                </span>
+                <span class="badge bg-success px-3 py-2 fw-semibold font-12 rounded-1 text-nowrap text-capitalize">
+                    <i class="ti ti-point-filled me-1"></i>{{ $project->projectStatus ? $project->projectStatus->name : 'Active' }}
+                </span>
+            </div>
+        </div>
+        <div class="card-body p-4 bg-white rounded-0">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-primary-subtle text-primary border border-2 border-primary d-flex align-items-center justify-content-center fw-bold fs-2 shadow-sm" style="width: 70px; height: 70px;">
+                        {{ strtoupper(substr($project->customer->lead->name, 0, 1)) }}
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1">{{ $project->customer->lead->name }}</h4>
+                        <div class="d-flex flex-wrap align-items-center gap-3 text-muted font-12">
+                            <span><i class="ti ti-phone me-1 text-secondary"></i>{{ $project->customer->lead->phone ?: 'N/A' }}</span>
+                            <span><i class="ti ti-mail me-1 text-secondary"></i>{{ $project->customer->lead->email }}</span>
+                            @if($project->customer->lead->address)
+                                <span><i class="ti ti-map-pin me-1 text-secondary"></i>{{ $project->customer->lead->address }}, {{ $project->customer->lead->city }}</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
 
-                                <p class="mb-0 font-12">Project Status: <span class="badge bg-primary font-13">{{ $project->projectStatus->name }}</span></p>
-                                <p class="mb-0 font-12">Start Date: {{ Carbon::parse($project->start_date)->format('M, d Y') }}</p>
-                                <p class="mb-0 font-12">End Date: {{ Carbon::parse($project->end_date)->format('M, d Y') }}</p>
-                                <p class="mb-0 font-14">Created By : {{ $project->creator->name }} </p>
-                                <p class="mb-0 font-14">Last Updated : {{ $project->updated_at->format('D, d M Y h:i A') }} </p>
-                                <p class="mb-0 font-14">Updated By : {{ $project->updater->name }} </p>
-                            </div><!--end card-body-->
-                        </div>  <!--end card-->
-                    </div><!--end col-->
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="media mb-3">
-                                    <div class="media-body align-self-center">
-                                        <h4 class="mt-0 mb-0 font-13">Financials</h4>
-                                    </div><!--end media body-->
-                                </div> <!--end media-->
-
-                                <p class="mb-0 font-12">Total Labor: {{ $totalLabor }}</p>
-                                <p class="mb-0 font-12">Total Labor Cost: {{ $totalLaborCost }}</p>
-                                <p class="mb-0 font-12">Administrative Cost: {{ $administrativeCost }}</p>
-                                <p class="mb-0 font-12">Total Material: {{ $totalMaterial }}</p>
-                                <p class="mb-0 font-12">Total Material Cost: {{  $totalMaterialCost }}</p>
-                                <p class="mb-0 font-12">Total Cost Incurred: {{ $totalCostIncurred }}</p>
-                                <p class="mb-0 font-12">Result: {{ $project->administrative_cost }}</p>
-                                <p class="mb-0 font-12">
-                                    @if ($result['profitLossValue'] > 0)
-                                        Profit: {{ get_setting('currency', '₹') }}{{ $result['profitLossValue'] }}
-                                    @elseif ($result['profitLossValue'] < 0)
-                                        Loss: {{ get_setting('currency', '₹') }}{{ abs($result['profitLossValue']) }}
-                                    @else
-                                        No Profit, No Loss
-                                    @endif    
-                                </p>
-                                <p class="mb-0 font-12">
-                                    @if ($result['profitLossPercentage'] > 0)
-                                        Profit Percentage: {{ number_format($result['profitLossPercentage'], 2) }}%
-                                    @elseif ($result['profitLossPercentage'] < 0)
-                                        Loss Percentage: {{ number_format(abs($result['profitLossPercentage']), 2) }}%
-                                    @else
-                                        No Profit, No Loss
-                                    @endif
-                                </p>
-                                {{-- <p class="mb-0 font-12">Bill Status: {{ $project->administrative_cost }}</p> --}}
-                            </div><!--end card-body-->
-                        </div>  <!--end card-->
-                    </div><!--end col-->
+                <!-- Action Button Toolbar -->
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    @if (Auth::user()->hasPermission('update-project'))
+                        <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-primary btn-sm px-3 py-2 font-12 fw-semibold rounded-0 text-nowrap d-inline-flex align-items-center">
+                            <i class="ti ti-pencil me-1"></i> Edit Project
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container-fluid mb-4">
-    <div class="row">
-        <div class="row justify-content-center">
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-9">
-                                <p class="text-dark mb-0 fw-semibold">Labor</p>
-                                <h3 class="my-1 font-20 fw-bold">{{  $totalLabor }}</h3>
-                                <p class="mb-0 text-truncate text-muted">Working here</p>
-                            </div><!--end col-->
-                            <div class="col-3 align-self-center">
-                                <div class="d-flex justify-content-center align-items-center thumb-md bg-light-alt rounded-circle mx-auto">
-                                    <i class="ti ti-users font-24 align-self-center text-muted"></i>
-                                </div>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body--> 
-                </div><!--end card--> 
-            </div> <!--end col-->
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-9">
-                                <p class="text-dark mb-0 fw-semibold">Material Cost</p>
-                                <h3 class="my-1 font-20 fw-bold">{{ $totalMaterialCost }}</h3>
-                                <p class="mb-0 text-truncate text-muted"><span class="text-success"><i class="mdi mdi-trending-up"></i>{{ $totalMaterial }}</span> Materials</p>
-                            </div><!--end col-->
-                            <div class="col-3 align-self-center">
-                                <div class="d-flex justify-content-center align-items-center thumb-md bg-light-alt rounded-circle mx-auto">
-                                    <i class="ti ti-layout-list font-24 align-self-center text-muted"></i>
-                                </div>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body--> 
-                </div><!--end card--> 
-            </div> <!--end col-->
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-9">
-                                <p class="text-dark mb-0 fw-semibold">Total Cost</p>
-                                <h3 class="my-1 font-20 fw-bold">{{ $totalCostIncurred }}</h3>
-                                <p class="mb-0 text-truncate text-muted">Incurred</p>
-                            </div><!--end col-->
-                            <div class="col-3 align-self-center">
-                                <div class="d-flex justify-content-center align-items-center thumb-md bg-light-alt rounded-circle mx-auto">
-                                    <i class="ti ti-currency-rupee font-24 align-self-center text-muted"></i>
-                                </div>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body--> 
-                </div><!--end card--> 
-            </div> <!--end col--> 
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row d-flex justify-content-center">                                                
-                            <div class="col-9">
-                                @if ($result['profitLossPercentage'] > 0)
-                                    <p class="text-dark mb-0 fw-semibold">Result</p>
-                                    <h3 class="my-1 font-20 text-success fw-bold">Profit</h3>
-                                    <p class="mb-0 text-truncate text-muted">Good Job</p>
-                                @elseif ($result['profitLossPercentage'] < 0)
-                                    <p class="text-dark mb-0 fw-semibold">Result</p>
-                                    <h3 class="my-1 font-20 text-danger fw-bold">Loss</h3>
-                                    <p class="mb-0 text-truncate text-muted">Work Hard</p>
-                                @else
-                                    <p class="text-dark mb-0 fw-semibold">Result</p>
-                                    <h3 class="my-1 font-20 text-dark fw-bold">No Data</h3>
-                                    <p class="mb-0 text-truncate text-muted">No Profit/Loss</p>
-                                @endif
-                            </div><!--end col-->
-                            <div class="col-3 align-self-center">
-                                <div class="d-flex justify-content-center align-items-center thumb-md bg-light-alt rounded-circle mx-auto">
-                                    @if ($result['profitLossPercentage'] > 0)
-                                        <i class="ti ti-thumb-up font-24 align-self-center text-success"></i>
-                                    @elseif ($result['profitLossPercentage'] < 0)
-                                        <i class="ti ti-thumb-down font-24 align-self-center text-danger"></i>
-                                    @else
-                                        <i class="ti ti-clock font-24 align-self-center text-warning"></i>
-                                    @endif
-                                </div>
-                            </div> <!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body--> 
-                </div><!--end card--> 
-            </div> <!--end col--> 
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row d-flex justify-content-center">                                                
-                            <div class="col-9">
-                                @if ($result['profitLossPercentage'] > 0)
-                                    <p class="text-dark mb-0 fw-semibold">Total Revenue</p>
-                                    <h3 class="my-1 font-20 text-success fw-bold">{{ $result['profitLossValue'] }}</h3>
-                                    <p class="mb-0 text-truncate text-muted">In Ptofit</p>
-                                @elseif ($result['profitLossPercentage'] < 0)
-                                    <p class="text-dark mb-0 fw-semibold">Total Revenue</p>
-                                    <h3 class="my-1 font-20 text-danger fw-bold">{{ abs($result['profitLossValue']) }}</h3>
-                                    <p class="mb-0 text-truncate text-muted">In Loss</p>
-                                @else
-                                    <p class="text-dark mb-0 fw-semibold">Result</p>
-                                    <h3 class="my-1 font-20 text-dark fw-bold">No Data</h3>
-                                    <p class="mb-0 text-truncate text-muted">No Profit/Loss</p>
-                                @endif
-                            </div><!--end col-->
-                            <div class="col-3 align-self-center">
-                                <div class="d-flex justify-content-center align-items-center thumb-md bg-light-alt rounded-circle mx-auto">
-                                    @if ($result['profitLossPercentage'] > 0)
-                                        <i class="ti ti-currency-rupee font-24 align-self-center text-success"></i>
-                                    @elseif ($result['profitLossPercentage'] < 0)
-                                        <i class="ti ti-currency-rupee font-24 align-self-center text-danger"></i>
-                                    @else
-                                        <i class="ti ti-currency-rupee font-24 align-self-center text-warning"></i>
-                                    @endif
-                                </div>
-                            </div> <!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body--> 
-                </div><!--end card--> 
-            </div> <!--end col-->
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row d-flex justify-content-center">                                                
-                            <div class="col-9">
-                                @if ($result['profitLossPercentage'] > 0)
-                                    <p class="text-dark mb-0 fw-semibold">Profit %</p>
-                                    <h3 class="my-1 font-20 text-success fw-bold">{{ number_format($result['profitLossPercentage'], 2) }}</h3>
-                                    <p class="mb-0 text-truncate text-muted">Percentage</p>
-                                @elseif ($result['profitLossPercentage'] < 0)
-                                    <p class="text-dark mb-0 fw-semibold">Loss %</p>
-                                    <h3 class="my-1 text-danger font-20 fw-bold">{{ number_format(abs($result['profitLossPercentage']), 2) }}</h3>
-                                    <p class="mb-0 text-truncate text-muted">Percentage</p>
-                                @else
-                                    <p class="text-dark mb-0 fw-semibold">Result</p>
-                                    <h3 class="my-1 font-20 text-dark fw-bold">No Data</h3>
-                                    <p class="mb-0 text-truncate text-muted">No Profit/Loss</p>
-                                @endif
-                            </div><!--end col-->
-                            <div class="col-3 align-self-center">
-                                <div class="d-flex justify-content-center align-items-center thumb-md bg-light-alt rounded-circle mx-auto">
-                                    @if ($result['profitLossPercentage'] > 0)
-                                        <i class="ti ti-percentage font-24 align-self-center text-success"></i>
-                                    @elseif ($result['profitLossPercentage'] < 0)
-                                        <i class="ti ti-percentage font-24 align-self-center text-danger"></i>
-                                    @else
-                                        <i class="ti ti-percentage font-24 align-self-center text-warning"></i>
-                                    @endif
-                                </div>
-                            </div> <!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body--> 
-                </div><!--end card--> 
-            </div> <!--end col-->                               
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid mb-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-0">
-                <div class="card-body">
-                    <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>Assigned Team / Labors</h5>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary btn-sm mt-0 mb-3" data-bs-toggle="modal" data-bs-target="#assignTeamModal">Assign Team</button>
-                        </div>
+    <!-- 3-Column Info Cards Grid -->
+    <div class="row g-3 mb-4">
+        <!-- 1. Lead Source & Metadata Card -->
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 rounded-0 h-100">
+                <div class="card-header bg-light py-3 border-bottom rounded-0">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="ti ti-info-circle text-primary fs-4"></i> Client details
+                    </h6>
+                </div>
+                <div class="card-body p-3 rounded-0 font-12">
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted">Source:</span>
+                        <span class="fw-semibold text-dark">{{ $project->customer->lead->leadSource->name ?? 'N/A' }}</span>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Emp ID</th>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>Designation</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($project->employees as $emp)
-                                <tr>
-                                    <td>{{ $emp->emp_id }}</td>
-                                    <td>{{ $emp->name }}</td>
-                                    <td>{{ $emp->phone }}</td>
-                                    <td>{{ $emp->designation ? $emp->designation->name : 'N/A' }}</td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="4">No employees assigned to this project yet.</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted">Project Type:</span>
+                        <span class="fw-semibold text-dark">{{ $project->projectType->name ?? 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Assigned To:</span>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-0 font-12 fw-bold">{{ $project->assignedTo->name ?? 'Unassigned' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Project Details Card -->
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 rounded-0 h-100">
+                <div class="card-header bg-light py-3 border-bottom rounded-0">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="ti ti-calendar text-info fs-4"></i> Date Parameters
+                    </h6>
+                </div>
+                <div class="card-body p-3 rounded-0 font-12">
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted">Start Date:</span>
+                        <span class="fw-semibold text-dark">{{ Carbon::parse($project->start_date)->format('d M Y') }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted">End Date:</span>
+                        <span class="fw-semibold text-dark">{{ $project->end_date ? Carbon::parse($project->end_date)->format('d M Y') : 'Active' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Created By:</span>
+                        <span class="fw-semibold text-dark">{{ optional($project->creator)->name ?? 'System' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Financial Info Card -->
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 rounded-0 h-100">
+                <div class="card-header bg-light py-3 border-bottom rounded-0">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="ti ti-currency-rupee text-success fs-4"></i> Financial Summary
+                    </h6>
+                </div>
+                <div class="card-body p-3 rounded-0 font-12">
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted">Invoice Value:</span>
+                        <span class="fw-semibold text-dark">₹{{ number_format($project->invoiceValue, 2) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom border-light">
+                        <span class="text-muted">Administrative Cost:</span>
+                        <span class="fw-semibold text-dark">₹{{ number_format($administrativeCost, 2) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Profit/Loss Result:</span>
+                        @if ($result['profitLossValue'] > 0)
+                            <span class="fw-bold text-success">Profit (₹{{ number_format($result['profitLossValue'], 2) }})</span>
+                        @elseif ($result['profitLossValue'] < 0)
+                            <span class="fw-bold text-danger">Loss (₹{{ number_format(abs($result['profitLossValue']), 2) }})</span>
+                        @else
+                            <span class="fw-semibold text-muted">No Profit/Loss</span>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Include the Kanban Board for Tasks -->
-@include('crm.crud.projects.kanban')
-
-<div class="container-fluid mb-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-0">
-                <div class="card-body">
-                    <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>Payments</h5>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary btn-sm mt-0 mb-3" data-bs-toggle="modal" data-bs-target="#paymentModal">Add Payment</button>
-                        </div>
+    <!-- Multi Stat widgets row -->
+    <div class="row g-3 mb-4">
+        <!-- Labor widget -->
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-body p-3 text-center d-flex flex-column align-items-center justify-content-center">
+                    <div class="rounded-circle bg-primary-subtle text-primary p-2 mb-2"><i class="ti ti-users font-20"></i></div>
+                    <small class="text-muted text-uppercase font-10 fw-semibold">Team Size</small>
+                    <h5 class="fw-bold text-dark mb-0">{{ $totalLabor }}</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Material Cost -->
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-body p-3 text-center d-flex flex-column align-items-center justify-content-center">
+                    <div class="rounded-circle bg-info-subtle text-info p-2 mb-2"><i class="ti ti-layout-list font-20"></i></div>
+                    <small class="text-muted text-uppercase font-10 fw-semibold">Material Cost</small>
+                    <h5 class="fw-bold text-dark mb-0">₹{{ number_format($totalMaterialCost, 0) }}</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Total Cost -->
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-body p-3 text-center d-flex flex-column align-items-center justify-content-center">
+                    <div class="rounded-circle bg-secondary-subtle text-secondary p-2 mb-2"><i class="ti ti-receipt-2 font-20"></i></div>
+                    <small class="text-muted text-uppercase font-10 fw-semibold">Total Cost</small>
+                    <h5 class="fw-bold text-dark mb-0">₹{{ number_format($totalCostIncurred, 0) }}</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Project Result -->
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-body p-3 text-center d-flex flex-column align-items-center justify-content-center">
+                    <div class="rounded-circle bg-warning-subtle text-warning p-2 mb-2">
+                        <i class="ti ti-{{ $result['profitLossValue'] >= 0 ? 'thumb-up' : 'thumb-down' }} font-20"></i>
                     </div>
+                    <small class="text-muted text-uppercase font-10 fw-semibold">Profit Status</small>
+                    <h5 class="fw-bold mb-0 text-{{ $result['profitLossValue'] >= 0 ? 'success' : 'danger' }}">{{ $result['profitLossValue'] >= 0 ? 'Profit' : 'Loss' }}</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Total Revenue -->
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-body p-3 text-center d-flex flex-column align-items-center justify-content-center">
+                    <div class="rounded-circle bg-success-subtle text-success p-2 mb-2"><i class="ti ti-currency-rupee font-20"></i></div>
+                    <small class="text-muted text-uppercase font-10 fw-semibold">Net Gain</small>
+                    <h5 class="fw-bold mb-0 text-{{ $result['profitLossValue'] >= 0 ? 'success' : 'danger' }}">₹{{ number_format(abs($result['profitLossValue']), 0) }}</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Profit Percentage -->
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-body p-3 text-center d-flex flex-column align-items-center justify-content-center">
+                    <div class="rounded-circle bg-danger-subtle text-danger p-2 mb-2"><i class="ti ti-percentage font-20"></i></div>
+                    <small class="text-muted text-uppercase font-10 fw-semibold">Gain Pct</small>
+                    <h5 class="fw-bold mb-0 text-{{ $result['profitLossPercentage'] >= 0 ? 'success' : 'danger' }}">{{ number_format(abs($result['profitLossPercentage']), 2) }}%</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assigned Team section -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header bg-light py-3 border-bottom rounded-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                <i class="ti ti-users text-primary fs-4"></i> Assigned Team / Labors
+            </h6>
+            <button type="button" class="btn btn-primary btn-sm rounded-0 px-3 py-1.5 font-12 fw-semibold" style="width: auto !important;" data-bs-toggle="modal" data-bs-target="#assignTeamModal">
+                <i class="ti ti-plus me-1"></i> Assign Team
+            </button>
+        </div>
+        <div class="card-body p-0 rounded-0 bg-white">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 table-sm">
+                    <thead class="table-light text-uppercase font-10">
+                        <tr>
+                            <th class="ps-3" style="width: 120px;">Emp ID</th>
+                            <th>Name</th>
+                            <th style="width: 160px;">Phone</th>
+                            <th style="width: 160px;">Designation</th>
+                        </tr>
+                    </thead>
+                    <tbody class="font-12">
+                        @forelse ($project->employees as $emp)
+                            <tr>
+                                <td class="ps-3 fw-bold text-dark">#{{ $emp->emp_id }}</td>
+                                <td class="fw-semibold">{{ $emp->name }}</td>
+                                <td class="text-muted">{{ $emp->phone }}</td>
+                                <td>
+                                    <span class="badge bg-light text-secondary border font-12">
+                                        {{ $emp->designation ? $emp->designation->name : 'N/A' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No employees assigned to this project yet.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the Kanban Board for Tasks -->
+    <div class="mb-4">
+        @include('crm.crud.projects.kanban')
+    </div>
+
+    <!-- Payments and Bills grid side by side -->
+    <div class="row g-3 mb-4">
+        <!-- Payments Card -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-header bg-light py-3 border-bottom rounded-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="ti ti-currency-rupee text-success fs-4"></i> Payments
+                    </h6>
+                    <button type="button" class="btn btn-primary btn-sm rounded-0 px-3 py-2 font-12 fw-semibold" style="width: auto !important;" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                        <i class="ti ti-plus me-1"></i> Add Payment
+                    </button>
+                </div>
+                <div class="card-body p-0 rounded-0 d-flex flex-column justify-content-between bg-white">
                     <div class="table-responsive">
-                        <table class="table">
-                            <thead class="thead-light">
+                        <table class="table table-hover align-middle mb-0 table-sm">
+                            <thead class="table-light text-uppercase font-10">
                                 <tr>
-                                    <th>Reference</th>
-                                    <th>Status</th>
+                                    <th class="ps-3">Reference</th>
                                     <th>Method</th>
-                                    <th>Customer</th>
                                     <th>Amount</th>
-                                    <th>Action</th>
-                                </tr><!--end tr-->
+                                    <th class="pe-3 text-center" style="width: 80px;">Actions</th>
+                                </tr>
                             </thead>
-
-                            <tbody>
+                            <tbody class="font-12">
                                 @forelse ($payments as $payment)
-                                <tr>
-                                    <td>{{ $payment->reference }}</td>
-                                    <td>{{ $payment->paymentStatus ? $payment->paymentStatus->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ $payment->paymentMethod ? $payment->paymentMethod->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ $payment->customer ? $payment->customer->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ $payment->amount }}</td>
-                                    <td>
-                                        <a href="{{ route('payments.show', $payment->id) }}" class="btn btn-sm btn-success">View</a>
-                                        <a href="{{ route('payments.edit', $payment->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $payment->id }}">Delete</button>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3">No Payments added for this project</td>
-                                    <!-- Add more columns as needed -->
-                                </tr>
-                            @endforelse
+                                    <tr>
+                                        <td class="ps-3 fw-semibold text-dark">{{ $payment->reference }}</td>
+                                        <td>{{ $payment->paymentMethod ? $payment->paymentMethod->name : 'N/A' }}</td>
+                                        <td class="fw-bold text-success">₹{{ number_format($payment->amount, 2) }}</td>
+                                        <td class="pe-3 text-center text-nowrap">
+                                            <div class="d-inline-flex align-items-center gap-1 justify-content-center">
+                                                <a href="{{ route('payments.show', $payment->id) }}" class="btn btn-sm btn-outline-info rounded-0 px-2 py-1" title="View"><i class="ti ti-eye"></i></a>
+                                                <a href="{{ route('payments.edit', $payment->id) }}" class="btn btn-sm btn-outline-primary rounded-0 px-2 py-1" title="Edit"><i class="ti ti-pencil"></i></a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-0 px-2 py-1" data-bs-toggle="modal" data-bs-target="#confirmPaymentDeleteModal{{ $payment->id }}" title="Delete"><i class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-muted">No payments found.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
-                </div><!--end card-body-->
-            </div><!--end card-->
-            <!-- Pagination links -->
-            <div class="pt-3">
-                {{ $payments->links('pagination::bootstrap-5') }}
+                    @if($payments->hasPages())
+                        <div class="p-2 border-top">
+                            {{ $payments->links('pagination::bootstrap-5') }}
+                        </div>
+                    @endif
+                </div>
             </div>
-        </div> <!--end col-->
-    </div>
-</div>
+        </div>
 
-<div class="container-fluid mb-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-0">
-                <div class="card-body">
-                    <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>Bills</h5>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary btn-sm mt-0 mb-3" data-bs-toggle="modal" data-bs-target="#billModal">Add Bill</button>
-                        </div>
-                    </div>
+        <!-- Bills Card -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-header bg-light py-3 border-bottom rounded-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="ti ti-file-invoice text-warning fs-4"></i> Bills
+                    </h6>
+                    <button type="button" class="btn btn-primary btn-sm rounded-0 px-3 py-2 font-12 fw-semibold" style="width: auto !important;" data-bs-toggle="modal" data-bs-target="#billModal">
+                        <i class="ti ti-plus me-1"></i> Add Bill
+                    </button>
+                </div>
+                <div class="card-body p-0 rounded-0 d-flex flex-column justify-content-between bg-white">
                     <div class="table-responsive">
-                        <table class="table">
-                            <thead class="thead-light">
+                        <table class="table table-hover align-middle mb-0 table-sm">
+                            <thead class="table-light text-uppercase font-10">
                                 <tr>
-                                    <th>Ref #</th>
+                                    <th class="ps-3">Ref #</th>
                                     <th>Type</th>
                                     <th>Amount</th>
-                                    <th>Employee</th>
-                                    <th>Inventory</th>
-                                    <th>Bill Date</th>
-                                    <th>Due Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr><!--end tr-->
-                            </thead>
-
-                            <tbody>
-                                @forelse ($bills as $bill)
-                                <tr>
-                                    <td>{{ $bill->reference }}</td>
-                                    <td>{{ $bill->billType ? $bill->billType->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ $bill->amount }}</td>
-                                    <td>{{ $bill->employee ? $bill->employee->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ $bill->inventory ? $bill->inventory->id ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($bill->bill_date)->format('D d, M Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($bill->due_date)->format('D d, M Y') }}</td>
-                                    <td>{{ $bill->billStatus ? $bill->billStatus->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>
-                                        <a href="{{ route('bills.show', $bill->id) }}" class="btn btn-sm btn-success">View</a>
-                                        <a href="{{ route('bills.edit', $bill->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $bill->id }}">Delete</button>
-                                    </td>
+                                    <th class="pe-3 text-center" style="width: 80px;">Actions</th>
                                 </tr>
+                            </thead>
+                            <tbody class="font-12">
+                                @forelse ($bills as $bill)
+                                    <tr>
+                                        <td class="ps-3 fw-semibold text-dark">{{ $bill->reference }}</td>
+                                        <td>{{ $bill->billType ? $bill->billType->name : 'N/A' }}</td>
+                                        <td class="fw-bold text-danger">₹{{ number_format($bill->amount, 2) }}</td>
+                                        <td class="pe-3 text-center text-nowrap">
+                                            <div class="d-inline-flex align-items-center gap-1 justify-content-center">
+                                                <a href="{{ route('bills.show', $bill->id) }}" class="btn btn-sm btn-outline-info rounded-0 px-2 py-1" title="View"><i class="ti ti-eye"></i></a>
+                                                <a href="{{ route('bills.edit', $bill->id) }}" class="btn btn-sm btn-outline-primary rounded-0 px-2 py-1" title="Edit"><i class="ti ti-pencil"></i></a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-0 px-2 py-1" data-bs-toggle="modal" data-bs-target="#confirmBillDeleteModal{{ $bill->id }}" title="Delete"><i class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3">No Bills added for this project</td>
-                                        <!-- Add more columns as needed -->
+                                        <td colspan="4" class="text-center py-4 text-muted">No bills found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
-                </div><!--end card-body-->
-            </div><!--end card-->
-            <!-- Pagination links -->
-            <div class="pt-3">
-                {{ $bills->links('pagination::bootstrap-5') }}
+                    @if($bills->hasPages())
+                        <div class="p-2 border-top">
+                            {{ $bills->links('pagination::bootstrap-5') }}
+                        </div>
+                    @endif
+                </div>
             </div>
-        </div> <!--end col-->
+        </div>
     </div>
-</div>
 
-<div class="container-fluid mb-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-0">
-                <div class="card-body">
-                    <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>Activities</h5>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary btn-sm mt-0 mb-3" data-bs-toggle="modal" data-bs-target="#activityModal">Add Activity</button>
-                        </div>
-                    </div>
+    <!-- Activities & Attachments Side by Side -->
+    <div class="row g-3">
+        <!-- Activities -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-header bg-light py-3 border-bottom rounded-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="ti ti-activity text-info fs-4"></i> Activities
+                    </h6>
+                    <button type="button" class="btn btn-primary btn-sm rounded-0 px-3 py-2 font-12 fw-semibold" style="width: auto !important;" data-bs-toggle="modal" data-bs-target="#activityModal">
+                        <i class="ti ti-plus me-1"></i> Add Activity
+                    </button>
+                </div>
+                <div class="card-body p-0 rounded-0 d-flex flex-column justify-content-between bg-white">
                     <div class="table-responsive">
-                        <table class="table">
-                            <thead class="thead-light">
+                        <table class="table table-hover align-middle mb-0 table-sm">
+                            <thead class="table-light text-uppercase font-10">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Type</th>
+                                    <th class="ps-3">ID</th>
                                     <th>Title</th>
-                                    {{-- <th>Description</th> --}}
-                                    <th>Contact Method</th>
-                                    <th>Action</th>
-                                </tr><!--end tr-->
+                                    <th>Method</th>
+                                    <th class="pe-3 text-center" style="width: 80px;">Actions</th>
+                                </tr>
                             </thead>
-
-                            <tbody>
+                            <tbody class="font-12">
                                 @forelse ($activities as $activity)
-                                <tr>
-                                    <td>{{ $activity->id }}</td>
-                                    <td>{{ $activity->activityType ? $activity->activityType->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>{{ $activity->title }}</td>
-                                    {{-- <td>{{ $activity->description }}</td> --}}
-                                    <td>{{ $activity->contactMethod ? $activity->contactMethod->name ?? 'Not Assigned' : 'Not Assigned' }}</td>
-                                    <td>
-                                        <a href="{{ route('activities.show', $activity->id) }}" class="btn btn-sm btn-success">View</a>
-                                        <a href="{{ route('activities.edit', $activity->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $activity->id }}">Delete</button>
-                                    </td>
-                                </tr><!--end tr-->
+                                    <tr>
+                                        <td class="ps-3 text-muted">#{{ $activity->id }}</td>
+                                        <td class="fw-semibold">{{ $activity->title }}</td>
+                                        <td>
+                                            <span class="badge bg-light text-secondary border font-12">
+                                                {{ $activity->contactMethod ? $activity->contactMethod->name : 'N/A' }}
+                                            </span>
+                                        </td>
+                                        <td class="pe-3 text-center text-nowrap">
+                                            <div class="d-inline-flex align-items-center gap-1 justify-content-center">
+                                                <a href="{{ route('activities.show', $activity->id) }}" class="btn btn-sm btn-outline-info rounded-0 px-2 py-1" title="View"><i class="ti ti-eye"></i></a>
+                                                <a href="{{ route('activities.edit', $activity->id) }}" class="btn btn-sm btn-outline-primary rounded-0 px-2 py-1" title="Edit"><i class="ti ti-pencil"></i></a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-0 px-2 py-1" data-bs-toggle="modal" data-bs-target="#confirmActivityDeleteModal{{ $activity->id }}" title="Delete"><i class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3">No Activities found for this project.</td>
-                                        <!-- Add more columns as needed -->
+                                        <td colspan="4" class="text-center py-4 text-muted">No activities found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
-                    <!-- Pagination links -->
-                    <div class="">
-                        {{ $activities->links('pagination::bootstrap-5') }}
-                    </div>
-                </div><!--end card-body-->
-            </div><!--end card-->
-        </div> <!--end col-->
-    </div>
-</div>
+                    @if($activities->hasPages())
+                        <div class="p-2 border-top">
+                            {{ $activities->links('pagination::bootstrap-5') }}
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
 
-<div class="container-fluid mb-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-0">
-                <div class="card-body">
-                    <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>Attachments</h5>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary btn-sm mt-0 mb-3" data-bs-toggle="modal" data-bs-target="#attachmentModal">Add Images</button>
-                        </div>
-                    </div>
+        <!-- Attachments -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-0 h-100 mb-0">
+                <div class="card-header bg-light py-3 border-bottom rounded-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h6 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="ti ti-photo text-danger fs-4"></i> Work Reports & Images
+                    </h6>
+                    <button type="button" class="btn btn-primary btn-sm rounded-0 px-3 py-2 font-12 fw-semibold" style="width: auto !important;" data-bs-toggle="modal" data-bs-target="#attachmentModal">
+                        <i class="ti ti-plus me-1"></i> Add Images
+                    </button>
+                </div>
+                <div class="card-body p-0 rounded-0 d-flex flex-column justify-content-between bg-white">
                     <div class="table-responsive">
-                        <table class="table">
-                            <thead class="thead-light">
+                        <table class="table table-hover align-middle mb-0 table-sm">
+                            <thead class="table-light text-uppercase font-10">
                                 <tr>
-                                    <th>ID</th>
+                                    <th class="ps-3">ID</th>
                                     <th>Type</th>
-                                    <th>Project</th>
-                                    <th>Images</th>
-                                    <th>Actions</th>
-                                </tr><!--end tr-->
+                                    <th>Files</th>
+                                    <th class="pe-3 text-center" style="width: 80px;">Actions</th>
+                                </tr>
                             </thead>
-
-                            <tbody>
-                                @forelse($attachments as $attachment)
+                            <tbody class="font-12">
+                                @forelse ($attachments as $attachment)
                                     <tr>
-                                        <td>{{ $attachment->id }}</td>
+                                        <td class="ps-3 text-muted">#{{ $attachment->id }}</td>
                                         <td>{{ $attachment->attachmentType->name }}</td>
-                                        <td>{{ $attachment->project->id }} - {{ $attachment->project->customer->lead->name }}</td>
                                         <td>
                                             @foreach ($attachment->images as $image)
-                                                <a href="{{ (\Illuminate\Support\Str::startsWith($image, 'http') ? $image : asset('storage/' . $image)) }}" target="_blank"><span class="badge bg-secondary">{{ basename($image) }}</span></a><br>
+                                                <a href="{{ (\Illuminate\Support\Str::startsWith($image, 'http') ? $image : asset('storage/' . $image)) }}" target="_blank" class="badge bg-light text-primary border font-11 text-decoration-none d-inline-block me-1">{{ basename($image) }}</a>
                                             @endforeach
                                         </td>
-                                        <td>
-                                            <a href="{{ route('attachments.edit', $attachment->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $attachment->id }}">Delete</button>
+                                        <td class="pe-3 text-center text-nowrap">
+                                            <div class="d-inline-flex align-items-center gap-1 justify-content-center">
+                                                <a href="{{ route('attachments.edit', $attachment->id) }}" class="btn btn-sm btn-outline-primary rounded-0 px-2 py-1" title="Edit"><i class="ti ti-pencil"></i></a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-0 px-2 py-1" data-bs-toggle="modal" data-bs-target="#confirmAttachmentDeleteModal{{ $attachment->id }}" title="Delete"><i class="ti ti-trash"></i></button>
+                                            </div>
                                         </td>
-                                    </tr><!--end tr-->
-                                    @empty
-                                        <tr>
-                                            <td colspan="3">No Work Reports found for this Project.</td>
-                                            <!-- Add more columns as needed -->
-                                        </tr>
-                                    @endforelse
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-muted">No attachments found.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
-                    <div class="">
-                        {{ $attachments->links('pagination::bootstrap-5') }}
-                    </div>
-                </div><!--end card-body-->
-            </div><!--end card-->
-            <!-- Pagination links -->
-
-        </div> <!--end col-->
+                    @if($attachments->hasPages())
+                        <div class="p-2 border-top">
+                            {{ $attachments->links('pagination::bootstrap-5') }}
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Add the Bill  Modal Markup -->
-<div class="modal fade" id="billModal" tabindex="-1" aria-labelledby="billModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="billModalLabel">Add Bill</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Modals -->
+<div class="modal fade" id="billModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-primary text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-file-invoice me-2"></i>Add Bill</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <!-- Include the 'Projects.show_bill_form' content here -->
+            <div class="modal-body p-4 rounded-0 bg-white">
                 @include('crm.crud.projects.show_bill_form')
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add the JavaScript to handle the Bill popup -->
-<script>
-    function openBillPopup(event) {
-        event.preventDefault();
-        const popup = document.getElementById('billpopup');
-        popup.style.display = 'block';
-    }
-</script>
-
-<!-- Add the Activity  Modal Markup -->
-<div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="activityModalLabel">Add Activity</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="activityModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-info text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-activity me-2"></i>Add Activity</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <!-- Include the 'Projects.show_activity_form' content here -->
+            <div class="modal-body p-4 rounded-0 bg-white">
                 @include('crm.crud.projects.show_activity_form')
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add the JavaScript to handle the Activity popup -->
-<script>
-    function openActivityPopup(event) {
-        event.preventDefault();
-        const popup = document.getElementById('activitypopup');
-        popup.style.display = 'block';
-    }
-</script>
-
-<!-- Add the Attachment  Modal Markup -->
-<div class="modal fade" id="attachmentModal" tabindex="-1" aria-labelledby="attachmentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="attachmentModalLabel">Add Attachment </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="attachmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-danger text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-photo me-2"></i>Add Attachment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <!-- Include the 'Projects.show_attachment_form' content here -->
+            <div class="modal-body p-4 rounded-0 bg-white">
                 @include('crm.crud.projects.show_attachment_form')
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add the JavaScript to handle the attachment popup -->
-<script>
-    function openAttachmentPopup(event) {
-        event.preventDefault();
-        const popup = document.getElementById('Attachmentpopup');
-        popup.style.display = 'block';
-    }
-</script>
-
-<!-- Add the Payment  Modal Markup -->
-<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="paymentModalLabel">Add Payment </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-success text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-currency-rupee me-2"></i>Add Payment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <!-- Include the 'Projects.show_payment_form' content here -->
+            <div class="modal-body p-4 rounded-0 bg-white">
                 @include('crm.crud.projects.show_payment_form')
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add the JavaScript to handle the Payment popup -->
-<script>
-    function openPaymentPopup(event) {
-        event.preventDefault();
-        const popup = document.getElementById('Paymentpopup');
-        popup.style.display = 'block';
-    }
-</script>
-
-
 @foreach($payments as $payment)
-<!-- Modal for delete confirmation -->
-<div class="modal fade" id="confirmPaymentDeleteModal{{ $payment->id }}" tabindex="-1" aria-labelledby="confirmPaymentDeleteModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmPaymentDeleteModal">Confirm Deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="confirmPaymentDeleteModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-danger text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-alert-triangle me-2"></i>Delete Payment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                Are you sure you want to delete this Payment?
+            <div class="modal-body p-4 rounded-0">
+                Are you sure you want to delete payment reference <strong>{{ $payment->reference }}</strong>?
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-footer border-top rounded-0">
+                <button type="button" class="btn btn-secondary btn-sm px-3 py-1.5 rounded-0 text-nowrap" data-bs-dismiss="modal">Cancel</button>
                 <form action="{{ route('payments.destroy', $payment->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger btn-sm px-4 py-1.5 rounded-0 text-nowrap">Delete</button>
                 </form>
             </div>
         </div>
@@ -681,23 +560,22 @@
 @endforeach
 
 @foreach($activities as $activity)
-<!-- Modal for delete confirmation -->
-<div class="modal fade" id="confirmActivityDeleteModal{{ $activity->id }}" tabindex="-1" aria-labelledby="confirmActivityDeleteModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmActivityDeleteModal">Confirm Deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="confirmActivityDeleteModal{{ $activity->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-danger text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-alert-triangle me-2"></i>Delete Activity</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                Are you sure you want to delete this Activity?
+            <div class="modal-body p-4 rounded-0">
+                Are you sure you want to delete activity <strong>#{{ $activity->id }}</strong>?
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-footer border-top rounded-0">
+                <button type="button" class="btn btn-secondary btn-sm px-3 py-1.5 rounded-0 text-nowrap" data-bs-dismiss="modal">Cancel</button>
                 <form action="{{ route('activities.destroy', $activity->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger btn-sm px-4 py-1.5 rounded-0 text-nowrap">Delete</button>
                 </form>
             </div>
         </div>
@@ -706,23 +584,22 @@
 @endforeach
 
 @foreach($bills as $bill)
-<!-- Modal for delete confirmation -->
-<div class="modal fade" id="confirmBillDeleteModal{{ $bill->id }}" tabindex="-1" aria-labelledby="confirmBillDeleteModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmBillDeleteModal">Confirm Deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="confirmBillDeleteModal{{ $bill->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-danger text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-alert-triangle me-2"></i>Delete Bill</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                Are you sure you want to delete this Bill?
+            <div class="modal-body p-4 rounded-0">
+                Are you sure you want to delete bill <strong>{{ $bill->reference }}</strong>?
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-footer border-top rounded-0">
+                <button type="button" class="btn btn-secondary btn-sm px-3 py-1.5 rounded-0 text-nowrap" data-bs-dismiss="modal">Cancel</button>
                 <form action="{{ route('bills.destroy', $bill->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger btn-sm px-4 py-1.5 rounded-0 text-nowrap">Delete</button>
                 </form>
             </div>
         </div>
@@ -731,23 +608,22 @@
 @endforeach
 
 @foreach($attachments as $attachment)
-<!-- Modal for delete confirmation -->
-<div class="modal fade" id="confirmAttachmentDeleteModal{{ $attachment->id }}" tabindex="-1" aria-labelledby="confirmAttachmentDeleteModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmAttachmentDeleteModal">Confirm Deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="confirmAttachmentDeleteModal{{ $attachment->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-danger text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-alert-triangle me-2"></i>Delete Attachment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                Are you sure you want to delete this Work Attachment?
+            <div class="modal-body p-4 rounded-0">
+                Are you sure you want to delete work report attachment <strong>#{{ $attachment->id }}</strong>?
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-footer border-top rounded-0">
+                <button type="button" class="btn btn-secondary btn-sm px-3 py-1.5 rounded-0" data-bs-dismiss="modal">Cancel</button>
                 <form action="{{ route('attachments.destroy', $attachment->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger btn-sm px-4 py-1.5 rounded-0 text-nowrap">Delete</button>
                 </form>
             </div>
         </div>
@@ -757,30 +633,30 @@
 
 <!-- Add the Assign Team Modal Markup -->
 <div class="modal fade" id="assignTeamModal" tabindex="-1" aria-labelledby="assignTeamModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="assignTeamModalLabel">Assign Team / Labors</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-primary text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15" id="assignTeamModalLabel"><i class="ti ti-users me-2"></i>Assign Team / Labors</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('projects.assign-team', $project->id) }}" method="POST">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body p-4 bg-white rounded-0">
                     <div class="mb-3">
-                        <label class="form-label">Select Employees</label>
-                        <select class="form-select" name="employee_ids[]" multiple style="height: 200px;">
+                        <label class="form-label font-12 fw-semibold text-muted text-uppercase">Select Employees</label>
+                        <select class="form-select rounded-0" name="employee_ids[]" multiple style="height: 200px;">
                             @foreach($employees as $employee)
                                 <option value="{{ $employee->id }}" {{ $project->employees->contains($employee->id) ? 'selected' : '' }}>
                                     {{ $employee->name }} - {{ $employee->designation ? $employee->designation->name : 'Labor' }}
                                 </option>
                             @endforeach
                         </select>
-                        <small class="text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple.</small>
+                        <small class="text-muted font-11">Hold Ctrl (Windows) or Command (Mac) to select multiple.</small>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Assignment</button>
+                <div class="modal-footer border-top rounded-0">
+                    <button type="button" class="btn btn-secondary btn-sm px-3 py-1.5 rounded-0 text-nowrap" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-sm px-4 py-1.5 rounded-0 text-nowrap">Save Assignment</button>
                 </div>
             </form>
         </div>

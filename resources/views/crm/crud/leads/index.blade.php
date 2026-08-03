@@ -1,186 +1,148 @@
 @extends('layouts.app')
 @section('title', 'All Leads')
 @section('content')
-<div class="p-3 bg-light">
-    <!-- Page-Title -->
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="page-title-box">
-                <h4 class="page-title">Leads</h4>
-            </div><!--end page-title-box-->
-        </div><!--end col-->
-    </div>
-    <!-- end page title end breadcrumb -->
-    <!-- end page title end breadcrumb -->
 
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    {{ $chart1->options['chart_title'] }}
-                </div>
-                <div class="card-body">
-                    {!! $chart1->renderHtml() !!}
+<div class="container-fluid p-3 p-md-4">
+    <!-- Header Hero Banner -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header border-0 rounded-0 bg-primary bg-gradient py-3 px-4 text-white d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <i class="ti ti-user-check fs-2"></i>
+                <div>
+                    <h5 class="fw-semibold text-black mb-0 text-capitalize">Leads Directory</h5>
+                    <small class="text-black-50 font-12 text-capitalize">Track sales opportunities, statuses, and assignees</small>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    {{ $chart2->options['chart_title'] }}
-                </div>
-                <div class="card-body">
-                    {!! $chart2->renderHtml() !!}
-                </div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="{{ route('leads.create') }}" class="bg-blue text-white text-capitalize btn btn-light btn-sm px-3 py-2 font-13 fw-semibold rounded-0 text-nowrap d-inline-flex align-items-center" style="width: auto !important;">
+                    <i class="ti ti-plus me-2"></i> Add New Lead
+                </a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    {{ $chart3->options['chart_title'] }}
-                </div>
-                <div class="card-body">
-                    {!! $chart3->renderHtml() !!}
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Analytics Cards -->
-
-    <div class="mb-4">
-        <h6 class="mb-3 text-secondary fw-bold text-uppercase" style="font-size: 13px; letter-spacing: 0.5px;">Leads By Status</h6>
-        <div class="row g-3">
-            @php
-                $importantKeywords = ['new', 'contact', 'qualif', 'convert', 'progress', 'follow', 'won', 'active'];
-            @endphp
-            @foreach($leadStatusAnalytics as $status)
-                @php
-                    $isImportant = false;
-                    foreach($importantKeywords as $keyword) {
-                        if(str_contains(strtolower($status->name), $keyword)) {
-                            $isImportant = true;
-                            break;
-                        }
-                    }
-                @endphp
-                @if($isImportant)
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body text-center p-3">
-                            <p class="text-muted mb-1 fw-semibold" style="font-size: 14px;">{{ $status->name }}</p>
-                            <h3 class="mb-0 text-dark fw-bold">{{ $status->leads_count }}</h3>
+        <div class="card-body p-4 bg-white rounded-0">
+            <!-- Search & Filter Bar -->
+            <form action="{{ route('leads.index') }}" method="GET" class="card bg-light border-0 rounded-0 p-3 mb-4">
+                <div class="row g-2 align-items-center">
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="position-relative">
+                            <i class="ti ti-search position-absolute top-50 translate-middle-y text-muted" style="left: 12px; font-size: 16px; z-index: 5;"></i>
+                            <input type="text" name="search" class="form-control rounded-0 font-13" placeholder="Search by name, email, phone, city..." value="{{ request('search') }}" style="padding-left: 36px;">
                         </div>
                     </div>
-                </div> 
-                @endif
-            @endforeach
-        </div>
-    </div>
-
-
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white border-bottom p-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                    <div>
-                        <a href="{{ route('leads.create') }}" class="btn btn-primary shadow-sm"><i class="ti ti-plus me-1"></i> Add New Lead</a>
-                    </div>
-                    <div>
-                        <form action="{{ route('leads.index') }}" method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search leads..." value="{{ request('search') }}">
-                            <button type="submit" class="btn btn-outline-secondary">Search</button>
-                        </form>
+                    <div class="col-12 col-md-3 d-flex align-items-center gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm rounded-0 px-2 py-2 font-13 text-nowrap" style="width: auto !important;"><i class="ti ti-search me-1"></i> Search</button>
+                        @if(request('search'))
+                            <a href="{{ route('leads.index') }}" class="btn btn-secondary btn-sm rounded-0 px-2 py-2 font-13 text-nowrap" style="width: auto !important;">Clear</a>
+                        @endif
                     </div>
                 </div>
+            </form>
 
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="ps-3">Name</th>
-                                    <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>Source</th>
-                                    <th>Status</th>
-                                    <th>Assigned To</th>
-                                    <th class="text-end pe-3">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($leads as $lead)
-                                <tr>
-                                    <td class="ps-3 fw-medium text-dark">{{ $lead->name }}</td>
-                                    <td>{{ $lead->phone ?? '-' }}</td>
-                                    <td>{{ $lead->email }}</td>
-                                    <td><span class="badge bg-soft-secondary text-secondary">{{ optional($lead->leadSource)->name ?? '-' }}</span></td>
-                                    <td>
-                                        <span class="badge bg-soft-primary text-primary">{{ optional($lead->leadStatus)->name ?? '-' }}</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-sm bg-soft-info text-info rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 24px; height: 24px; font-size: 11px;">
-                                                {{ strtoupper(substr($lead->assignedTo->name ?? 'N', 0, 1)) }}
-                                            </div>
-                                            <span style="font-size: 13px;">{{ $lead->assignedTo ? $lead->assignedTo->name : 'Unassigned' }}</span>
+            <!-- Leads Table -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border mb-0 table-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-2 text-nowrap" style="min-width: 150px;">Name / Email</th>
+                            <th class="text-nowrap" style="min-width: 100px;">Phone</th>
+                            <th class="text-nowrap" style="min-width: 100px;">Source</th>
+                            <th class="text-nowrap" style="min-width: 100px;">Status</th>
+                            <th class="text-nowrap" style="min-width: 150px;">Assigned To</th>
+                            <th class="pe-2 text-center text-nowrap" style="min-width: 90px; width: 90px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($leads as $lead)
+                            <tr>
+                                <td class="ps-2 text-nowrap">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="rounded-circle bg-primary-subtle text-primary border flex-shrink-0 d-flex align-items-center justify-content-center fw-bold font-12" style="width: 32px; height: 32px; min-width: 32px; min-height: 32px;">
+                                            {{ strtoupper(substr($lead->name, 0, 1)) }}
                                         </div>
-                                    </td>
-                                    <td class="text-end pe-3">
-                                        <div class="d-flex justify-content-end gap-1">
-                                            <a href="{{ route('leads.show', $lead->id) }}" class="btn btn-sm btn-outline-info" title="View"><i class="ti ti-eye"></i></a>
-                                            <a href="{{ route('leads.edit', $lead->id) }}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="ti ti-edit"></i></a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $lead->id }}" title="Delete"><i class="ti ti-trash"></i></button>
+                                        <div>
+                                            <a href="{{ route('leads.show', $lead->id) }}" class="fw-semibold text-dark font-13 text-decoration-none d-block">{{ $lead->name }}</a>
+                                            <small class="text-muted font-11">{{ $lead->email }}</small>
                                         </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-4 text-muted">No leads found.</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                    </div>
+                                </td>
+                                <td class="text-nowrap font-12 text-muted">
+                                    {{ $lead->phone ?? 'N/A' }}
+                                </td>
+                                <td class="text-nowrap">
+                                    <span class="badge bg-light text-secondary border font-12">
+                                        {{ optional($lead->leadSource)->name ?? 'N/A' }}
+                                    </span>
+                                </td>
+                                <td class="text-nowrap">
+                                    <span class="badge bg-primary-subtle text-primary rounded-0 font-12 fw-semibold">
+                                        {{ optional($lead->leadStatus)->name ?? 'N/A' }}
+                                    </span>
+                                </td>
+                                <td class="text-nowrap">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle bg-info-subtle text-info border flex-shrink-0 d-flex align-items-center justify-content-center fw-bold font-11 me-2" style="width: 24px; height: 24px; min-width: 24px; min-height: 24px;">
+                                            {{ strtoupper(substr($lead->assignedTo->name ?? 'N', 0, 1)) }}
+                                        </div>
+                                        <span class="font-12 text-muted">{{ $lead->assignedTo ? $lead->assignedTo->name : 'Unassigned' }}</span>
+                                    </div>
+                                </td>
+                                <td class="pe-2 text-center text-nowrap">
+                                    <div class="d-inline-flex align-items-center gap-1 justify-content-center">
+                                        <a href="{{ route('leads.show', $lead->id) }}" class="btn btn-sm btn-outline-info rounded-0 px-2 py-1" title="View Lead">
+                                            <i class="ti ti-eye"></i>
+                                        </a>
+                                        <a href="{{ route('leads.edit', $lead->id) }}" class="btn btn-sm btn-outline-primary rounded-0 px-2 py-1" title="Edit Lead">
+                                            <i class="ti ti-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger rounded-0 px-2 py-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $lead->id }}" title="Delete Lead">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">No leads found in directory.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            <!-- Pagination links -->
-            <div class="p-3 border-top bg-white rounded-bottom">
-                {{ $leads->links('pagination::bootstrap-5') }}
-            </div>
-        </div>
-    </div>
 
-    @foreach($leads as $lead)
-    <!-- Modal for delete confirmation -->
-    <div class="modal fade" id="confirmDeleteModal{{ $lead->id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            @if($leads->hasPages())
+                <div class="pt-3 border-top bg-white rounded-bottom">
+                    {{ $leads->links('pagination::bootstrap-5') }}
                 </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this lead?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form action="{{ route('leads.destroy', $lead->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
-            </div>
+            @endif
         </div>
     </div>
-    @endforeach
 </div>
-@endsection
-@section('scripts')
-{!! $chart1->renderChartJsLibrary() !!}
-{!! $chart1->renderJs() !!}
-{!! $chart2->renderJs() !!}
-{!! $chart3->renderJs() !!}
+
+@foreach($leads as $lead)
+<!-- Modal for delete confirmation -->
+<div class="modal fade" id="confirmDeleteModal{{ $lead->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-0">
+            <div class="modal-header bg-danger text-white rounded-0">
+                <h5 class="modal-title fw-bold font-15"><i class="ti ti-alert-triangle me-2"></i>Delete Lead</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 rounded-0">
+                <p class="mb-1 font-14">Are you sure you want to delete lead <strong>{{ $lead->name }}</strong>?</p>
+                <small class="text-muted font-12">This action is permanent and cannot be undone.</small>
+            </div>
+            <div class="modal-footer border-top rounded-0">
+                <button type="button" class="btn btn-secondary btn-sm px-3 py-1.5 rounded-0 text-nowrap" data-bs-dismiss="modal">Cancel</button>
+                <form action="{{ route('leads.destroy', $lead->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm px-4 py-1.5 rounded-0 text-nowrap"><i class="ti ti-trash me-1"></i> Confirm Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 @endsection

@@ -117,7 +117,7 @@ body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000;
 
 <div class="tax-invoice-wrapper" style="position: relative;">
   <!-- Watermark -->
-  <div style="position: absolute; top: 25%; left: 15%; width: 70%; height: 50%; background-image: url('{{ get_setting('company_logo') ? (\Illuminate\Support\Str::startsWith(get_setting('company_logo', 'http') ? get_setting('company_logo' : asset('storage/' . get_setting('company_logo'))) : asset('assets/images/logo.webp') }}'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.05; z-index: 0; pointer-events: none; transform: rotate(-45deg);"></div>
+  <div style="position: absolute; top: 25%; left: 15%; width: 70%; height: 50%; background-image: url('{{ get_setting('company_logo') ? (\Illuminate\Support\Str::startsWith(get_setting('company_logo'), 'http') ? get_setting('company_logo') : asset('storage/' . get_setting('company_logo'))) : asset('assets/images/logo.webp') }}'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.05; z-index: 0; pointer-events: none; transform: rotate(-45deg);"></div>
   
   <div style="position: relative; z-index: 1;">
   
@@ -130,7 +130,7 @@ body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000;
   <div class="company-header">
     <div class="logo-container">
       @if(get_setting('company_logo'))
-        <img src="{{ (\Illuminate\Support\Str::startsWith(get_setting('company_logo', 'http') ? get_setting('company_logo' : asset('storage/' . get_setting('company_logo'))) }}" alt="Company Logo">
+        <img src="{{ \Illuminate\Support\Str::startsWith(get_setting('company_logo'), 'http') ? get_setting('company_logo') : asset('storage/' . get_setting('company_logo')) }}" alt="Company Logo">
       @else
         <img src="{{ asset('assets/images/logo.webp') }}" alt="Default Logo">
       @endif

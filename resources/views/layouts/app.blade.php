@@ -160,12 +160,17 @@
             border-radius: 4px !important; 
             box-shadow: none !important; 
             font-weight: 600; 
+            width: auto !important;
+            flex: 0 0 auto !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
         }
         .btn:not(.btn-sm) {
-            padding: 8px 16px;
+            padding: 8px 16px !important; /* py-2 equivalent */
         }
         .btn-sm {
-            padding: 4px 10px;
+            padding: 6px 12px !important; /* py-2 equivalent for small button types */
             font-size: 12px;
         }
         .form-control, .form-select { 

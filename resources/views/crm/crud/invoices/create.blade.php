@@ -1,17 +1,21 @@
 @extends('layouts.app')
 @section('title', 'Create Tax Invoice')
 @section('content')
-<div class="p-3 bg-light">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="page-title-box">
-                <h4 class="page-title"><i class="ti ti-file-plus"></i> Create New Tax Invoice</h4>
+<div class="container-fluid p-3 p-md-4">
+    <!-- Header Hero Banner -->
+    <div class="card shadow-sm border-0 rounded-0 mb-4">
+        <div class="card-header border-0 rounded-0 bg-primary bg-gradient py-3 px-4 text-white d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('invoices.index') }}" class="text-black text-decoration-none me-1" title="Back to Invoices"><i class="ti ti-arrow-left fs-4"></i></a>
+                <i class="ti ti-file-plus fs-2"></i>
+                <div>
+                    <h5 class="fw-semibold text-black mb-0 text-capitalize">Create Tax Invoice</h5>
+                    <small class="text-black-50 font-12 text-capitalize">Generate and validate tax calculations for new invoice</small>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
+
+        <div class="card-body p-4 bg-white rounded-0">
 <style>
   /* Premium Invoice Form Styling */
   .inv-section {
@@ -398,10 +402,7 @@
       <button type="submit" class="btn-submit"><i class="ti ti-device-floppy"></i> Save Invoice</button>
     </div>
   </form>
-                </div><!--end card-body-->
-            </div><!--end card-->
-        </div><!--end col-->
-    </div><!--end row-->
+    </div>
 </div>
 
 <script>

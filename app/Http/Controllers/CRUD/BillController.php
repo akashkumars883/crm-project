@@ -65,7 +65,15 @@ class BillController extends Controller
             $chart3 = new LaravelChart($chart_options);
 
             $searchQuery = $request->input('search');
-            $billsQuery = Bill::with(['billType', 'billStatus', 'paymentMethod', 'project', 'inventory', 'employee']);
+            $isPayout = $request->input('type') === 'payout';
+            $billsQuery = Bill::with(['billType', 'billStatus', 'paymentMethod', 'project', 'inventory', 'employee'])
+                ->whereHas('billType', function ($q) use ($isPayout) {
+                    if ($isPayout) {
+                        $q->where('name', '=', 'Salary');
+                    } else {
+                        $q->where('name', '!=', 'Salary');
+                    }
+                });
             if ($searchQuery) {
                 $billsQuery->where(function ($query) use ($searchQuery) {
                     $query->where('reference', 'LIKE', '%' . $searchQuery . '%')
@@ -79,7 +87,7 @@ class BillController extends Controller
                             $projectQuery->where('id', 'LIKE', '%' . $searchQuery . '%');
                         })
                         ->orWhereHas('inventory', function ($inventoryQuery) use ($searchQuery) {
-                            $inventoryQuery->where('name', 'LIKE', '%' . $searchQuery . '%');
+                            $inventoryQuery->where('title', 'LIKE', '%' . $searchQuery . '%');
                         })
                         ->orWhereHas('employee', function ($employeeQuery) use ($searchQuery) {
                             $employeeQuery->where('name', 'LIKE', '%' . $searchQuery . '%');
