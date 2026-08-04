@@ -92,24 +92,27 @@ class HomeController extends Controller
                 return $data;
             };
 
+            $dbDriver = \DB::connection()->getDriverName();
+            $monthExpr = $dbDriver === 'pgsql' ? 'EXTRACT(MONTH FROM created_at) as month' : 'MONTH(created_at) as month';
+
             // Revenue by month (Payments)
-            $revenueRaw = Payment::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+            $revenueRaw = Payment::selectRaw("$monthExpr, SUM(amount) as total")
                 ->whereYear('created_at', $year)->groupBy('month')->orderBy('month')->get();
             $revenueData = $fillMonths($revenueRaw);
 
             // Expenses by month
-            $expensesRaw = Expense::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+            $expensesRaw = Expense::selectRaw("$monthExpr, SUM(amount) as total")
                 ->where('status', 'Approved')->whereYear('created_at', $year)
                 ->groupBy('month')->orderBy('month')->get();
             $expensesData = $fillMonths($expensesRaw);
 
             // Leads by month (count)
-            $leadsRaw = Lead::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            $leadsRaw = Lead::selectRaw("$monthExpr, COUNT(*) as total")
                 ->whereYear('created_at', $year)->groupBy('month')->orderBy('month')->get();
             $leadsData = $fillMonths($leadsRaw);
 
             // Projects by Month (count)
-            $projectsRaw = \App\Models\Project::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            $projectsRaw = \App\Models\Project::selectRaw("$monthExpr, COUNT(*) as total")
                 ->whereYear('created_at', $year)->groupBy('month')->orderBy('month')->get();
             $projectsData = $fillMonths($projectsRaw);
 
