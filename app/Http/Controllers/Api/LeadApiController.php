@@ -33,7 +33,8 @@ class LeadApiController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone ?? null,
-            'lead_source_id' => 1, // Corrected from leads_source_id
+            'company_id' => $request->company_id ?? 1, // Protect HomeGlazer Org (ID: 1)
+            'lead_source_id' => 1,
         ]);
 
         return response()->json([
