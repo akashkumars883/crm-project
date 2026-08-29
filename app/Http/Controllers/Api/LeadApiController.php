@@ -13,11 +13,11 @@ class LeadApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:leads,email',
-            'phone' => 'required|string|min:10|unique:leads,phone',
+            'email' => 'required|email',
+            'phone' => 'nullable|string',
             'company' => 'nullable|string|max:255',
-            'source' => 'required|string|in:website,referral,cold_call,email,social,other',
-            'status' => 'required|string|in:new,contacted,qualified,converted,lost',
+            'source' => 'nullable|string',
+            'status' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
 
